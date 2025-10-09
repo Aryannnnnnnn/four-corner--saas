@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "vercel-build": "npm install --platform=linux --arch=x64 sharp && npm install && next build"
+    "postinstall": "npm rebuild sharp"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",
