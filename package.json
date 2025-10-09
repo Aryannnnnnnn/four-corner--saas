@@ -8,8 +8,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check",
-    "format": "biome format --write",
-    "postinstall": "npm rebuild sharp"
+    "format": "biome format --write"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",
