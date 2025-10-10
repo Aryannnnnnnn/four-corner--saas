@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Mail, Phone, MapPin, Award, Calendar, X, Building2, Globe, Linkedin, Badge } from "lucide-react";
+import { Mail, Phone, MapPin, Calendar, X, Linkedin, Badge } from "lucide-react";
 
 interface TeamMember {
   id: number;

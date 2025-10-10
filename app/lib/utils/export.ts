@@ -131,9 +131,10 @@ export async function exportToPDF(data: PropertyData) {
 
     const gradeValue = data.aiAnalysis?.buyingGrade || "N/A";
     const gradeColor = getGradeColor(gradeValue);
+    const [gr, gg, gb] = gradeColor;
     pdf.setFontSize(32);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(gradeColor[0], gradeColor[1], gradeColor[2]);
+    pdf.setTextColor(gr, gg, gb);
     pdf.text(gradeValue, gradeBoxX + 27.5, gradeBoxY + 20, { align: "center" });
 
     pdf.setFontSize(8);
@@ -188,7 +189,11 @@ export async function exportToPDF(data: PropertyData) {
     const zestimate = data.propertyOverview?.zestimate || 0;
     const pricePerSqft = data.propertyOverview?.pricePerSqft || 0;
 
-    const metricsData = [
+    const metricsData: Array<{
+      label: string;
+      value: string;
+      color: [number, number, number];
+    }> = [
       {
         label: "List Price",
         value: listPrice ? formatExactPrice(listPrice) : "N/A",
@@ -252,7 +257,8 @@ export async function exportToPDF(data: PropertyData) {
       pdf.roundedRect(xPos, cardY, colWidth, cardHeight, 2, 2, "FD");
 
       // Color bar
-      pdf.setFillColor(metric.color[0], metric.color[1], metric.color[2]);
+      const [r, g, b] = metric.color;
+      pdf.setFillColor(r, g, b);
       pdf.roundedRect(xPos, cardY, 3, cardHeight, 1.5, 1.5, "F");
 
       // Label
@@ -782,7 +788,7 @@ export async function exportToPDF(data: PropertyData) {
       pdf.text("Nearby Schools", margin, yPosition);
       yPosition += 8;
 
-      data.schools.forEach((school, index) => {
+      data.schools.forEach((school) => {
         checkPageBreak(20);
 
         pdf.setFillColor(249, 250, 251);
