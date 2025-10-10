@@ -20,7 +20,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             "luxury-button": variant === "primary",
             "bg-gray-200 hover:bg-gray-300 text-gray-900 border border-gray-300":
               variant === "secondary",
-            "bg-transparent hover:bg-gray-100 text-gray-700": variant === "ghost",
+            "bg-transparent hover:bg-gray-100 text-gray-700":
+              variant === "ghost",
             "bg-red-500 hover:bg-red-600 text-white": variant === "danger",
             "px-3 py-1.5 text-sm min-h-[32px]": size === "sm",
             "px-6 py-2.5 text-base min-h-[40px]": size === "md",

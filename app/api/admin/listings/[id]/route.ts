@@ -4,28 +4,34 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Check authentication and admin status
     const session = await auth();
-    
+
     if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin using the is_admin() function
-    const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin", {
-      user_email: session.user.email,
-    });
+    const { data: isAdmin, error: adminError } = await supabase.rpc(
+      "is_admin",
+      {
+        user_email: session.user.email,
+      },
+    );
 
     if (adminError || !isAdmin) {
-      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Admin access required" },
+        { status: 403 },
+      );
     }
 
     const { id: propertyId } = await params;
@@ -54,24 +60,23 @@ export async function GET(
       console.error("Database error:", error);
       return NextResponse.json(
         { error: "Property not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     return NextResponse.json({ property });
-
   } catch (error) {
     console.error("Property fetch error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Check authentication and admin status
@@ -81,12 +86,18 @@ export async function PUT(
     }
 
     // Check if user is admin using the is_admin() function
-    const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin", {
-      user_email: session.user.email,
-    });
+    const { data: isAdmin, error: adminError } = await supabase.rpc(
+      "is_admin",
+      {
+        user_email: session.user.email,
+      },
+    );
 
     if (adminError || !isAdmin) {
-      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Admin access required" },
+        { status: 403 },
+      );
     }
 
     const { id: propertyId } = await params;
@@ -116,8 +127,10 @@ export async function PUT(
     // Basic validation
     if (!title || !street_address || !city || !state) {
       return NextResponse.json(
-        { error: "Missing required fields: title, street_address, city, state" },
-        { status: 400 }
+        {
+          error: "Missing required fields: title, street_address, city, state",
+        },
+        { status: 400 },
       );
     }
 
@@ -125,7 +138,7 @@ export async function PUT(
     if (contact_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact_email)) {
       return NextResponse.json(
         { error: "Invalid email format" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -133,7 +146,7 @@ export async function PUT(
     if (list_price < 0 || bedrooms < 0 || bathrooms < 0 || square_feet < 0) {
       return NextResponse.json(
         { error: "Numeric fields cannot be negative" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -147,7 +160,7 @@ export async function PUT(
     if (fetchError || !existingProperty) {
       return NextResponse.json(
         { error: "Property not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -181,27 +194,26 @@ export async function PUT(
       console.error("Database error:", error);
       return NextResponse.json(
         { error: "Failed to update property" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     return NextResponse.json({
       message: "Property updated successfully",
-      property: data?.[0]
+      property: data?.[0],
     });
-
   } catch (error) {
     console.error("Property update error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Check authentication and admin status
@@ -211,12 +223,18 @@ export async function DELETE(
     }
 
     // Check if user is admin using the is_admin() function
-    const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin", {
-      user_email: session.user.email,
-    });
+    const { data: isAdmin, error: adminError } = await supabase.rpc(
+      "is_admin",
+      {
+        user_email: session.user.email,
+      },
+    );
 
     if (adminError || !isAdmin) {
-      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Admin access required" },
+        { status: 403 },
+      );
     }
 
     const { id: propertyId } = await params;
@@ -231,7 +249,7 @@ export async function DELETE(
     if (fetchError || !existingProperty) {
       return NextResponse.json(
         { error: "Property not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -256,19 +274,18 @@ export async function DELETE(
       console.error("Database error:", error);
       return NextResponse.json(
         { error: "Failed to delete property" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     return NextResponse.json({
-      message: "Property deleted successfully"
+      message: "Property deleted successfully",
     });
-
   } catch (error) {
     console.error("Property deletion error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

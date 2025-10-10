@@ -273,8 +273,6 @@ function SearchPageContent() {
     }
   };
 
-
-
   const handlePropertyClick = (property: PropertySearchResult) => {
     window.open(
       `/analyze?zpid=${property.zpid}&address=${encodeURIComponent(property.address)}`,

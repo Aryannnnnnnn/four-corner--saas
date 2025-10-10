@@ -1,7 +1,6 @@
 "use client";
 
-
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
 interface TeamMember {
   id: number;
@@ -20,37 +19,42 @@ const TeamSection: React.FC = () => {
       id: 1,
       name: "Lori Hurley",
       title: "Founder & Head Real Estate Advisor",
-      description: "With a sharp eye for rare estates and a reputation built on trust, Founder & Head Real Estate Advisor Alexandra Sienna leads Sienna with vision, discretion, and integrity.",
-      imageUrl: "/team-1.png"
+      description:
+        "With a sharp eye for rare estates and a reputation built on trust, Founder & Head Real Estate Advisor Alexandra Sienna leads Sienna with vision, discretion, and integrity.",
+      imageUrl: "/team-1.png",
     },
     {
       id: 2,
       name: "Alex Shaffer",
       title: "Lead Project Manager",
-      description: "With a sharp eye for Vermont's finest properties and a reputation built on trust, Lead Realtor Alex Shaffer guides Four Corner Properties' clients with expertise and passion, securing dream homes in Rutland, Killington, Bennington, and beyond. Contact him today to find your perfect Vermont retreat!",
-      imageUrl: "/team-2.png"
+      description:
+        "With a sharp eye for Vermont's finest properties and a reputation built on trust, Lead Realtor Alex Shaffer guides Four Corner Properties' clients with expertise and passion, securing dream homes in Rutland, Killington, Bennington, and beyond. Contact him today to find your perfect Vermont retreat!",
+      imageUrl: "/team-2.png",
     },
     {
       id: 3,
       name: "Courtney Harvey",
       title: "Senior Real Estate Agent",
-      description: "With a sharp eye for Vermont's finest properties and a reputation for poised professionalism, Senior Real Estate Agent Courtney Harvey delivers exceptional results at Four Corner Properties, handling every transaction with care and confidence. Contact her today to secure your dream Vermont home!",
-      imageUrl: "/team-3.jpeg"
+      description:
+        "With a sharp eye for Vermont's finest properties and a reputation for poised professionalism, Senior Real Estate Agent Courtney Harvey delivers exceptional results at Four Corner Properties, handling every transaction with care and confidence. Contact her today to secure your dream Vermont home!",
+      imageUrl: "/team-3.jpeg",
     },
     {
       id: 4,
       name: "Erin Roy",
       title: "Luxury Property Specialist",
-      description: "With a sharp eye for Vermont’s luxury estates and a passion for architectural elegance, Luxury Property Specialist Erin Roy blends financial acumen with market expertise at Four Corner Properties, delivering unmatched value and vision. Contact Erin today to secure your dream Vermont retreat!",
-      imageUrl: "/team-4.png"
+      description:
+        "With a sharp eye for Vermont’s luxury estates and a passion for architectural elegance, Luxury Property Specialist Erin Roy blends financial acumen with market expertise at Four Corner Properties, delivering unmatched value and vision. Contact Erin today to secure your dream Vermont retreat!",
+      imageUrl: "/team-4.png",
     },
     {
       id: 5,
       name: "Pat Sady",
       title: "Lead Real Estate Agent",
-      description: "With an expert eye for Vermont’s most coveted properties and a reputation built on trust, Lead Real Estate Agent Patrick Sady drives Four Corner Properties’ success with unmatched dedication and precision. Specializing in Southern Vermont’s premier homes, he transforms dreams into reality. Contact Patrick today to find your perfect Vermont escape!",
-      imageUrl: "/team-5.png"
-    }
+      description:
+        "With an expert eye for Vermont’s most coveted properties and a reputation built on trust, Lead Real Estate Agent Patrick Sady drives Four Corner Properties’ success with unmatched dedication and precision. Specializing in Southern Vermont’s premier homes, he transforms dreams into reality. Contact Patrick today to find your perfect Vermont escape!",
+      imageUrl: "/team-5.png",
+    },
   ];
 
   // Intersection Observer to trigger animation when section comes into view
@@ -80,7 +84,16 @@ const TeamSection: React.FC = () => {
   }, []);
 
   // Split title into words for animation
-  const titleWords = ["A", "Team", "of", "Visionary", "Experts", "and", "Passionate", "Professionals"];
+  const titleWords = [
+    "A",
+    "Team",
+    "of",
+    "Visionary",
+    "Experts",
+    "and",
+    "Passionate",
+    "Professionals",
+  ];
 
   return (
     <>

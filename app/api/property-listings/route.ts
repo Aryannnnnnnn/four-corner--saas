@@ -3,6 +3,9 @@ import { createClient } from "@supabase/supabase-js";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/auth";
+import { logger } from "@/app/lib/utils/logger";
+import { deletePropertyImages } from "@/app/lib/utils/s3";
+import { propertyListingRatelimit } from "@/app/lib/ratelimit";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -34,7 +37,11 @@ const propertyListingSchema = z.object({
   square_feet: z.number().int().min(1),
   lot_size: z.number().min(0),
   lot_size_unit: z.string().optional(),
-  year_built: z.number().int().min(1800).max(new Date().getFullYear() + 2),
+  year_built: z
+    .number()
+    .int()
+    .min(1800)
+    .max(new Date().getFullYear() + 2),
   stories: z.number().int().min(1).optional(),
   garage_spaces: z.number().int().min(0).optional(),
   list_price: z.number().min(0),
@@ -44,20 +51,25 @@ const propertyListingSchema = z.object({
   contact_email: z.string().email().max(255),
   contact_phone: z.string().min(1).max(20),
   features: z.record(z.string(), z.any()).optional(),
-  images: z.array(z.object({
-    s3Key: z.string(),
-    s3Url: z.string(),
-    thumbnailSmallUrl: z.string(),
-    thumbnailMediumUrl: z.string(),
-    thumbnailLargeUrl: z.string(),
-    displayOrder: z.number(),
-    isPrimary: z.boolean(),
-    width: z.number(),
-    height: z.number(),
-    fileSize: z.number(),
-    mimeType: z.string(),
-    caption: z.string().optional(),
-  })).min(1).max(35),
+  images: z
+    .array(
+      z.object({
+        s3Key: z.string(),
+        s3Url: z.string(),
+        thumbnailSmallUrl: z.string(),
+        thumbnailMediumUrl: z.string(),
+        thumbnailLargeUrl: z.string(),
+        displayOrder: z.number(),
+        isPrimary: z.boolean(),
+        width: z.number(),
+        height: z.number(),
+        fileSize: z.number(),
+        mimeType: z.string(),
+        caption: z.string().optional(),
+      }),
+    )
+    .min(1)
+    .max(35),
   status: z.enum(["draft", "pending"]).optional(),
 });
 
@@ -88,7 +100,7 @@ export async function GET(req: NextRequest) {
     const { data, error } = await query;
 
     if (error) {
-      console.error("Database error:", error);
+      logger.error("Database error:", error);
       return NextResponse.json(
         { error: "Failed to fetch listings" },
         { status: 500 },
@@ -103,7 +115,7 @@ export async function GET(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Fetch listings error:", error);
+    logger.error("Fetch listings error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -119,19 +131,48 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Rate limiting - use user ID for authenticated requests
+    const identifier = session.user.email || session.user.id;
+    const { success, limit, reset, remaining } = await propertyListingRatelimit.limit(identifier);
+
+    if (!success) {
+      return NextResponse.json(
+        {
+          error: "Too many listing submissions. Please try again later.",
+          rateLimit: {
+            limit,
+            remaining,
+            reset: new Date(reset).toISOString(),
+          },
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": limit.toString(),
+            "X-RateLimit-Remaining": remaining.toString(),
+            "X-RateLimit-Reset": reset.toString(),
+          },
+        },
+      );
+    }
+
     const body = await req.json();
 
     // Validate input
     try {
       var validatedData = propertyListingSchema.parse(body);
-    } catch (validationError: any) {
-      console.error("Validation error:", validationError);
-      if (validationError.errors) {
-        const errorMessages = validationError.errors.map((err: any) => 
-          `${err.path.join('.')}: ${err.message}`
-        ).join(', ');
+    } catch (validationError) {
+      logger.error("Validation error:", validationError);
+      if (validationError instanceof z.ZodError) {
+        const errorMessages = validationError.issues
+          .map((err) => `${err.path.join(".")}: ${err.message}`)
+          .join(", ");
         return NextResponse.json(
-          { error: "Validation failed", message: errorMessages, details: validationError.errors },
+          {
+            error: "Validation failed",
+            message: errorMessages,
+            details: validationError.issues,
+          },
           { status: 400 },
         );
       }
@@ -152,9 +193,9 @@ export async function POST(req: NextRequest) {
 
     // Start a transaction-like operation
     // 1. Insert the property listing
-    console.log("Attempting to insert listing for user:", session.user.id);
-    console.log("Listing data:", listingToInsert);
-    
+    logger.log("Attempting to insert listing for user:", session.user.id);
+    logger.log("Listing data:", listingToInsert);
+
     const { data: listing, error: listingError } = await supabase
       .from("property_listings")
       .insert(listingToInsert)
@@ -162,10 +203,13 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (listingError) {
-      console.error("Listing creation error:", listingError);
-      console.error("Error details:", JSON.stringify(listingError, null, 2));
+      logger.error("Listing creation error:", listingError);
+      logger.error("Error details:", JSON.stringify(listingError, null, 2));
       return NextResponse.json(
-        { error: "Failed to create listing", details: listingError.message || listingError },
+        {
+          error: "Failed to create listing",
+          details: listingError.message || listingError,
+        },
         { status: 500 },
       );
     }
@@ -192,9 +236,20 @@ export async function POST(req: NextRequest) {
       .insert(imageRecords);
 
     if (imagesError) {
-      console.error("Images insertion error:", imagesError);
-      // Rollback: delete the listing
+      logger.error("Images insertion error:", imagesError);
+      // Rollback: delete the listing and cleanup S3 images
       await supabase.from("property_listings").delete().eq("id", listing.id);
+
+      // Cleanup S3 images to prevent orphaned files
+      try {
+        const s3Keys = images.map((img) => img.s3Key);
+        await deletePropertyImages(s3Keys);
+        logger.log("Cleaned up S3 images after listing creation failure");
+      } catch (s3Error) {
+        logger.error("Failed to cleanup S3 images:", s3Error);
+        // Don't fail the request, but log the error
+      }
+
       return NextResponse.json(
         { error: "Failed to save images" },
         { status: 500 },
@@ -219,7 +274,7 @@ export async function POST(req: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("Create listing error:", error);
+    logger.error("Create listing error:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

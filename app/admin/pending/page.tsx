@@ -79,7 +79,10 @@ export default function PendingListingsPage() {
       });
 
       if (response.ok) {
-        showToast("Listing approved successfully! Email sent to owner.", "success");
+        showToast(
+          "Listing approved successfully! Email sent to owner.",
+          "success",
+        );
         setListings(listings.filter((l) => l.id !== listingId));
       } else {
         const error = await response.json();
@@ -108,7 +111,10 @@ export default function PendingListingsPage() {
       });
 
       if (response.ok) {
-        showToast("Listing rejected successfully! Email sent to owner.", "success");
+        showToast(
+          "Listing rejected successfully! Email sent to owner.",
+          "success",
+        );
         setListings(listings.filter((l) => l.id !== listingId));
         setRejectionReason("");
       } else {
@@ -155,7 +161,9 @@ export default function PendingListingsPage() {
           <h3 className="text-lg font-medium text-gray-900 mb-2">
             No Pending Listings
           </h3>
-          <p className="text-gray-600">All caught up! No listings awaiting review.</p>
+          <p className="text-gray-600">
+            All caught up! No listings awaiting review.
+          </p>
         </div>
       ) : (
         <div className="space-y-4 md:space-y-6">
@@ -167,10 +175,16 @@ export default function PendingListingsPage() {
               <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-4 md:p-6">
                 {/* Image */}
                 <div className="flex-shrink-0">
-                  {listing.images && listing.images.length > 0 && listing.images[0] ? (
+                  {listing.images &&
+                  listing.images.length > 0 &&
+                  listing.images[0] ? (
                     <div className="relative w-full h-56 md:w-48 md:h-36 lg:w-56 lg:h-40 rounded-lg overflow-hidden">
                       <Image
-                        src={listing.images[0].thumbnail_small_url || listing.images[0].s3_url || "/placeholder-image.jpg"}
+                        src={
+                          listing.images[0].thumbnail_small_url ||
+                          listing.images[0].s3_url ||
+                          "/placeholder-image.jpg"
+                        }
                         alt={listing.title}
                         fill
                         className="object-cover"
@@ -219,27 +233,38 @@ export default function PendingListingsPage() {
                           d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                         />
                       </svg>
-                      <span className="font-medium">{listing.property_type}</span>
+                      <span className="font-medium">
+                        {listing.property_type}
+                      </span>
                     </span>
                     <span className="font-medium">{listing.bedrooms} bed</span>
-                    <span className="font-medium">{listing.bathrooms} bath</span>
-                    <span className="font-medium">{listing.square_feet.toLocaleString()} sqft</span>
+                    <span className="font-medium">
+                      {listing.bathrooms} bath
+                    </span>
+                    <span className="font-medium">
+                      {listing.square_feet.toLocaleString()} sqft
+                    </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-3 mb-4">
                     <span className="text-2xl md:text-3xl font-bold text-blue-600">
                       ${listing.list_price.toLocaleString()}
                     </span>
                     <span className="text-xs md:text-sm text-gray-500 px-2 py-1 bg-gray-100 rounded">
-                      Submitted {new Date(listing.created_at).toLocaleDateString()}
+                      Submitted{" "}
+                      {new Date(listing.created_at).toLocaleDateString()}
                     </span>
                   </div>
                   <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
                     <p className="font-medium mb-1">Contact Information:</p>
                     <p className="break-words">
-                      <span className="font-semibold">{listing.contact_name}</span>
+                      <span className="font-semibold">
+                        {listing.contact_name}
+                      </span>
                       <br className="sm:hidden" />
                       <span className="hidden sm:inline"> • </span>
-                      <span className="text-blue-600">{listing.contact_email}</span>
+                      <span className="text-blue-600">
+                        {listing.contact_email}
+                      </span>
                       <br className="sm:hidden" />
                       <span className="hidden sm:inline"> • </span>
                       <span>{listing.contact_phone}</span>
@@ -257,19 +282,27 @@ export default function PendingListingsPage() {
                   </Link>
                   <button
                     onClick={() => handleApprove(listing.id)}
-                    disabled={approvingId === listing.id || rejectingId === listing.id}
+                    disabled={
+                      approvingId === listing.id || rejectingId === listing.id
+                    }
                     className="flex-1 md:flex-initial px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     <span>{approvingId === listing.id ? "..." : "✓"}</span>
-                    <span>{approvingId === listing.id ? "Processing..." : "Approve"}</span>
+                    <span>
+                      {approvingId === listing.id ? "Processing..." : "Approve"}
+                    </span>
                   </button>
                   <button
                     onClick={() => handleReject(listing.id)}
-                    disabled={approvingId === listing.id || rejectingId === listing.id}
+                    disabled={
+                      approvingId === listing.id || rejectingId === listing.id
+                    }
                     className="flex-1 md:flex-initial px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     <span>{rejectingId === listing.id ? "..." : "✗"}</span>
-                    <span>{rejectingId === listing.id ? "Processing..." : "Reject"}</span>
+                    <span>
+                      {rejectingId === listing.id ? "Processing..." : "Reject"}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -281,7 +314,9 @@ export default function PendingListingsPage() {
       {/* Confirmation Dialogs */}
       <ConfirmDialog
         isOpen={confirmDialog.isOpen && confirmDialog.type === "approve"}
-        onClose={() => setConfirmDialog({ isOpen: false, type: "approve", listingId: "" })}
+        onClose={() =>
+          setConfirmDialog({ isOpen: false, type: "approve", listingId: "" })
+        }
         onConfirm={confirmApprove}
         title="Approve Listing"
         message="Are you sure you want to approve this listing? An approval email will be sent to the property owner."

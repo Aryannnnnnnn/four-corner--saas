@@ -21,11 +21,15 @@ const statusColors = {
 
 export default function AllListingsPage() {
   const [properties, setProperties] = useState<PropertyListing[]>([]);
-  const [filteredProperties, setFilteredProperties] = useState<PropertyListing[]>([]);
+  const [filteredProperties, setFilteredProperties] = useState<
+    PropertyListing[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "price-high" | "price-low">("newest");
+  const [sortBy, setSortBy] = useState<
+    "newest" | "oldest" | "price-high" | "price-low"
+  >("newest");
   // Separate loading states for each button type
   const [loadingButtons, setLoadingButtons] = useState<{
     [key: string]: {
@@ -33,21 +37,28 @@ export default function AllListingsPage() {
       reject?: boolean;
       pending?: boolean;
       delete?: boolean;
-    }
+    };
   }>({});
 
   // Helper functions for button states
-  const setButtonLoading = (propertyId: string, action: 'approve' | 'reject' | 'pending' | 'delete', isLoading: boolean) => {
-    setLoadingButtons(prev => ({
+  const setButtonLoading = (
+    propertyId: string,
+    action: "approve" | "reject" | "pending" | "delete",
+    isLoading: boolean,
+  ) => {
+    setLoadingButtons((prev) => ({
       ...prev,
       [propertyId]: {
         ...prev[propertyId],
-        [action]: isLoading
-      }
+        [action]: isLoading,
+      },
     }));
   };
 
-  const isButtonLoading = (propertyId: string, action: 'approve' | 'reject' | 'pending' | 'delete') => {
+  const isButtonLoading = (
+    propertyId: string,
+    action: "approve" | "reject" | "pending" | "delete",
+  ) => {
     return loadingButtons[propertyId]?.[action] || false;
   };
 
@@ -62,18 +73,19 @@ export default function AllListingsPage() {
   const fetchProperties = async () => {
     try {
       // Use the same approach as pending/rejected pages
-      const url = statusFilter === "all" 
-        ? "/api/admin/listings" 
-        : `/api/admin/listings?status=${statusFilter}`;
-      
+      const url =
+        statusFilter === "all"
+          ? "/api/admin/listings"
+          : `/api/admin/listings?status=${statusFilter}`;
+
       const response = await fetch(url);
-      
+
       if (!response.ok) {
         throw new Error("Failed to fetch properties");
       }
 
       const result = await response.json();
-      
+
       if (result.listings) {
         setProperties(result.listings);
       }
@@ -93,12 +105,13 @@ export default function AllListingsPage() {
     // Filter by search term
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter(property =>
-        property.title?.toLowerCase().includes(searchLower) ||
-        property.street_address?.toLowerCase().includes(searchLower) ||
-        property.city?.toLowerCase().includes(searchLower) ||
-        property.state?.toLowerCase().includes(searchLower) ||
-        property.user?.name?.toLowerCase().includes(searchLower)
+      filtered = filtered.filter(
+        (property) =>
+          property.title?.toLowerCase().includes(searchLower) ||
+          property.street_address?.toLowerCase().includes(searchLower) ||
+          property.city?.toLowerCase().includes(searchLower) ||
+          property.state?.toLowerCase().includes(searchLower) ||
+          property.user?.name?.toLowerCase().includes(searchLower),
       );
     }
 
@@ -106,9 +119,13 @@ export default function AllListingsPage() {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "newest":
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
         case "oldest":
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          return (
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
         case "price-high":
           return (b.list_price || 0) - (a.list_price || 0);
         case "price-low":
@@ -121,17 +138,23 @@ export default function AllListingsPage() {
     setFilteredProperties(filtered);
   };
 
-  const updatePropertyStatus = async (propertyId: string, newStatus: "approved" | "rejected" | "pending") => {
-    const action: 'approve' | 'reject' | 'pending' = 
-      newStatus === 'approved' ? 'approve' : 
-      newStatus === 'rejected' ? 'reject' : 'pending';
+  const updatePropertyStatus = async (
+    propertyId: string,
+    newStatus: "approved" | "rejected" | "pending",
+  ) => {
+    const action: "approve" | "reject" | "pending" =
+      newStatus === "approved"
+        ? "approve"
+        : newStatus === "rejected"
+          ? "reject"
+          : "pending";
     setButtonLoading(propertyId, action, true);
-    
+
     try {
       console.log(`Updating property ${propertyId} to status: ${newStatus}`);
-      
+
       let response: Response;
-      
+
       // Use the appropriate API endpoint based on the new status
       if (newStatus === "approved") {
         response = await fetch(`/api/admin/listings/${propertyId}/approve`, {
@@ -157,7 +180,7 @@ export default function AllListingsPage() {
           // Create a stateful component for the rejection reason input
           const RejectionReasonForm = ({ toastId }: { toastId: string }) => {
             const [rejectionReason, setRejectionReason] = useState("");
-            
+
             return (
               <div className="flex flex-col gap-3 min-w-[300px]">
                 <span className="font-medium">Reject Property</span>
@@ -200,10 +223,10 @@ export default function AllListingsPage() {
           toast((t) => <RejectionReasonForm toastId={t.id} />, {
             duration: Infinity,
             style: {
-              background: '#fff',
-              color: '#000',
-              border: '1px solid #ccc'
-            }
+              background: "#fff",
+              color: "#000",
+              border: "1px solid #ccc",
+            },
           });
         });
 
@@ -231,10 +254,14 @@ export default function AllListingsPage() {
       await fetchProperties();
 
       // Show success message
-      toast.success(`Property status updated to ${newStatus.toUpperCase()} successfully!`);
+      toast.success(
+        `Property status updated to ${newStatus.toUpperCase()} successfully!`,
+      );
     } catch (error) {
       console.error("Error updating property status:", error);
-      toast.error(`Failed to update property status: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(
+        `Failed to update property status: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
     } finally {
       setButtonLoading(propertyId, action, false);
     }
@@ -243,7 +270,7 @@ export default function AllListingsPage() {
   const deleteProperty = async (propertyId: string) => {
     // Use a custom confirmation toast instead of browser confirm
     const confirmDelete = () => {
-      setButtonLoading(propertyId, 'delete', true);
+      setButtonLoading(propertyId, "delete", true);
       performDelete();
     };
 
@@ -259,49 +286,58 @@ export default function AllListingsPage() {
         }
 
         // Update local state
-        setProperties(prev => prev.filter(property => property.id !== propertyId));
-        
+        setProperties((prev) =>
+          prev.filter((property) => property.id !== propertyId),
+        );
+
         // Show success message
         toast.success("Property deleted successfully!");
       } catch (error) {
         console.error("Error deleting property:", error);
-        toast.error(`Failed to delete property: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        toast.error(
+          `Failed to delete property: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
       } finally {
-        setButtonLoading(propertyId, 'delete', false);
+        setButtonLoading(propertyId, "delete", false);
       }
     };
 
     // Show confirmation toast
-    toast((t) => (
-      <div className="flex flex-col gap-2">
-        <span className="font-medium text-gray-900">Delete Property?</span>
-        <span className="text-sm text-gray-700">This action cannot be undone.</span>
-        <div className="flex gap-2">
-          <button
-            onClick={() => {
-              toast.dismiss(t.id);
-              confirmDelete();
-            }}
-            className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-          >
-            Delete
-          </button>
-          <button
-            onClick={() => toast.dismiss(t.id)}
-            className="px-3 py-1 bg-gray-200 text-gray-800 text-sm rounded hover:bg-gray-300"
-          >
-            Cancel
-          </button>
+    toast(
+      (t) => (
+        <div className="flex flex-col gap-2">
+          <span className="font-medium text-gray-900">Delete Property?</span>
+          <span className="text-sm text-gray-700">
+            This action cannot be undone.
+          </span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                confirmDelete();
+              }}
+              className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+            >
+              Delete
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-3 py-1 bg-gray-200 text-gray-800 text-sm rounded hover:bg-gray-300"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
-      </div>
-    ), {
-      duration: Infinity,
-      style: {
-        background: '#fff',
-        color: '#000',
-        border: '1px solid #ccc'
-      }
-    });
+      ),
+      {
+        duration: Infinity,
+        style: {
+          background: "#fff",
+          color: "#000",
+          border: "1px solid #ccc",
+        },
+      },
+    );
   };
 
   if (loading) {
@@ -314,38 +350,41 @@ export default function AllListingsPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6 p-4 sm:p-0">
-      <Toaster 
+      <Toaster
         position="top-right"
         toastOptions={{
           duration: 4000,
           style: {
-            background: '#363636',
-            color: '#fff',
+            background: "#363636",
+            color: "#fff",
           },
           success: {
             duration: 3000,
             iconTheme: {
-              primary: '#10B981',
-              secondary: '#fff',
+              primary: "#10B981",
+              secondary: "#fff",
             },
           },
           error: {
             duration: 4000,
             iconTheme: {
-              primary: '#EF4444',
-              secondary: '#fff',
+              primary: "#EF4444",
+              secondary: "#fff",
             },
           },
         }}
       />
-      
+
       {/* Header */}
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">All Property Listings</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+              All Property Listings
+            </h1>
             <p className="text-sm sm:text-base text-gray-600">
-              Manage all property listings - Approved, Rejected, and Pending ({properties.length} total)
+              Manage all property listings - Approved, Rejected, and Pending (
+              {properties.length} total)
             </p>
           </div>
         </div>
@@ -353,11 +392,16 @@ export default function AllListingsPage() {
 
       {/* Filters and Search */}
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border">
-        <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Filters & Search</h2>
+        <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
+          Filters & Search
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
-            <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="search"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Search Properties
             </label>
             <input
@@ -372,7 +416,10 @@ export default function AllListingsPage() {
 
           {/* Status Filter */}
           <div>
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="status"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Status
             </label>
             <select
@@ -381,7 +428,7 @@ export default function AllListingsPage() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black bg-white"
             >
-              {statusOptions.map(option => (
+              {statusOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -391,7 +438,10 @@ export default function AllListingsPage() {
 
           {/* Sort */}
           <div>
-            <label htmlFor="sort" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="sort"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Sort By
             </label>
             <select
@@ -415,10 +465,15 @@ export default function AllListingsPage() {
           Showing {filteredProperties.length} of {properties.length} properties
         </span>
         <div className="flex flex-wrap gap-2 text-xs">
-          {statusOptions.slice(1).map(status => {
-            const count = properties.filter(p => p.status === status.value).length;
+          {statusOptions.slice(1).map((status) => {
+            const count = properties.filter(
+              (p) => p.status === status.value,
+            ).length;
             return (
-              <span key={status.value} className="px-2 py-1 bg-white rounded border text-gray-800 font-medium whitespace-nowrap">
+              <span
+                key={status.value}
+                className="px-2 py-1 bg-white rounded border text-gray-800 font-medium whitespace-nowrap"
+              >
                 {status.label}: {count}
               </span>
             );
@@ -429,21 +484,35 @@ export default function AllListingsPage() {
       {/* Properties List */}
       {filteredProperties.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.6.713-3.714m0 0A9.97 9.97 0 0124 30a9.97 9.97 0 019.287 6.286" />
+          <svg
+            className="mx-auto h-12 w-12 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 48 48"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1}
+              d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.6.713-3.714m0 0A9.97 9.97 0 0124 30a9.97 9.97 0 019.287 6.286"
+            />
           </svg>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No properties found</h3>
+          <h3 className="mt-2 text-sm font-medium text-gray-900">
+            No properties found
+          </h3>
           <p className="mt-1 text-sm text-gray-500">
-            {searchTerm || statusFilter !== "all" 
+            {searchTerm || statusFilter !== "all"
               ? "Try adjusting your filters or search term."
-              : "Get started by creating your first property listing."
-            }
+              : "Get started by creating your first property listing."}
           </p>
         </div>
       ) : (
         <div className="space-y-4">
           {filteredProperties.map((property) => (
-            <div key={property.id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+            <div
+              key={property.id}
+              className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow"
+            >
               <div className="p-4 sm:p-6">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                   <div className="flex flex-col sm:flex-row gap-4 flex-1">
@@ -459,7 +528,7 @@ export default function AllListingsPage() {
                         />
                       ) : property.images && property.images.length > 0 ? (
                         <Image
-                          src={property.images[0]?.s3_url || ''}
+                          src={property.images[0]?.s3_url || ""}
                           alt={property.title || "Property"}
                           width={120}
                           height={80}
@@ -467,8 +536,18 @@ export default function AllListingsPage() {
                         />
                       ) : (
                         <div className="w-[120px] h-[80px] bg-gray-200 rounded-lg flex items-center justify-center">
-                          <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          <svg
+                            className="w-8 h-8 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
                           </svg>
                         </div>
                       )}
@@ -482,46 +561,67 @@ export default function AllListingsPage() {
                             {property.title || "Untitled Property"}
                           </h3>
                           <p className="text-sm text-gray-600 break-words">
-                            {property.street_address}, {property.city}, {property.state}
+                            {property.street_address}, {property.city},{" "}
+                            {property.state}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${statusColors[property.status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}`}>
-                            {property.status.charAt(0).toUpperCase() + property.status.slice(1)}
+                          <span
+                            className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${statusColors[property.status as keyof typeof statusColors] || "bg-gray-100 text-gray-800"}`}
+                          >
+                            {property.status.charAt(0).toUpperCase() +
+                              property.status.slice(1)}
                           </span>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-sm">
                         <div>
-                          <span className="text-gray-600 text-xs sm:text-sm">Price:</span>
+                          <span className="text-gray-600 text-xs sm:text-sm">
+                            Price:
+                          </span>
                           <p className="font-semibold text-green-700 text-sm sm:text-base">
                             ${property.list_price?.toLocaleString() || "N/A"}
                           </p>
                         </div>
                         <div>
-                          <span className="text-gray-600 text-xs sm:text-sm">Bedrooms:</span>
-                          <p className="font-medium text-gray-900">{property.bedrooms || "N/A"}</p>
+                          <span className="text-gray-600 text-xs sm:text-sm">
+                            Bedrooms:
+                          </span>
+                          <p className="font-medium text-gray-900">
+                            {property.bedrooms || "N/A"}
+                          </p>
                         </div>
                         <div>
-                          <span className="text-gray-600 text-xs sm:text-sm">Bathrooms:</span>
-                          <p className="font-medium text-gray-900">{property.bathrooms || "N/A"}</p>
+                          <span className="text-gray-600 text-xs sm:text-sm">
+                            Bathrooms:
+                          </span>
+                          <p className="font-medium text-gray-900">
+                            {property.bathrooms || "N/A"}
+                          </p>
                         </div>
                         <div>
-                          <span className="text-gray-600 text-xs sm:text-sm">Sq Ft:</span>
-                          <p className="font-medium text-gray-900">{property.square_feet?.toLocaleString() || "N/A"}</p>
+                          <span className="text-gray-600 text-xs sm:text-sm">
+                            Sq Ft:
+                          </span>
+                          <p className="font-medium text-gray-900">
+                            {property.square_feet?.toLocaleString() || "N/A"}
+                          </p>
                         </div>
                       </div>
 
                       <div className="mt-3 text-xs sm:text-sm">
                         <span className="text-gray-600">Owner:</span>
                         <span className="ml-1 font-medium text-gray-900 break-words">
-                          {property.user?.name || "Unknown"} ({property.user?.email || "No email"})
+                          {property.user?.name || "Unknown"} (
+                          {property.user?.email || "No email"})
                         </span>
                       </div>
 
                       <div className="mt-2 text-xs text-gray-600">
-                        Listed: {new Date(property.created_at).toLocaleDateString()} at {new Date(property.created_at).toLocaleTimeString()}
+                        Listed:{" "}
+                        {new Date(property.created_at).toLocaleDateString()} at{" "}
+                        {new Date(property.created_at).toLocaleTimeString()}
                       </div>
                     </div>
                   </div>
@@ -543,44 +643,60 @@ export default function AllListingsPage() {
                         Edit Property
                       </Link>
                     </div>
-                    
+
                     <div className="flex flex-row lg:flex-col gap-2 mt-2 lg:mt-0">
                       {property.status === "pending" && (
                         <>
                           <button
-                            onClick={() => updatePropertyStatus(property.id, "approved")}
+                            onClick={() =>
+                              updatePropertyStatus(property.id, "approved")
+                            }
                             disabled={isButtonLoading(property.id, "approve")}
                             className="flex-1 lg:flex-none px-3 py-2 text-xs font-medium text-green-600 bg-green-50 hover:bg-green-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
                           >
-                            {isButtonLoading(property.id, "approve") ? "Approving..." : "Approve"}
+                            {isButtonLoading(property.id, "approve")
+                              ? "Approving..."
+                              : "Approve"}
                           </button>
                           <button
-                            onClick={() => updatePropertyStatus(property.id, "rejected")}
+                            onClick={() =>
+                              updatePropertyStatus(property.id, "rejected")
+                            }
                             disabled={isButtonLoading(property.id, "reject")}
                             className="flex-1 lg:flex-none px-3 py-2 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
                           >
-                            {isButtonLoading(property.id, "reject") ? "Rejecting..." : "Reject"}
+                            {isButtonLoading(property.id, "reject")
+                              ? "Rejecting..."
+                              : "Reject"}
                           </button>
                         </>
                       )}
 
                       {property.status === "approved" && (
                         <button
-                          onClick={() => updatePropertyStatus(property.id, "pending")}
+                          onClick={() =>
+                            updatePropertyStatus(property.id, "pending")
+                          }
                           disabled={isButtonLoading(property.id, "pending")}
                           className="w-full lg:w-auto px-3 py-2 text-xs font-medium text-yellow-600 bg-yellow-50 hover:bg-yellow-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
                         >
-                          {isButtonLoading(property.id, "pending") ? "Processing..." : "Set Pending"}
+                          {isButtonLoading(property.id, "pending")
+                            ? "Processing..."
+                            : "Set Pending"}
                         </button>
                       )}
 
                       {property.status === "rejected" && (
                         <button
-                          onClick={() => updatePropertyStatus(property.id, "pending")}
+                          onClick={() =>
+                            updatePropertyStatus(property.id, "pending")
+                          }
                           disabled={isButtonLoading(property.id, "pending")}
                           className="w-full lg:w-auto px-3 py-2 text-xs font-medium text-yellow-600 bg-yellow-50 hover:bg-yellow-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
                         >
-                          {isButtonLoading(property.id, "pending") ? "Processing..." : "Review Again"}
+                          {isButtonLoading(property.id, "pending")
+                            ? "Processing..."
+                            : "Review Again"}
                         </button>
                       )}
                     </div>
@@ -590,7 +706,9 @@ export default function AllListingsPage() {
                       disabled={isButtonLoading(property.id, "delete")}
                       className="w-full lg:w-auto px-3 py-2 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors mt-2 lg:mt-0"
                     >
-                      {isButtonLoading(property.id, "delete") ? "Deleting..." : "Delete"}
+                      {isButtonLoading(property.id, "delete")
+                        ? "Deleting..."
+                        : "Delete"}
                     </button>
                   </div>
                 </div>

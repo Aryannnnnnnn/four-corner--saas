@@ -4,7 +4,7 @@
  * Only logs in development, silent in production
  */
 
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevelopment = process.env.NODE_ENV === "development";
 
 export const logger = {
   /**
@@ -25,7 +25,7 @@ export const logger = {
     } else {
       // In production, send to error tracking service (Sentry, etc.)
       // For now, we'll still log errors but they won't show in prod builds
-      console.error('[Production Error]:', ...args);
+      console.error("[Production Error]:", ...args);
     }
   },
 

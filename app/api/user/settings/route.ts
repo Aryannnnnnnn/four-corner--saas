@@ -60,8 +60,10 @@ export async function GET(_req: NextRequest) {
     if (error) {
       console.error("Database error:", error);
       // If the table or column doesn't exist, return default settings
-      if (error.code === '42703' || error.code === '42P01') {
-        console.log("User settings table not found or has different schema, returning defaults");
+      if (error.code === "42703" || error.code === "42P01") {
+        console.log(
+          "User settings table not found or has different schema, returning defaults",
+        );
       } else {
         throw error;
       }
@@ -149,7 +151,7 @@ export async function PATCH(req: NextRequest) {
     if (error) {
       console.error("Database error:", error);
       // If the table doesn't exist, we can't update settings
-      if (error.code === '42703' || error.code === '42P01') {
+      if (error.code === "42703" || error.code === "42P01") {
         return NextResponse.json({
           message: "Settings table not configured. Contact administrator.",
           settings: updates,

@@ -83,36 +83,60 @@ function generatePDFHTML(user: any, properties: any[]) {
     0,
   );
   const averagePrice = totalProperties > 0 ? totalValue / totalProperties : 0;
-  
+
   // Calculate average grade
-  const gradeValues: Record<string, number> = { 'A+': 97, 'A': 93, 'A-': 90, 'B+': 87, 'B': 83, 'B-': 80, 'C+': 77, 'C': 73, 'C-': 70, 'D': 65, 'F': 50 };
+  const gradeValues: Record<string, number> = {
+    "A+": 97,
+    A: 93,
+    "A-": 90,
+    "B+": 87,
+    B: 83,
+    "B-": 80,
+    "C+": 77,
+    C: 73,
+    "C-": 70,
+    D: 65,
+    F: 50,
+  };
   const grades = properties
-    .map(p => p.analysis_data.aiAnalysis?.buyingGrade)
+    .map((p) => p.analysis_data.aiAnalysis?.buyingGrade)
     .filter((grade): grade is string => grade && grade in gradeValues);
-  const averageGradeValue = grades.length > 0 
-    ? grades.reduce((sum, grade) => sum + (gradeValues[grade] || 0), 0) / grades.length 
-    : 0;
+  const averageGradeValue =
+    grades.length > 0
+      ? grades.reduce((sum, grade) => sum + (gradeValues[grade] || 0), 0) /
+        grades.length
+      : 0;
   const averageGrade = getGradeFromValue(averageGradeValue);
-  
+
   // Find best and worst properties
-  const propertiesWithGrades = properties.filter(p => p.analysis_data.aiAnalysis?.buyingGrade && p.analysis_data.aiAnalysis.buyingGrade in gradeValues);
+  const propertiesWithGrades = properties.filter(
+    (p) =>
+      p.analysis_data.aiAnalysis?.buyingGrade &&
+      p.analysis_data.aiAnalysis.buyingGrade in gradeValues,
+  );
   const bestProperty = propertiesWithGrades.reduce((best, current) => {
     if (!best) return current;
-    const bestGrade = gradeValues[best.analysis_data.aiAnalysis?.buyingGrade] || 0;
-    const currentGrade = gradeValues[current.analysis_data.aiAnalysis?.buyingGrade] || 0;
+    const bestGrade =
+      gradeValues[best.analysis_data.aiAnalysis?.buyingGrade] || 0;
+    const currentGrade =
+      gradeValues[current.analysis_data.aiAnalysis?.buyingGrade] || 0;
     return currentGrade > bestGrade ? current : best;
   }, null as any);
   const worstProperty = propertiesWithGrades.reduce((worst, current) => {
     if (!worst) return current;
-    const worstGrade = gradeValues[worst.analysis_data.aiAnalysis?.buyingGrade] || 100;
-    const currentGrade = gradeValues[current.analysis_data.aiAnalysis?.buyingGrade] || 100;
+    const worstGrade =
+      gradeValues[worst.analysis_data.aiAnalysis?.buyingGrade] || 100;
+    const currentGrade =
+      gradeValues[current.analysis_data.aiAnalysis?.buyingGrade] || 100;
     return currentGrade < worstGrade ? current : worst;
   }, null as any);
 
   // Recent activity (last 30 days)
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const recentProperties = properties.filter(p => new Date(p.created_at) > thirtyDaysAgo);
+  const recentProperties = properties.filter(
+    (p) => new Date(p.created_at) > thirtyDaysAgo,
+  );
 
   return `
 <!DOCTYPE html>
@@ -437,7 +461,7 @@ function generatePDFHTML(user: any, properties: any[]) {
       </div>
       <div class="stat-card">
         <div class="stat-label">Portfolio Value</div>
-        <div class="stat-value">$${totalValue > 1000000 ? (totalValue / 1000000).toFixed(1) + 'M' : totalValue > 1000 ? (totalValue / 1000).toFixed(0) + 'K' : totalValue.toLocaleString()}</div>
+        <div class="stat-value">$${totalValue > 1000000 ? (totalValue / 1000000).toFixed(1) + "M" : totalValue > 1000 ? (totalValue / 1000).toFixed(0) + "K" : totalValue.toLocaleString()}</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Average Grade</div>
@@ -457,30 +481,40 @@ function generatePDFHTML(user: any, properties: any[]) {
       </div>
     </div>
 
-    ${totalProperties > 0 ? `
+    ${
+      totalProperties > 0
+        ? `
     <!-- Portfolio Analytics -->
     <div class="section">
       <h2 class="section-title">Portfolio Analytics</h2>
       <div class="stats-grid">
-        ${bestProperty ? `
+        ${
+          bestProperty
+            ? `
         <div class="stat-card primary">
           <div class="stat-label">Top Performer</div>
-          <div class="stat-value">${bestProperty.analysis_data.aiAnalysis?.buyingGrade || 'N/A'}</div>
-          <div class="stat-subtitle">${bestProperty.address.length > 40 ? bestProperty.address.substring(0, 40) + '...' : bestProperty.address}</div>
+          <div class="stat-value">${bestProperty.analysis_data.aiAnalysis?.buyingGrade || "N/A"}</div>
+          <div class="stat-subtitle">${bestProperty.address.length > 40 ? bestProperty.address.substring(0, 40) + "..." : bestProperty.address}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${worstProperty && bestProperty && worstProperty.id !== bestProperty.id ? `
+        ${
+          worstProperty && bestProperty && worstProperty.id !== bestProperty.id
+            ? `
         <div class="stat-card warning">
           <div class="stat-label">Needs Attention</div>
-          <div class="stat-value">${worstProperty.analysis_data.aiAnalysis?.buyingGrade || 'N/A'}</div>
-          <div class="stat-subtitle">${worstProperty.address.length > 40 ? worstProperty.address.substring(0, 40) + '...' : worstProperty.address}</div>
+          <div class="stat-value">${worstProperty.analysis_data.aiAnalysis?.buyingGrade || "N/A"}</div>
+          <div class="stat-subtitle">${worstProperty.address.length > 40 ? worstProperty.address.substring(0, 40) + "..." : worstProperty.address}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
         <div class="stat-card">
           <div class="stat-label">Average Property Value</div>
-          <div class="stat-value">$${averagePrice > 1000000 ? (averagePrice / 1000000).toFixed(1) + 'M' : averagePrice > 1000 ? (averagePrice / 1000).toFixed(0) + 'K' : Math.round(averagePrice).toLocaleString()}</div>
+          <div class="stat-value">$${averagePrice > 1000000 ? (averagePrice / 1000000).toFixed(1) + "M" : averagePrice > 1000 ? (averagePrice / 1000).toFixed(0) + "K" : Math.round(averagePrice).toLocaleString()}</div>
           <div class="stat-subtitle">Based on ${totalProperties} properties</div>
         </div>
         
@@ -491,7 +525,9 @@ function generatePDFHTML(user: any, properties: any[]) {
         </div>
       </div>
     </div>
-    ` : ''}
+    `
+        : ""
+    }
 
     <!-- Account Information -->
     <div class="section">
@@ -636,15 +672,15 @@ function generatePDFHTML(user: any, properties: any[]) {
 }
 
 function getGradeFromValue(value: number): string {
-  if (value >= 97) return 'A+';
-  if (value >= 93) return 'A';
-  if (value >= 90) return 'A-';
-  if (value >= 87) return 'B+';
-  if (value >= 83) return 'B';
-  if (value >= 80) return 'B-';
-  if (value >= 77) return 'C+';
-  if (value >= 73) return 'C';
-  if (value >= 70) return 'C-';
-  if (value >= 65) return 'D';
-  return 'F';
+  if (value >= 97) return "A+";
+  if (value >= 93) return "A";
+  if (value >= 90) return "A-";
+  if (value >= 87) return "B+";
+  if (value >= 83) return "B";
+  if (value >= 80) return "B-";
+  if (value >= 77) return "C+";
+  if (value >= 73) return "C";
+  if (value >= 70) return "C-";
+  if (value >= 65) return "D";
+  return "F";
 }

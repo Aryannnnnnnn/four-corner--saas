@@ -7,63 +7,70 @@ export async function POST(request: NextRequest) {
   try {
     // Check authentication and admin status
     const session = await auth();
-    
+
     if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
     );
 
     // Check if user is admin using the is_admin() function
-    const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin", {
-      user_email: session.user.email,
-    });
+    const { data: isAdmin, error: adminError } = await supabase.rpc(
+      "is_admin",
+      {
+        user_email: session.user.email,
+      },
+    );
 
     if (adminError || !isAdmin) {
-      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Admin access required" },
+        { status: 403 },
+      );
     }
 
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const propertyListingId = formData.get('propertyListingId') as string;
-    const displayOrder = parseInt(formData.get('displayOrder') as string) || 1;
+    const file = formData.get("file") as File;
+    const propertyListingId = formData.get("propertyListingId") as string;
+    const displayOrder = parseInt(formData.get("displayOrder") as string) || 1;
 
     if (!file || !propertyListingId) {
       return NextResponse.json(
-        { error: 'File and property listing ID are required' },
-        { status: 400 }
+        { error: "File and property listing ID are required" },
+        { status: 400 },
       );
     }
 
     // Validate file
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith("image/")) {
       return NextResponse.json(
-        { error: 'File must be an image' },
-        { status: 400 }
+        { error: "File must be an image" },
+        { status: 400 },
       );
     }
 
-    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+    if (file.size > 10 * 1024 * 1024) {
+      // 10MB limit
       return NextResponse.json(
-        { error: 'File size must be less than 10MB' },
-        { status: 400 }
+        { error: "File size must be less than 10MB" },
+        { status: 400 },
       );
     }
 
     // Check if property exists
     const { data: property, error: propertyError } = await supabase
-      .from('property_listings')
-      .select('id')
-      .eq('id', propertyListingId)
+      .from("property_listings")
+      .select("id")
+      .eq("id", propertyListingId)
       .single();
 
     if (propertyError || !property) {
       return NextResponse.json(
-        { error: 'Property not found' },
-        { status: 404 }
+        { error: "Property not found" },
+        { status: 404 },
       );
     }
 
@@ -73,12 +80,12 @@ export async function POST(request: NextRequest) {
       buffer,
       session.user.id!,
       file.name,
-      file.type
+      file.type,
     );
 
     // Save to database
     const { data: imageRecord, error: dbError } = await supabase
-      .from('property_images')
+      .from("property_images")
       .insert({
         property_listing_id: propertyListingId,
         s3_key: uploadResult.s3Key,
@@ -96,15 +103,15 @@ export async function POST(request: NextRequest) {
     if (dbError) {
       // If database insertion fails, try to clean up the S3 upload
       try {
-        await fetch('/api/admin/s3/delete', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ s3Key: uploadResult.s3Key })
+        await fetch("/api/admin/s3/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ s3Key: uploadResult.s3Key }),
         });
       } catch (cleanupError) {
-        console.error('Failed to cleanup S3 after DB error:', cleanupError);
+        console.error("Failed to cleanup S3 after DB error:", cleanupError);
       }
-      
+
       throw dbError;
     }
 
@@ -112,12 +119,11 @@ export async function POST(request: NextRequest) {
       success: true,
       image: imageRecord,
     });
-
   } catch (error) {
-    console.error('Error uploading image:', error);
+    console.error("Error uploading image:", error);
     return NextResponse.json(
-      { error: 'Failed to upload image' },
-      { status: 500 }
+      { error: "Failed to upload image" },
+      { status: 500 },
     );
   }
 }

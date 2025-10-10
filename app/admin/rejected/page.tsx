@@ -51,7 +51,9 @@ export default function RejectedListingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-lg text-gray-600">Loading rejected listings...</div>
+        <div className="text-lg text-gray-600">
+          Loading rejected listings...
+        </div>
       </div>
     );
   }
@@ -92,10 +94,16 @@ export default function RejectedListingsPage() {
               <div className="flex gap-6 p-6">
                 {/* Image */}
                 <div className="flex-shrink-0">
-                  {listing.images && listing.images.length > 0 && listing.images[0] ? (
+                  {listing.images &&
+                  listing.images.length > 0 &&
+                  listing.images[0] ? (
                     <div className="relative w-48 h-32 rounded-lg overflow-hidden">
                       <Image
-                        src={listing.images[0].thumbnail_small_url || listing.images[0].s3_url || "/placeholder-image.jpg"}
+                        src={
+                          listing.images[0].thumbnail_small_url ||
+                          listing.images[0].s3_url ||
+                          "/placeholder-image.jpg"
+                        }
                         alt={listing.title}
                         fill
                         className="object-cover"
@@ -155,7 +163,8 @@ export default function RejectedListingsPage() {
                       ${listing.list_price.toLocaleString()}
                     </span>
                     <span className="text-sm text-gray-500">
-                      Submitted {new Date(listing.created_at).toLocaleDateString()}
+                      Submitted{" "}
+                      {new Date(listing.created_at).toLocaleDateString()}
                     </span>
                   </div>
 

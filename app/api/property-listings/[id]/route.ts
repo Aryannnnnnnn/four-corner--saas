@@ -19,7 +19,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 // GET - Fetch single listing by ID
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -33,7 +33,10 @@ export async function GET(
         images:property_images(*)
       `)
       .eq("id", id)
-      .order("display_order", { foreignTable: "property_images", ascending: true })
+      .order("display_order", {
+        foreignTable: "property_images",
+        ascending: true,
+      })
       .single();
 
     if (error) {
@@ -54,7 +57,7 @@ export async function GET(
     // Allow if: listing is approved, OR user is the owner, OR user is admin
     const isApproved = data.status === "approved";
     const isOwner = session?.user?.id === data.user_id;
-    
+
     // Check if user is admin
     let isAdmin = false;
     if (session?.user?.email) {
@@ -71,10 +74,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(
-      { listing: data },
-      { status: 200 },
-    );
+    return NextResponse.json({ listing: data }, { status: 200 });
   } catch (error) {
     console.error("Server error:", error);
     return NextResponse.json(

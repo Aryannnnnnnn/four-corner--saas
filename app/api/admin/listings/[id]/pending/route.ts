@@ -4,12 +4,12 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 export async function POST(
   _request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await auth();
@@ -38,23 +38,20 @@ export async function POST(
 
     if (fetchError || !listing) {
       console.error("Error fetching listing:", fetchError);
-      return NextResponse.json(
-        { error: "Listing not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Listing not found" }, { status: 404 });
     }
 
     // Update the listing status to pending
     const { error: updateError } = await supabase
       .from("property_listings")
-      .update({ 
+      .update({
         status: "pending",
         approved_at: null,
         approved_by: null,
         rejected_at: null,
         rejected_by: null,
         rejection_reason: null,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("id", listingId);
 
@@ -62,19 +59,19 @@ export async function POST(
       console.error("Error setting listing to pending:", updateError);
       return NextResponse.json(
         { error: "Failed to update listing status" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
-      message: "Listing set to pending successfully" 
+      message: "Listing set to pending successfully",
     });
   } catch (error) {
     console.error("Set pending listing error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

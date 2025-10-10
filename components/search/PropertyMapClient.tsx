@@ -131,13 +131,15 @@ export default function PropertyMapClient({
 
   return (
     <>
-      <div style={{ 
-        height: "100%", 
-        borderRadius: "8px", 
-        overflow: "hidden",
-        border: "1px solid #e0e0e0",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.1)"
-      }}>
+      <div
+        style={{
+          height: "100%",
+          borderRadius: "8px",
+          overflow: "hidden",
+          border: "1px solid #e0e0e0",
+          boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+        }}
+      >
         <MapContainer
           center={center}
           zoom={13}

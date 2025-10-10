@@ -52,30 +52,30 @@ export interface PropertyListing {
   year_built?: number;
   stories?: number;
   garage_spaces?: number;
-  
+
   // Financial
   list_price: number;
   hoa_fees?: number;
   property_tax?: number;
-  
+
   // Contact Information
   contact_name: string;
   contact_email: string;
   contact_phone?: string;
-  
+
   // Features (JSONB)
   features?: PropertyListingFeatures;
-  
+
   // Admin Review
   rejection_reason?: string;
   admin_notes?: string;
   reviewed_by?: string;
   reviewed_at?: string;
-  
+
   // Timestamps
   created_at: string;
   updated_at: string;
-  
+
   // Populated from joins
   user?: {
     id: string;
@@ -113,13 +113,13 @@ export interface PropertyListingFormData {
   // Basic Information
   title: string;
   description: string;
-  
+
   // Location
   street_address: string;
   city: string;
   state: string;
   zipcode: string;
-  
+
   // Property Details
   property_type: string;
   bedrooms: number;
@@ -130,15 +130,15 @@ export interface PropertyListingFormData {
   year_built?: number;
   stories?: number;
   garage_spaces?: number;
-  
+
   // Financial
   list_price: number;
   hoa_fees?: number;
   property_tax?: number;
-  
+
   // Features
   features?: PropertyListingFeatures;
-  
+
   // Images (files to upload)
   imageFiles: File[];
 }

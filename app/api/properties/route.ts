@@ -64,8 +64,8 @@ export async function GET(req: NextRequest) {
       {
         headers: {
           "Cache-Control": "private, no-cache, no-store, must-revalidate",
-          "Pragma": "no-cache",
-          "Expires": "0",
+          Pragma: "no-cache",
+          Expires: "0",
         },
       },
     );

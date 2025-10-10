@@ -6,9 +6,11 @@ import {
 } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import sharp from "sharp";
+import { logger } from "./logger";
 
 const s3Client = new S3Client({
-  region: process.env.AWS_S3_BUCKET_REGION || process.env.AWS_REGION || "us-east-1",
+  region:
+    process.env.AWS_S3_BUCKET_REGION || process.env.AWS_REGION || "us-east-1",
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
@@ -17,9 +19,15 @@ const s3Client = new S3Client({
 
 const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!;
 const CLOUDFRONT_URL = process.env.AWS_CLOUDFRONT_URL;
-const AWS_REGION = process.env.AWS_S3_BUCKET_REGION || process.env.AWS_REGION || "us-east-1";
+const AWS_REGION =
+  process.env.AWS_S3_BUCKET_REGION || process.env.AWS_REGION || "us-east-1";
 const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB
-const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic"];
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+];
 
 // Generate S3 URL based on CloudFront or direct S3 bucket URL
 function getPublicUrl(key: string): string {
@@ -46,7 +54,10 @@ interface UploadResult {
 /**
  * Validate image file before upload
  */
-export async function validateImage(file: Buffer, mimeType: string): Promise<void> {
+export async function validateImage(
+  file: Buffer,
+  mimeType: string,
+): Promise<void> {
   // Check file size
   if (file.length > MAX_FILE_SIZE) {
     throw new Error(`File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit`);
@@ -54,7 +65,9 @@ export async function validateImage(file: Buffer, mimeType: string): Promise<voi
 
   // Check MIME type
   if (!ALLOWED_MIME_TYPES.includes(mimeType)) {
-    throw new Error(`Invalid file type. Allowed types: ${ALLOWED_MIME_TYPES.join(", ")}`);
+    throw new Error(
+      `Invalid file type. Allowed types: ${ALLOWED_MIME_TYPES.join(", ")}`,
+    );
   }
 
   // Validate that it's actually an image
@@ -92,9 +105,7 @@ export async function optimizeImage(
   }
 
   // Convert to WebP for better compression
-  return image
-    .webp({ quality })
-    .toBuffer();
+  return image.webp({ quality }).toBuffer();
 }
 
 /**
@@ -116,14 +127,18 @@ export async function createThumbnail(
 /**
  * Generate unique S3 key for image
  */
-function generateS3Key(userId: string, originalFilename: string, suffix = ""): string {
+function generateS3Key(
+  userId: string,
+  originalFilename: string,
+  suffix = "",
+): string {
   const timestamp = Date.now();
   const randomString = crypto.randomBytes(8).toString("hex");
   const extension = suffix ? `${suffix}.webp` : ".webp";
   const safeFilename = originalFilename
     .replace(/[^a-zA-Z0-9.-]/g, "_")
     .substring(0, 50);
-  
+
   return `property-listings/${userId}/${timestamp}-${randomString}-${safeFilename}${extension}`;
 }
 
@@ -230,7 +245,7 @@ export async function deletePropertyImage(s3Key: string): Promise<void> {
       }),
     );
   } catch (error) {
-    console.error("Error deleting image from S3:", error);
+    logger.error("Error deleting image from S3:", error);
     throw new Error("Failed to delete image");
   }
 }

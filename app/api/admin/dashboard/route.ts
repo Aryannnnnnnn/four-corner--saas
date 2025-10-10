@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 export async function GET() {
@@ -33,7 +33,7 @@ export async function GET() {
       console.error("Error fetching listings:", listingsError);
       return NextResponse.json(
         { error: "Failed to fetch listings" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -56,7 +56,7 @@ export async function GET() {
       console.error("Error fetching recent listings:", recentError);
       return NextResponse.json(
         { error: "Failed to fetch recent listings" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -68,7 +68,7 @@ export async function GET() {
     console.error("Dashboard API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

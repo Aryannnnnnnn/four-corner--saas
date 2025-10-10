@@ -70,22 +70,21 @@ export default function LoadingScreen({
 
   useEffect(() => {
     // Only run internal progress if external progress is not provided
-    if (externalProgress === undefined) {
-      const progressInterval = setInterval(() => {
-        setInternalProgress((prev) => {
-          const targetProgress =
-            ((currentStep + 1) / loadingSteps.length) * 100;
-          if (prev < targetProgress) {
-            return Math.min(prev + 1, 100);
-          }
-          return prev;
-        });
-      }, 50);
-
-      return () => clearInterval(progressInterval);
+    if (externalProgress !== undefined) {
+      return; // No cleanup needed when using external progress
     }
 
-    return () => {}; // Return empty cleanup function if external progress is used
+    const progressInterval = setInterval(() => {
+      setInternalProgress((prev) => {
+        const targetProgress = ((currentStep + 1) / loadingSteps.length) * 100;
+        if (prev < targetProgress) {
+          return Math.min(prev + 1, 100);
+        }
+        return prev;
+      });
+    }, 50);
+
+    return () => clearInterval(progressInterval);
   }, [currentStep, externalProgress]);
 
   return (

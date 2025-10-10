@@ -72,9 +72,9 @@ export default function LibraryPage() {
       // Add cache-busting parameter with user ID to prevent cross-user data leakage
       const url = `/api/properties?_t=${Date.now()}&_u=${session.user.id}`;
       const response = await fetch(url, {
-        cache: 'no-store',
+        cache: "no-store",
         headers: {
-          'Cache-Control': 'no-cache',
+          "Cache-Control": "no-cache",
         },
       });
       const data = await response.json();
@@ -397,9 +397,11 @@ export default function LibraryPage() {
               {(() => {
                 const totalValue = properties.reduce((sum, p) => {
                   // Only use listPrice like the dashboard
-                  return sum + (p.analysis_data.propertyOverview?.listPrice || 0);
+                  return (
+                    sum + (p.analysis_data.propertyOverview?.listPrice || 0)
+                  );
                 }, 0);
-                
+
                 if (totalValue >= 1000000) {
                   return `$${(totalValue / 1000000).toFixed(1)}M`;
                 } else if (totalValue >= 1000) {

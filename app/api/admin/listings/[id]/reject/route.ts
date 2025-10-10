@@ -5,12 +5,12 @@ import { sendListingRejectionEmail } from "@/app/lib/utils/listing-emails";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await auth();
@@ -35,7 +35,7 @@ export async function POST(
     if (!reason) {
       return NextResponse.json(
         { error: "Rejection reason is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -48,10 +48,7 @@ export async function POST(
 
     if (fetchError || !listing) {
       console.error("Error fetching listing:", fetchError);
-      return NextResponse.json(
-        { error: "Listing not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Listing not found" }, { status: 404 });
     }
 
     // Update the listing status to rejected
@@ -69,7 +66,7 @@ export async function POST(
       console.error("Error rejecting listing:", updateError);
       return NextResponse.json(
         { error: "Failed to reject listing" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -94,7 +91,7 @@ export async function POST(
     console.error("Reject listing error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -30,9 +30,7 @@ export default function Header() {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   // Navigation items in specific order
-  const homeNavigation = [
-    { name: "Home", href: "/", icon: Home },
-  ];
+  const homeNavigation = [{ name: "Home", href: "/", icon: Home }];
 
   const ourListingsNavigation = [
     { name: "Our Listings", href: "/listings", icon: FolderOpen },
@@ -72,8 +70,16 @@ export default function Header() {
   // Company dropdown items (non-clickable parent)
   const companyItems = [
     { name: "About", href: "https://fourcornervt.com/about", icon: BookOpen },
-    { name: "Stories", href: "https://fourcornervt.com/case-studies", icon: BookMarked },
-    { name: "Projects", href: "https://fourcornervt.com/projects", icon: FolderOpen },
+    {
+      name: "Stories",
+      href: "https://fourcornervt.com/case-studies",
+      icon: BookMarked,
+    },
+    {
+      name: "Projects",
+      href: "https://fourcornervt.com/projects",
+      icon: FolderOpen,
+    },
   ];
 
   // Close dropdowns when clicking outside or on route change
@@ -84,8 +90,8 @@ export default function Header() {
       setProfileDropdownOpen(false);
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -141,7 +147,7 @@ export default function Header() {
             ))}
 
             {/* 3. Dashboard with Dropdown */}
-            <div 
+            <div
               className="relative group"
               onMouseEnter={() => setDashboardDropdownOpen(true)}
               onMouseLeave={() => setDashboardDropdownOpen(false)}
@@ -157,12 +163,16 @@ export default function Header() {
                 <span>Dashboard</span>
                 <ChevronDown className="w-3 h-3 opacity-60" />
               </Link>
-              
+
               {/* Dashboard Dropdown */}
-              <div className={cn(
-                "absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50",
-                dashboardDropdownOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2"
-              )}>
+              <div
+                className={cn(
+                  "absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50",
+                  dashboardDropdownOpen
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2",
+                )}
+              >
                 {dashboardItems.map((item) => (
                   <Link
                     key={item.name}
@@ -179,7 +189,7 @@ export default function Header() {
             </div>
 
             {/* Company with Dropdown (non-clickable) */}
-            <div 
+            <div
               className="relative group"
               onMouseEnter={() => setCompanyDropdownOpen(true)}
               onMouseLeave={() => setCompanyDropdownOpen(false)}
@@ -189,12 +199,16 @@ export default function Header() {
                 <span>Company</span>
                 <ChevronDown className="w-3 h-3 opacity-60" />
               </div>
-              
+
               {/* Company Dropdown */}
-              <div className={cn(
-                "absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50",
-                companyDropdownOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2"
-              )}>
+              <div
+                className={cn(
+                  "absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50",
+                  companyDropdownOpen
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2",
+                )}
+              >
                 {companyItems.map((item) => (
                   <Link
                     key={item.name}
@@ -275,20 +289,26 @@ export default function Header() {
             {session ? (
               <div className="flex items-center space-x-3 xl:space-x-4">
                 {/* Profile Dropdown */}
-                <div 
+                <div
                   className="relative group"
                   onMouseEnter={() => setProfileDropdownOpen(true)}
                   onMouseLeave={() => setProfileDropdownOpen(false)}
                 >
                   <button className="flex items-center justify-center w-8 h-8 xl:w-9 xl:h-9 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-white font-semibold text-sm hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg">
-                    {session.user?.name?.[0]?.toUpperCase() || session.user?.email?.[0]?.toUpperCase() || 'U'}
+                    {session.user?.name?.[0]?.toUpperCase() ||
+                      session.user?.email?.[0]?.toUpperCase() ||
+                      "U"}
                   </button>
-                  
+
                   {/* Profile Dropdown Menu */}
-                  <div className={cn(
-                    "absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50 rounded-lg",
-                    profileDropdownOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2"
-                  )}>
+                  <div
+                    className={cn(
+                      "absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50 rounded-lg",
+                      profileDropdownOpen
+                        ? "opacity-100 visible translate-y-0"
+                        : "opacity-0 invisible -translate-y-2",
+                    )}
+                  >
                     <Link
                       href="/profile"
                       className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100"

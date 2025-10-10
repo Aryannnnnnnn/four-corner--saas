@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 export async function GET(request: NextRequest) {
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
           display_order,
           is_primary
         )
-      `
+      `,
       )
       .order("created_at", { ascending: false });
 
@@ -72,11 +72,9 @@ export async function GET(request: NextRequest) {
       console.error("Error fetching listings:", error);
       return NextResponse.json(
         { error: "Failed to fetch listings" },
-        { status: 500 }
+        { status: 500 },
       );
     }
-
-
 
     // Format the data
     const formattedListings = listings?.map((listing: any) => ({
@@ -89,7 +87,7 @@ export async function GET(request: NextRequest) {
     console.error("Admin listings API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

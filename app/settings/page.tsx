@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Download,
-  Eye,
-  EyeOff,
-  Key,
-  Save,
-  Trash2,
-  User,
-} from "lucide-react";
+import { Download, Eye, EyeOff, Key, Save, Trash2, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
@@ -19,11 +11,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 
-type SettingsTab =
-  | "account"
-  | "api"
-  | "appearance"
-  | "data";
+type SettingsTab = "account" | "api" | "appearance" | "data";
 
 export default function Settings() {
   const { data: session, status, update } = useSession();
@@ -40,8 +28,6 @@ export default function Settings() {
     newPassword: "",
     confirmPassword: "",
   });
-
-
 
   // API Settings
   const [apiKey, setApiKey] = useState("");
@@ -158,8 +144,6 @@ export default function Settings() {
       setIsLoading(false);
     }
   };
-
-
 
   const handleGenerateApiKey = async () => {
     if (!confirm("This will invalidate your existing API key. Continue?"))
@@ -440,8 +424,6 @@ export default function Settings() {
                 )}
               </>
             )}
-
-
 
             {/* API Keys */}
             {activeTab === "api" && (

@@ -193,7 +193,8 @@ const Footer: React.FC = () => {
             alt="Four Corner Properties"
             width={400}
             height={100}
-            className="mx-auto"/>
+            className="mx-auto"
+          />
         </div>
       </div>
     </footer>

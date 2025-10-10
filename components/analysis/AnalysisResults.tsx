@@ -83,7 +83,9 @@ export default function AnalysisResults({
           if (propertyId) {
             // Use comprehensive property analysis PDF export
             window.open(`/api/properties/${propertyId}/export-pdf`, "_blank");
-            toast.success("🔥 Comprehensive PDF report opened! Use Ctrl+P or Cmd+P to save as PDF");
+            toast.success(
+              "🔥 Comprehensive PDF report opened! Use Ctrl+P or Cmd+P to save as PDF",
+            );
           } else {
             // Fallback to basic PDF export
             await exportToPDF(data);
@@ -199,9 +201,12 @@ export default function AnalysisResults({
                 >
                   {propertyId ? (
                     <>
-                      <span className="text-luxury-blue">📊 Comprehensive PDF Report</span>
+                      <span className="text-luxury-blue">
+                        📊 Comprehensive PDF Report
+                      </span>
                       <div className="text-xs text-white/60 mt-1">
-                        Detailed analysis with AI insights, metrics & comparables
+                        Detailed analysis with AI insights, metrics &
+                        comparables
                       </div>
                     </>
                   ) : (

@@ -171,7 +171,9 @@ export default function ConfirmDialog({
                       autoFocus
                     />
                     {requireInput && !inputValue.trim() && (
-                      <p className="mt-1 text-xs text-red-600">This field is required</p>
+                      <p className="mt-1 text-xs text-red-600">
+                        This field is required
+                      </p>
                     )}
                   </div>
                 )}

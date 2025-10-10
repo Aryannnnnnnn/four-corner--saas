@@ -1,8 +1,36 @@
 // app/api/analyze-property/route.ts
 import { type NextRequest, NextResponse } from "next/server";
+import { logger } from "@/app/lib/utils/logger";
+import { analyzePropertyRatelimit } from "@/app/lib/ratelimit";
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "127.0.0.1";
+    const { success, limit, reset, remaining } = await analyzePropertyRatelimit.limit(ip);
+
+    if (!success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Too many analysis requests. Please try again later.",
+          rateLimit: {
+            limit,
+            remaining,
+            reset: new Date(reset).toISOString(),
+          },
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": limit.toString(),
+            "X-RateLimit-Remaining": remaining.toString(),
+            "X-RateLimit-Reset": reset.toString(),
+          },
+        },
+      );
+    }
+
     const body = await request.json();
     const { address, zpid } = body;
 
@@ -30,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("n8n Error Response:", errorText.substring(0, 500));
+      logger.error("n8n Error Response:", errorText.substring(0, 500));
 
       return NextResponse.json(
         {
@@ -46,7 +74,7 @@ export async function POST(request: NextRequest) {
     const contentType = response.headers.get("content-type");
     if (!contentType?.includes("application/json")) {
       const text = await response.text();
-      console.error("Non-JSON response:", text.substring(0, 500));
+      logger.error("Non-JSON response:", text.substring(0, 500));
 
       return NextResponse.json(
         {
@@ -63,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     // Validate response structure
     if (!data.success || !data.propertyOverview) {
-      console.error(
+      logger.error(
         "Invalid response structure:",
         JSON.stringify(data).substring(0, 200),
       );
@@ -79,10 +107,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error("========================================");
-    console.error("API ROUTE ERROR");
-    console.error("========================================");
-    console.error("Error:", error);
+    logger.error("========================================");
+    logger.error("API ROUTE ERROR");
+    logger.error("========================================");
+    logger.error("Error:", error);
 
     return NextResponse.json(
       {

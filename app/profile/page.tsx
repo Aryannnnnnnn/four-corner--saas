@@ -17,10 +17,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import type { SavedAnalysis } from "@/app/lib/types/index";
-import {
-  formatPrice,
-  formatRelativeTime,
-} from "@/app/lib/utils/format";
+import { formatPrice, formatRelativeTime } from "@/app/lib/utils/format";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import Button from "@/components/ui/Button";
@@ -187,8 +184,7 @@ export default function ProfilePage() {
               </div>
 
               {/* Member Since */}
-              <div className="flex items-center gap-6 mt-4 pt-4 border-t border-white/10">
-              </div>
+              <div className="flex items-center gap-6 mt-4 pt-4 border-t border-white/10"></div>
             </div>
           </div>
         </Card>

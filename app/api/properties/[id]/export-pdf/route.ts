@@ -17,7 +17,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await auth();
@@ -38,7 +38,7 @@ export async function GET(
     if (error || !property) {
       return NextResponse.json(
         { error: "Property not found or access denied" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -50,15 +50,15 @@ export async function GET(
       headers: {
         "Content-Type": "text/html",
         "Cache-Control": "private, no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0",
+        Pragma: "no-cache",
+        Expires: "0",
       },
     });
   } catch (error) {
     console.error("Property PDF export error:", error);
     return NextResponse.json(
       { error: "Failed to export property analysis" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -70,18 +70,21 @@ function generatePropertyAnalysisPDF(property: any) {
   const comparables = analysisData.comparables || [];
   const financials = analysisData.financials || {};
   const marketInsights = analysisData.marketInsights || {};
-  
+
   const exportDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 
-  const analysisDate = new Date(property.created_at).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const analysisDate = new Date(property.created_at).toLocaleDateString(
+    "en-US",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    },
+  );
 
   return `
 <!DOCTYPE html>
@@ -497,7 +500,9 @@ function generatePropertyAnalysisPDF(property: any) {
       <div class="property-title">${property.address}</div>
       <div class="analysis-date">Analysis Date: ${analysisDate}</div>
       
-      ${aiAnalysis.buyingGrade ? `
+      ${
+        aiAnalysis.buyingGrade
+          ? `
       <div class="grade-section">
         <div class="grade-badge">${aiAnalysis.buyingGrade}</div>
         <div class="grade-info">
@@ -507,7 +512,9 @@ function generatePropertyAnalysisPDF(property: any) {
           </div>
         </div>
       </div>
-      ` : ''}
+      `
+          : ""
+      }
     </div>
 
     <!-- Key Metrics -->
@@ -517,53 +524,77 @@ function generatePropertyAnalysisPDF(property: any) {
         Key Property Metrics
       </h2>
       <div class="metrics-grid">
-        ${overview.listPrice ? `
+        ${
+          overview.listPrice
+            ? `
         <div class="metric-card primary">
           <div class="metric-label">List Price</div>
           <div class="metric-value">$${overview.listPrice.toLocaleString()}</div>
           <div class="metric-subtitle">Current Market Price</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${overview.zestimate ? `
+        ${
+          overview.zestimate
+            ? `
         <div class="metric-card">
           <div class="metric-label">Zestimate</div>
           <div class="metric-value">$${overview.zestimate.toLocaleString()}</div>
           <div class="metric-subtitle">Zillow Estimate</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${overview.pricePerSqft ? `
+        ${
+          overview.pricePerSqft
+            ? `
         <div class="metric-card">
           <div class="metric-label">Price per Sq Ft</div>
           <div class="metric-value">$${overview.pricePerSqft}</div>
           <div class="metric-subtitle">Market Rate</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${financials.monthlyROI ? `
-        <div class="metric-card ${financials.monthlyROI > 0 ? 'success' : 'warning'}">
+        ${
+          financials.monthlyROI
+            ? `
+        <div class="metric-card ${financials.monthlyROI > 0 ? "success" : "warning"}">
           <div class="metric-label">Monthly ROI</div>
           <div class="metric-value">${financials.monthlyROI}%</div>
           <div class="metric-subtitle">Investment Return</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${financials.capRate ? `
+        ${
+          financials.capRate
+            ? `
         <div class="metric-card">
           <div class="metric-label">Cap Rate</div>
           <div class="metric-value">${financials.capRate}%</div>
           <div class="metric-subtitle">Capitalization Rate</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${financials.cashFlow ? `
-        <div class="metric-card ${financials.cashFlow > 0 ? 'success' : 'warning'}">
+        ${
+          financials.cashFlow
+            ? `
+        <div class="metric-card ${financials.cashFlow > 0 ? "success" : "warning"}">
           <div class="metric-label">Cash Flow</div>
           <div class="metric-value">$${financials.cashFlow.toLocaleString()}</div>
           <div class="metric-subtitle">Monthly Net Income</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
       </div>
     </div>
 
@@ -574,66 +605,100 @@ function generatePropertyAnalysisPDF(property: any) {
         Property Details
       </h2>
       <div class="detail-grid">
-        ${overview.bedrooms ? `
+        ${
+          overview.bedrooms
+            ? `
         <div class="detail-item">
           <div class="detail-label">Bedrooms</div>
           <div class="detail-value">${overview.bedrooms}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${overview.bathrooms ? `
+        ${
+          overview.bathrooms
+            ? `
         <div class="detail-item">
           <div class="detail-label">Bathrooms</div>
           <div class="detail-value">${overview.bathrooms}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${overview.squareFeet ? `
+        ${
+          overview.squareFeet
+            ? `
         <div class="detail-item">
           <div class="detail-label">Square Feet</div>
           <div class="detail-value">${overview.squareFeet.toLocaleString()}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${overview.lotSize ? `
+        ${
+          overview.lotSize
+            ? `
         <div class="detail-item">
           <div class="detail-label">Lot Size</div>
-          <div class="detail-value">${overview.lotSize.toLocaleString()} ${overview.lotSizeUnit || 'sq ft'}</div>
+          <div class="detail-value">${overview.lotSize.toLocaleString()} ${overview.lotSizeUnit || "sq ft"}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${overview.yearBuilt ? `
+        ${
+          overview.yearBuilt
+            ? `
         <div class="detail-item">
           <div class="detail-label">Year Built</div>
           <div class="detail-value">${overview.yearBuilt}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${overview.propertyType ? `
+        ${
+          overview.propertyType
+            ? `
         <div class="detail-item">
           <div class="detail-label">Property Type</div>
           <div class="detail-value">${overview.propertyType}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${overview.homeStatus ? `
+        ${
+          overview.homeStatus
+            ? `
         <div class="detail-item">
           <div class="detail-label">Status</div>
           <div class="detail-value">${overview.homeStatus}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${overview.daysOnZillow ? `
+        ${
+          overview.daysOnZillow
+            ? `
         <div class="detail-item">
           <div class="detail-label">Days on Market</div>
           <div class="detail-value">${overview.daysOnZillow} days</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
       </div>
     </div>
 
     <!-- AI Analysis -->
-    ${aiAnalysis && (aiAnalysis.pros || aiAnalysis.cons || aiAnalysis.summary) ? `
+    ${
+      aiAnalysis && (aiAnalysis.pros || aiAnalysis.cons || aiAnalysis.summary)
+        ? `
     <div class="section">
       <h2 class="section-title">
         <span class="section-icon">🤖</span>
@@ -645,112 +710,161 @@ function generatePropertyAnalysisPDF(property: any) {
           AI-Powered Insights
         </div>
         <div class="ai-insights">
-          ${aiAnalysis.summary ? `
+          ${
+            aiAnalysis.summary
+              ? `
           <div class="insight-item">
             <div class="insight-category">Summary</div>
             <div class="insight-text">${aiAnalysis.summary}</div>
           </div>
-          ` : ''}
+          `
+              : ""
+          }
           
-          ${aiAnalysis.pros && aiAnalysis.pros.length > 0 ? `
+          ${
+            aiAnalysis.pros && aiAnalysis.pros.length > 0
+              ? `
           <div class="insight-item">
             <div class="insight-category">Investment Pros</div>
             <div class="insight-text">
               <ul style="margin-left: 20px;">
-                ${aiAnalysis.pros.map((pro: string) => `<li>${pro}</li>`).join('')}
+                ${aiAnalysis.pros.map((pro: string) => `<li>${pro}</li>`).join("")}
               </ul>
             </div>
           </div>
-          ` : ''}
+          `
+              : ""
+          }
           
-          ${aiAnalysis.cons && aiAnalysis.cons.length > 0 ? `
+          ${
+            aiAnalysis.cons && aiAnalysis.cons.length > 0
+              ? `
           <div class="insight-item">
             <div class="insight-category">Investment Considerations</div>
             <div class="insight-text">
               <ul style="margin-left: 20px;">
-                ${aiAnalysis.cons.map((con: string) => `<li>${con}</li>`).join('')}
+                ${aiAnalysis.cons.map((con: string) => `<li>${con}</li>`).join("")}
               </ul>
             </div>
           </div>
-          ` : ''}
+          `
+              : ""
+          }
           
-          ${aiAnalysis.recommendation ? `
+          ${
+            aiAnalysis.recommendation
+              ? `
           <div class="insight-item">
             <div class="insight-category">Recommendation</div>
             <div class="insight-text">${aiAnalysis.recommendation}</div>
           </div>
-          ` : ''}
+          `
+              : ""
+          }
         </div>
       </div>
     </div>
-    ` : ''}
+    `
+        : ""
+    }
 
     <!-- Financial Analysis -->
-    ${Object.keys(financials).length > 0 ? `
+    ${
+      Object.keys(financials).length > 0
+        ? `
     <div class="section">
       <h2 class="section-title">
         <span class="section-icon">💰</span>
         Financial Analysis
       </h2>
       <div class="financial-grid">
-        ${financials.monthlyRent ? `
+        ${
+          financials.monthlyRent
+            ? `
         <div class="financial-card positive">
           <div class="metric-label">Monthly Rent</div>
           <div class="metric-value">$${financials.monthlyRent.toLocaleString()}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${financials.monthlyExpenses ? `
+        ${
+          financials.monthlyExpenses
+            ? `
         <div class="financial-card negative">
           <div class="metric-label">Monthly Expenses</div>
           <div class="metric-value">$${financials.monthlyExpenses.toLocaleString()}</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${financials.annualROI ? `
-        <div class="financial-card ${financials.annualROI > 0 ? 'positive' : 'negative'}">
+        ${
+          financials.annualROI
+            ? `
+        <div class="financial-card ${financials.annualROI > 0 ? "positive" : "negative"}">
           <div class="metric-label">Annual ROI</div>
           <div class="metric-value">${financials.annualROI}%</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
-        ${financials.totalROI ? `
-        <div class="financial-card ${financials.totalROI > 0 ? 'positive' : 'negative'}">
+        ${
+          financials.totalROI
+            ? `
+        <div class="financial-card ${financials.totalROI > 0 ? "positive" : "negative"}">
           <div class="metric-label">Total ROI</div>
           <div class="metric-value">${financials.totalROI}%</div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
       </div>
     </div>
-    ` : ''}
+    `
+        : ""
+    }
 
     <!-- Comparable Properties -->
-    ${comparables && comparables.length > 0 ? `
+    ${
+      comparables && comparables.length > 0
+        ? `
     <div class="section">
       <h2 class="section-title">
         <span class="section-icon">📈</span>
         Comparable Properties
       </h2>
-      ${comparables.slice(0, 5).map((comp: any) => `
+      ${comparables
+        .slice(0, 5)
+        .map(
+          (comp: any) => `
         <div class="comparable-item">
           <div>
-            <div class="comparable-address">${comp.address || 'Nearby Property'}</div>
+            <div class="comparable-address">${comp.address || "Nearby Property"}</div>
             <div class="comparable-details">
-              ${comp.bedrooms ? `${comp.bedrooms} bed` : ''} 
-              ${comp.bathrooms ? `• ${comp.bathrooms} bath` : ''} 
-              ${comp.squareFeet ? `• ${comp.squareFeet.toLocaleString()} sq ft` : ''}
+              ${comp.bedrooms ? `${comp.bedrooms} bed` : ""} 
+              ${comp.bathrooms ? `• ${comp.bathrooms} bath` : ""} 
+              ${comp.squareFeet ? `• ${comp.squareFeet.toLocaleString()} sq ft` : ""}
             </div>
           </div>
           <div class="comparable-price">
             $${(comp.price || comp.listPrice || 0).toLocaleString()}
           </div>
         </div>
-      `).join('')}
+      `,
+        )
+        .join("")}
     </div>
-    ` : ''}
+    `
+        : ""
+    }
 
     <!-- Market Insights -->
-    ${marketInsights && Object.keys(marketInsights).length > 0 ? `
+    ${
+      marketInsights && Object.keys(marketInsights).length > 0
+        ? `
     <div class="section">
       <h2 class="section-title">
         <span class="section-icon">🏙️</span>
@@ -758,30 +872,44 @@ function generatePropertyAnalysisPDF(property: any) {
       </h2>
       <div class="ai-analysis">
         <div class="ai-insights">
-          ${marketInsights.marketTrend ? `
+          ${
+            marketInsights.marketTrend
+              ? `
           <div class="insight-item">
             <div class="insight-category">Market Trend</div>
             <div class="insight-text">${marketInsights.marketTrend}</div>
           </div>
-          ` : ''}
+          `
+              : ""
+          }
           
-          ${marketInsights.priceHistory ? `
+          ${
+            marketInsights.priceHistory
+              ? `
           <div class="insight-item">
             <div class="insight-category">Price History</div>
             <div class="insight-text">${marketInsights.priceHistory}</div>
           </div>
-          ` : ''}
+          `
+              : ""
+          }
           
-          ${marketInsights.neighborhood ? `
+          ${
+            marketInsights.neighborhood
+              ? `
           <div class="insight-item">
             <div class="insight-category">Neighborhood Analysis</div>
             <div class="insight-text">${marketInsights.neighborhood}</div>
           </div>
-          ` : ''}
+          `
+              : ""
+          }
         </div>
       </div>
     </div>
-    ` : ''}
+    `
+        : ""
+    }
 
     <!-- Footer -->
     <div class="footer">
@@ -813,18 +941,18 @@ function generatePropertyAnalysisPDF(property: any) {
 
 function getGradeDescription(grade: string): string {
   const gradeDescriptions: Record<string, string> = {
-    'A+': 'Exceptional investment opportunity with outstanding potential',
-    'A': 'Excellent investment with strong fundamentals and high returns',
-    'A-': 'Very good investment opportunity with solid performance metrics',
-    'B+': 'Good investment with above-average potential',
-    'B': 'Fair investment opportunity with moderate returns',
-    'B-': 'Below-average investment with some concerns',
-    'C+': 'Poor investment with limited upside potential',
-    'C': 'High-risk investment with significant concerns',
-    'C-': 'Very poor investment opportunity',
-    'D': 'Not recommended for investment',
-    'F': 'Avoid - significant investment risks'
+    "A+": "Exceptional investment opportunity with outstanding potential",
+    A: "Excellent investment with strong fundamentals and high returns",
+    "A-": "Very good investment opportunity with solid performance metrics",
+    "B+": "Good investment with above-average potential",
+    B: "Fair investment opportunity with moderate returns",
+    "B-": "Below-average investment with some concerns",
+    "C+": "Poor investment with limited upside potential",
+    C: "High-risk investment with significant concerns",
+    "C-": "Very poor investment opportunity",
+    D: "Not recommended for investment",
+    F: "Avoid - significant investment risks",
   };
-  
-  return gradeDescriptions[grade] || 'Investment analysis available';
+
+  return gradeDescriptions[grade] || "Investment analysis available";
 }

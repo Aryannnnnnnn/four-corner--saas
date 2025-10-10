@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import type { PropertyData } from "@/app/lib/types/index";
 import AnalysisResults from "@/components/analysis/AnalysisResults";
@@ -10,6 +10,7 @@ import LoadingScreen from "@/components/analysis/LoadingScreen";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { propertyApi } from "@/lib/utils/api";
+import { logger } from "@/app/lib/utils/logger";
 
 export default function AnalysisPage() {
   const { status } = useSession();
@@ -19,6 +20,7 @@ export default function AnalysisPage() {
   const [error, setError] = useState<string | null>(null);
   const [address, setAddress] = useState<string>("");
   const [progress, setProgress] = useState(0);
+  const hasStartedRef = useRef(false);
 
   const startAnalysis = useCallback(async (propertyAddress: string) => {
     let progressInterval: NodeJS.Timeout | null = null;
@@ -57,7 +59,7 @@ export default function AnalysisPage() {
       sessionStorage.removeItem("propertyAddress");
       toast.success("✅ Analysis complete and saved to your library!");
     } catch (err: unknown) {
-      console.error("Analysis error:", err);
+      logger.error("Analysis error:", err);
       const errorMessage =
         err instanceof Error ? err.message : "Failed to analyze property";
       setError(errorMessage);
@@ -79,7 +81,7 @@ export default function AnalysisPage() {
       return;
     }
 
-    if (status === "authenticated") {
+    if (status === "authenticated" && !hasStartedRef.current) {
       // Get address from session storage
       const storedAddress = sessionStorage.getItem("propertyAddress");
       if (!storedAddress) {
@@ -88,6 +90,7 @@ export default function AnalysisPage() {
         return;
       }
 
+      hasStartedRef.current = true;
       setAddress(storedAddress);
       startAnalysis(storedAddress);
     }
