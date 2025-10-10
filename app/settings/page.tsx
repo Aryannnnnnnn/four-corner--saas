@@ -10,6 +10,7 @@ import Header from "@/components/layout/Header";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 type SettingsTab = "account" | "api" | "appearance" | "data";
 
@@ -226,14 +227,7 @@ export default function Settings() {
   ];
 
   if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 border-4 border-luxury-blue border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-white/70">Loading settings...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading settings..." />;
   }
 
   return (

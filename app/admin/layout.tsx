@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function AdminLayout({
   children,
@@ -49,11 +50,7 @@ export default function AdminLayout({
   }, [status, router]);
 
   if (loading || status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading admin panel..." />;
   }
 
   if (!isAdmin) {

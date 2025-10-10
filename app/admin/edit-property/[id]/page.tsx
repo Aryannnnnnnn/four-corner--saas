@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import type { PropertyListing, PropertyImage } from "@/app/lib/types/listings";
 import toast, { Toaster } from "react-hot-toast";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const US_STATES = [
   { value: "AL", label: "Alabama" },
@@ -450,11 +451,7 @@ export default function EditPropertyPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading property..." />;
   }
 
   if (!property) {

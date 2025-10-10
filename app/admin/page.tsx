@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 interface DashboardStats {
   total: number;
@@ -49,11 +50,7 @@ export default function AdminDashboard() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg text-gray-600">Loading dashboard...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading dashboard..." />;
   }
 
   const statCards = [

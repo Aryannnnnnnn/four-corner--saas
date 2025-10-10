@@ -7,6 +7,7 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import { PropertyListing } from "@/app/lib/types/listings";
 import Header from "@/components/layout/Header";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function MyListingsPage() {
   const router = useRouter();
@@ -45,11 +46,7 @@ export default function MyListingsPage() {
   };
 
   if (status === "loading" || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading your listings..." />;
   }
 
   if (error) {

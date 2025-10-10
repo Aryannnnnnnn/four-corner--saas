@@ -7,6 +7,7 @@ import {
   DollarSign,
   Edit,
   Home,
+  LogOut,
   Mail,
   MapPin,
   Star,
@@ -14,7 +15,7 @@ import {
   User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import type { SavedAnalysis } from "@/app/lib/types/index";
 import { formatPrice, formatRelativeTime } from "@/app/lib/utils/format";
@@ -22,6 +23,7 @@ import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
@@ -120,14 +122,7 @@ export default function ProfilePage() {
   }));
 
   if (status === "loading" || isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 border-4 border-luxury-blue border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-white/70">Loading profile...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading profile..." />;
   }
 
   return (
@@ -173,14 +168,24 @@ export default function ProfilePage() {
                     )}
                   </div>
                 </div>
-                <Button
-                  variant="secondary"
-                  onClick={() => router.push("/settings")}
-                  className="bg-luxury-blue/10 border-luxury-blue/30 text-luxury-blue hover:bg-luxury-blue/20 shrink-0"
-                >
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit Profile
-                </Button>
+                <div className="flex flex-col gap-2 shrink-0">
+                  <Button
+                    variant="secondary"
+                    onClick={() => router.push("/settings")}
+                    className="bg-luxury-blue/10 border-luxury-blue/30 text-luxury-blue hover:bg-luxury-blue/20"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit Profile
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="bg-red-500/10 border-red-500/30 text-red-500 hover:bg-red-500/20"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </div>
               </div>
 
               {/* Member Since */}

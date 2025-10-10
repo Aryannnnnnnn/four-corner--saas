@@ -258,7 +258,7 @@ export default function DashboardPage() {
               <Clock className="w-8 h-8 text-luxury-blue" />
               Recent Analyses
             </h2>
-            <Button variant="ghost" onClick={() => router.push("/library")}>
+            <Button className="text-white hover:text-black" variant="ghost" onClick={() => router.push("/library")}>
               View All <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>

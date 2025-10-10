@@ -5,6 +5,7 @@ import type { PropertyListing } from "@/app/lib/types/listings";
 import Link from "next/link";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const statusOptions = [
   { value: "all", label: "All Listings", color: "gray" },
@@ -341,11 +342,7 @@ export default function AllListingsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading all listings..." />;
   }
 
   return (

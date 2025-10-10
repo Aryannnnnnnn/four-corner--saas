@@ -177,7 +177,7 @@ export default function AnalysisResults({
     <div className="max-w-7xl mx-auto px-6 pt-32 pb-20">
       {/* Header Actions */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-        <Button variant="ghost" onClick={onNewAnalysis}>
+        <Button className="text-white hover:text-black" variant="ghost" onClick={onNewAnalysis}>
           <ArrowLeft className="w-5 h-5 mr-2" />
           New Analysis
         </Button>

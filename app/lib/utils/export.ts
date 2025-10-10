@@ -16,8 +16,8 @@ const formatExactPrice = (price: number) => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(price);
 };
 
@@ -47,140 +47,142 @@ export async function exportToPDF(data: PropertyData) {
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 15;
+    const margin = 20;
     const contentWidth = pageWidth - 2 * margin;
-    let yPosition = 20;
+    let yPosition = 25;
 
     const checkPageBreak = (requiredSpace: number) => {
-      if (yPosition + requiredSpace > pageHeight - 25) {
+      if (yPosition + requiredSpace > pageHeight - 30) {
         pdf.addPage();
-        yPosition = 20;
+        yPosition = 25;
       }
     };
 
     // ========================================
-    // HEADER - Premium Design
+    // MODERN HEADER
     // ========================================
-    pdf.setFillColor(30, 58, 138); // Deep blue gradient start
-    pdf.rect(0, 0, pageWidth, 50, "F");
+    // Main header background
+    pdf.setFillColor(30, 58, 138); // Deep blue
+    pdf.rect(0, 0, pageWidth, 45, "F");
 
-    // Accent gradient bar
-    pdf.setFillColor(59, 130, 246); // Lighter blue
-    pdf.rect(0, 45, pageWidth, 5, "F");
+    // Accent bar
+    pdf.setFillColor(59, 130, 246); // Bright blue
+    pdf.rect(0, 45, pageWidth, 3, "F");
 
-    // Add logo
-    try {
-      const logoImg = await fetch("/logo.png")
-        .then((res) => res.blob())
-        .then((blob) => {
-          return new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(blob);
-          });
-        });
-      pdf.addImage(logoImg, "PNG", margin, 10, 20, 20);
-    } catch (_err) {
-      // Fallback logo
-      pdf.setFillColor(255, 255, 255);
-      pdf.roundedRect(margin, 10, 20, 20, 3, 3, "F");
-      pdf.setFontSize(16);
-      pdf.setTextColor(30, 58, 138);
-      pdf.setFont("helvetica", "bold");
-      pdf.text("4C", margin + 10, 22, { align: "center" });
-    }
-
-    // Company name and tagline
-    pdf.setFontSize(26);
+    // Company branding
+    pdf.setFontSize(24);
     pdf.setTextColor(255, 255, 255);
     pdf.setFont("helvetica", "bold");
-    pdf.text("Four Corner Properties", margin + 25, 18);
+    pdf.text("Four Corner Properties", margin, 18);
 
-    pdf.setFontSize(11);
+    pdf.setFontSize(10);
     pdf.setFont("helvetica", "normal");
-    pdf.setTextColor(219, 234, 254); // Light blue
-    pdf.text("Premium Real Estate Investment Analysis", margin + 25, 28);
+    pdf.setTextColor(191, 219, 254);
+    pdf.text("Premium Real Estate Investment Analysis", margin, 28);
 
-    pdf.setFontSize(9);
-    pdf.setTextColor(191, 219, 254); // Even lighter blue
-    pdf.text(
-      `Generated: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`,
-      margin + 25,
-      36,
-    );
+    // Date stamp
+    pdf.setFontSize(8);
+    pdf.setTextColor(148, 163, 184);
+    const dateStr = new Date().toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
+    pdf.text(`Generated: ${dateStr}`, pageWidth - margin, 28, {
+      align: "right"
+    });
 
     yPosition = 60;
 
     // ========================================
-    // PROPERTY TITLE & ADDRESS
+    // PROPERTY HERO SECTION
     // ========================================
-    pdf.setFontSize(22);
-    pdf.setTextColor(30, 58, 138);
+    checkPageBreak(50);
+
+    // Property address
+    pdf.setFontSize(20);
+    pdf.setTextColor(30, 41, 59);
     pdf.setFont("helvetica", "bold");
     const addressLines = pdf.splitTextToSize(
       data.propertyOverview.streetAddress,
-      contentWidth,
+      contentWidth - 60,
     );
     pdf.text(addressLines, margin, yPosition);
     yPosition += addressLines.length * 8;
 
-    pdf.setFontSize(13);
+    // Location details
+    pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
-    pdf.setTextColor(107, 114, 128);
+    pdf.setTextColor(100, 116, 139);
     pdf.text(
       `${data.propertyOverview.city}, ${data.propertyOverview.state} ${data.propertyOverview.zipcode}`,
       margin,
       yPosition,
     );
-    yPosition += 12;
 
-    // ========================================
-    // INVESTMENT GRADE BOX - Eye-catching
-    // ========================================
-    checkPageBreak(50);
-    pdf.setFillColor(239, 246, 255); // Light blue background
-    pdf.roundedRect(margin, yPosition, contentWidth, 35, 4, 4, "F");
+    // Investment grade badge
+    const gradeBoxX = pageWidth - margin - 55;
+    const gradeBoxY = yPosition - addressLines.length * 8 - 2;
 
-    // Left side - Grade
-    pdf.setFillColor(59, 130, 246);
-    pdf.roundedRect(margin + 5, yPosition + 5, 50, 25, 3, 3, "F");
-    pdf.setFontSize(10);
-    pdf.setTextColor(255, 255, 255);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("INVESTMENT", margin + 30, yPosition + 12, { align: "center" });
-    pdf.text("GRADE", margin + 30, yPosition + 18, { align: "center" });
+    pdf.setDrawColor(226, 232, 240);
+    pdf.setLineWidth(0.5);
+    pdf.setFillColor(255, 255, 255);
+    pdf.roundedRect(gradeBoxX, gradeBoxY, 55, 35, 3, 3, "FD");
+
+    const gradeValue = data.aiAnalysis?.buyingGrade || "N/A";
+    const gradeColor = getGradeColor(gradeValue);
     pdf.setFontSize(32);
-    pdf.text(
-      data.aiAnalysis?.buyingGrade || "N/A",
-      margin + 30,
-      yPosition + 28,
-      {
-        align: "center",
-      },
-    );
+    pdf.setFont("helvetica", "bold");
+    pdf.setTextColor(gradeColor[0], gradeColor[1], gradeColor[2]);
+    pdf.text(gradeValue, gradeBoxX + 27.5, gradeBoxY + 20, { align: "center" });
 
-    // Right side - One Line Summary
+    pdf.setFontSize(8);
+    pdf.setFont("helvetica", "bold");
+    pdf.setTextColor(100, 116, 139);
+    pdf.text("GRADE", gradeBoxX + 27.5, gradeBoxY + 28, { align: "center" });
+
+    yPosition += 10;
+
+    // ========================================
+    // EXECUTIVE SUMMARY
+    // ========================================
     if (data.aiAnalysis?.oneLineSummary) {
-      pdf.setFontSize(11);
-      pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(30, 58, 138);
+      checkPageBreak(35);
+
       const summaryLines = pdf.splitTextToSize(
         safeString(data.aiAnalysis.oneLineSummary),
-        contentWidth - 70,
+        contentWidth - 12,
       );
-      pdf.text(summaryLines, margin + 60, yPosition + 15);
+      const summaryHeight = summaryLines.length * 5.5 + 14;
+
+      pdf.setFillColor(239, 246, 255);
+      pdf.setDrawColor(191, 219, 254);
+      pdf.setLineWidth(0.5);
+      pdf.roundedRect(margin, yPosition, contentWidth, summaryHeight, 3, 3, "FD");
+
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(30, 64, 175);
+      pdf.text("EXECUTIVE SUMMARY", margin + 6, yPosition + 7);
+
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(30, 58, 138);
+      pdf.text(summaryLines, margin + 6, yPosition + 13);
+
+      yPosition += summaryHeight + 8;
     }
-    yPosition += 45;
 
     // ========================================
-    // KEY METRICS GRID - Professional Layout
+    // KEY METRICS
     // ========================================
-    checkPageBreak(70);
-    pdf.setFontSize(16);
-    pdf.setTextColor(30, 58, 138);
+    checkPageBreak(75);
+
+    pdf.setFontSize(14);
+    pdf.setTextColor(30, 41, 59);
     pdf.setFont("helvetica", "bold");
     pdf.text("Key Metrics", margin, yPosition);
-    yPosition += 10;
+    yPosition += 8;
 
     const listPrice = data.propertyOverview?.listPrice || 0;
     const zestimate = data.propertyOverview?.zestimate || 0;
@@ -190,139 +192,146 @@ export async function exportToPDF(data: PropertyData) {
       {
         label: "List Price",
         value: listPrice ? formatExactPrice(listPrice) : "N/A",
-        color: [34, 197, 94], // Green
+        color: [34, 197, 94],
       },
       {
         label: "Zestimate",
         value: zestimate ? formatExactPrice(zestimate) : "N/A",
-        color: [59, 130, 246], // Blue
-      },
-      {
-        label: "Price/Sqft",
-        value: pricePerSqft ? `$${pricePerSqft.toFixed(2)}` : "N/A",
-        color: [168, 85, 247], // Purple
+        color: [59, 130, 246],
       },
       {
         label: "Square Feet",
         value: data.propertyOverview?.squareFeet
           ? formatNumber(data.propertyOverview.squareFeet)
           : "N/A",
-        color: [249, 115, 22], // Orange
+        color: [168, 85, 247],
+      },
+      {
+        label: "Price/Sqft",
+        value: pricePerSqft ? `$${pricePerSqft.toFixed(0)}` : "N/A",
+        color: [245, 158, 11],
       },
       {
         label: "Bedrooms",
         value: data.propertyOverview?.bedrooms?.toString() || "N/A",
-        color: [236, 72, 153], // Pink
+        color: [236, 72, 153],
       },
       {
         label: "Bathrooms",
         value: data.propertyOverview?.bathrooms?.toString() || "N/A",
-        color: [14, 165, 233], // Sky blue
+        color: [14, 165, 233],
       },
       {
         label: "Year Built",
         value: data.propertyOverview?.yearBuilt?.toString() || "N/A",
-        color: [139, 92, 246], // Violet
+        color: [100, 116, 139],
       },
       {
         label: "5-Year ROI",
         value: data.analysisDetails?.estimatedROI5Year || "N/A",
-        color: [16, 185, 129], // Emerald
+        color: [16, 185, 129],
       },
     ];
 
-    // Draw metrics in a 2-column grid
-    const colWidth = (contentWidth - 5) / 2;
-    let col = 0;
-    metricsData.forEach((metric) => {
-      checkPageBreak(18);
-      const xPos = margin + col * (colWidth + 5);
+    // Draw metrics in 2-column grid
+    const colWidth = (contentWidth - 4) / 2;
+    const cardHeight = 18;
+    const gap = 4;
 
-      pdf.setFillColor(249, 250, 251); // Light gray background
-      pdf.roundedRect(xPos, yPosition, colWidth, 15, 2, 2, "F");
+    metricsData.forEach((metric, index) => {
+      const col = index % 2;
+      const row = Math.floor(index / 2);
+      const xPos = margin + col * (colWidth + gap);
+      const cardY = yPosition + row * (cardHeight + gap);
 
-      // Colored indicator bar
-      const [r = 0, g = 0, b = 0] = metric.color;
-      pdf.setFillColor(r, g, b);
-      pdf.roundedRect(xPos, yPosition, 3, 15, 1.5, 1.5, "F");
+      checkPageBreak(cardHeight + 4);
 
-      pdf.setFontSize(9);
+      pdf.setFillColor(249, 250, 251);
+      pdf.setDrawColor(226, 232, 240);
+      pdf.setLineWidth(0.3);
+      pdf.roundedRect(xPos, cardY, colWidth, cardHeight, 2, 2, "FD");
+
+      // Color bar
+      pdf.setFillColor(metric.color[0], metric.color[1], metric.color[2]);
+      pdf.roundedRect(xPos, cardY, 3, cardHeight, 1.5, 1.5, "F");
+
+      // Label
+      pdf.setFontSize(8);
       pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(107, 114, 128);
-      pdf.text(metric.label, xPos + 6, yPosition + 6);
+      pdf.setTextColor(100, 116, 139);
+      pdf.text(metric.label, xPos + 6, cardY + 7);
 
+      // Value
       pdf.setFontSize(11);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(0, 0, 0);
-      // Ensure text fits within box - truncate if needed
-      const maxValueWidth = colWidth - 12; // Leave margin on both sides
-      const valueText = pdf.splitTextToSize(metric.value, maxValueWidth);
-      pdf.text(valueText[0], xPos + 6, yPosition + 12); // Only show first line to prevent overflow
-
-      col++;
-      if (col === 2) {
-        col = 0;
-        yPosition += 18;
-      }
+      pdf.setTextColor(30, 41, 59);
+      const valueText = pdf.splitTextToSize(metric.value, colWidth - 12);
+      pdf.text(valueText[0], xPos + 6, cardY + 14);
     });
 
-    if (col !== 0) yPosition += 18;
-    yPosition += 10;
+    yPosition += Math.ceil(metricsData.length / 2) * (cardHeight + gap) + 8;
 
     // ========================================
-    // AI RECOMMENDATION - Highlighted Section
+    // AI RECOMMENDATION
     // ========================================
-    checkPageBreak(50);
-    pdf.setFontSize(16);
-    pdf.setTextColor(30, 58, 138);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("AI Investment Recommendation", margin, yPosition);
-    yPosition += 8;
+    if (data.aiAnalysis?.recommendation) {
+      checkPageBreak(40);
 
-    pdf.setFillColor(254, 249, 195); // Light yellow/gold background
-    const recommendation =
-      safeString(data.aiAnalysis?.recommendation) ||
-      "No recommendation available";
-    const splitRecommendation = pdf.splitTextToSize(
-      recommendation,
-      contentWidth - 10,
-    );
-    const recHeight = splitRecommendation.length * 6 + 10;
+      pdf.setFontSize(14);
+      pdf.setTextColor(30, 41, 59);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("AI Investment Recommendation", margin, yPosition);
+      yPosition += 8;
 
-    checkPageBreak(recHeight);
-    pdf.roundedRect(margin, yPosition, contentWidth, recHeight, 3, 3, "F");
-    pdf.setFontSize(10);
-    pdf.setFont("helvetica", "normal");
-    pdf.setTextColor(92, 78, 24); // Dark yellow text
-    pdf.text(splitRecommendation, margin + 5, yPosition + 6);
-    yPosition += recHeight + 10;
+      const recommendation = safeString(data.aiAnalysis.recommendation);
+      const splitRecommendation = pdf.splitTextToSize(
+        recommendation,
+        contentWidth - 12,
+      );
+      const recHeight = splitRecommendation.length * 5.5 + 12;
+
+      checkPageBreak(recHeight);
+
+      pdf.setFillColor(254, 252, 232);
+      pdf.setDrawColor(245, 158, 11);
+      pdf.setLineWidth(0.3);
+      pdf.roundedRect(margin, yPosition, contentWidth, recHeight, 3, 3, "FD");
+
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(92, 78, 24);
+      pdf.text(splitRecommendation, margin + 6, yPosition + 7);
+      yPosition += recHeight + 8;
+    }
 
     // ========================================
     // VALUE ASSESSMENT
     // ========================================
     if (data.aiAnalysis?.valueAssessment) {
-      checkPageBreak(40);
-      pdf.setFontSize(14);
-      pdf.setTextColor(30, 58, 138);
+      checkPageBreak(35);
+
+      pdf.setFontSize(12);
+      pdf.setTextColor(30, 41, 59);
       pdf.setFont("helvetica", "bold");
       pdf.text("Value Assessment", margin, yPosition);
-      yPosition += 8;
+      yPosition += 7;
 
       const valueAssessment = safeString(data.aiAnalysis.valueAssessment);
-      const splitValue = pdf.splitTextToSize(
-        valueAssessment,
-        contentWidth - 10,
-      );
-      const valHeight = splitValue.length * 5 + 8;
+      const splitValue = pdf.splitTextToSize(valueAssessment, contentWidth - 10);
+      const valHeight = splitValue.length * 5 + 10;
 
       checkPageBreak(valHeight);
-      pdf.setFillColor(243, 244, 246);
-      pdf.roundedRect(margin, yPosition, contentWidth, valHeight, 3, 3, "F");
-      pdf.setFontSize(10);
+
+      pdf.setFillColor(248, 250, 252);
+      pdf.setDrawColor(226, 232, 240);
+      pdf.setLineWidth(0.3);
+      pdf.roundedRect(margin, yPosition, contentWidth, valHeight, 2, 2, "FD");
+
+      pdf.setFontSize(9.5);
       pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(55, 65, 81);
+      pdf.setTextColor(51, 65, 85);
       pdf.text(splitValue, margin + 5, yPosition + 6);
-      yPosition += valHeight + 10;
+      yPosition += valHeight + 8;
     }
 
     // ========================================
@@ -330,84 +339,94 @@ export async function exportToPDF(data: PropertyData) {
     // ========================================
     if (data.analysisDetails?.bestFor) {
       const bestForText = safeString(data.analysisDetails.bestFor);
-      const splitBestFor = pdf.splitTextToSize(bestForText, contentWidth - 14);
-      const boxHeight = Math.max(18, splitBestFor.length * 5 + 10);
+      const splitBestFor = pdf.splitTextToSize(bestForText, contentWidth - 16);
+      const boxHeight = Math.max(16, splitBestFor.length * 5 + 10);
 
-      checkPageBreak(boxHeight + 5);
-      pdf.setFillColor(220, 252, 231); // Light green
-      pdf.roundedRect(margin, yPosition, contentWidth, boxHeight, 3, 3, "F");
+      checkPageBreak(boxHeight + 4);
 
-      pdf.setFontSize(10);
+      pdf.setFillColor(236, 253, 245);
+      pdf.setDrawColor(16, 185, 129);
+      pdf.setLineWidth(0.3);
+      pdf.roundedRect(margin, yPosition, contentWidth, boxHeight, 2, 2, "FD");
+
+      pdf.setFontSize(9);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(21, 128, 61); // Dark green
-      pdf.text("✓ Best For:", margin + 5, yPosition + 7);
+      pdf.setTextColor(6, 95, 70);
+      pdf.text("Best For:", margin + 6, yPosition + 6);
 
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(9);
-      pdf.text(splitBestFor, margin + 5, yPosition + 13);
+      pdf.text(splitBestFor, margin + 6, yPosition + 11);
       yPosition += boxHeight + 8;
     }
 
     // ========================================
-    // COMPREHENSIVE AI DESCRIPTION
+    // DETAILED AI ANALYSIS
     // ========================================
     if (data.aiAnalysis?.comprehensiveDescription) {
       checkPageBreak(40);
-      pdf.setFontSize(16);
-      pdf.setTextColor(30, 58, 138);
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(30, 41, 59);
       pdf.setFont("helvetica", "bold");
       pdf.text("Detailed AI Analysis", margin, yPosition);
       yPosition += 8;
 
       const compDesc = safeString(data.aiAnalysis.comprehensiveDescription);
-      const splitDesc = pdf.splitTextToSize(compDesc, contentWidth);
+      const splitDesc = pdf.splitTextToSize(compDesc, contentWidth - 2);
 
-      pdf.setFontSize(10);
+      pdf.setFontSize(9.5);
       pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(55, 65, 81);
+      pdf.setTextColor(51, 65, 85);
 
       splitDesc.forEach((line: string) => {
-        checkPageBreak(6);
-        pdf.text(line, margin, yPosition);
+        checkPageBreak(5);
+        pdf.text(line, margin + 1, yPosition);
         yPosition += 5;
       });
-      yPosition += 10;
+      yPosition += 8;
     }
 
     // ========================================
     // PRICE ANALYSIS
     // ========================================
     if (data.analysisDetails?.priceAnalysis) {
-      checkPageBreak(40);
-      pdf.setFontSize(16);
-      pdf.setTextColor(30, 58, 138);
+      checkPageBreak(35);
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(30, 41, 59);
       pdf.setFont("helvetica", "bold");
       pdf.text("Price Analysis", margin, yPosition);
       yPosition += 8;
 
       const priceAnalysis = safeString(data.analysisDetails.priceAnalysis);
-      const splitPrice = pdf.splitTextToSize(priceAnalysis, contentWidth - 10);
-      const priceHeight = splitPrice.length * 5 + 8;
+      const splitPrice = pdf.splitTextToSize(priceAnalysis, contentWidth - 12);
+      const priceHeight = splitPrice.length * 5 + 10;
 
       checkPageBreak(priceHeight);
-      pdf.setFillColor(254, 243, 199); // Light amber
-      pdf.roundedRect(margin, yPosition, contentWidth, priceHeight, 3, 3, "F");
-      pdf.setFontSize(10);
+
+      pdf.setFillColor(254, 252, 232);
+      pdf.setDrawColor(245, 158, 11);
+      pdf.setLineWidth(0.3);
+      pdf.roundedRect(margin, yPosition, contentWidth, priceHeight, 2, 2, "FD");
+
+      pdf.setFontSize(9.5);
       pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(120, 53, 15); // Dark amber
-      pdf.text(splitPrice, margin + 5, yPosition + 6);
-      yPosition += priceHeight + 10;
+      pdf.setTextColor(92, 78, 24);
+      pdf.text(splitPrice, margin + 6, yPosition + 6);
+      yPosition += priceHeight + 8;
     }
 
     // ========================================
     // PROPERTY FEATURES & DETAILS
     // ========================================
     checkPageBreak(60);
-    pdf.setFontSize(16);
-    pdf.setTextColor(30, 58, 138);
+
+    pdf.setFontSize(14);
+    pdf.setTextColor(30, 41, 59);
     pdf.setFont("helvetica", "bold");
     pdf.text("Property Features & Details", margin, yPosition);
-    yPosition += 10;
+    yPosition += 8;
 
     const propertyDetails = [
       [
@@ -432,135 +451,168 @@ export async function exportToPDF(data: PropertyData) {
       ["Sewer", data.utilities?.sewer || "Not Specified"],
     ];
 
-    propertyDetails.forEach(([label, value]) => {
+    // Details in clean table format
+    propertyDetails.forEach(([label, value], index) => {
       if (!label || !value) return;
       checkPageBreak(7);
-      pdf.setFontSize(10);
+
+      if (index % 2 === 0) {
+        pdf.setFillColor(249, 250, 251);
+        pdf.rect(margin, yPosition - 1.5, contentWidth, 6.5, "F");
+      }
+
+      pdf.setFontSize(9);
       pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(107, 114, 128);
-      pdf.text(label, margin, yPosition);
+      pdf.setTextColor(100, 116, 139);
+      pdf.text(label, margin + 3, yPosition + 2.5);
+
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(31, 41, 55);
-      pdf.text(value, pageWidth - margin, yPosition, { align: "right" });
-      yPosition += 7;
+      pdf.setTextColor(30, 41, 59);
+      const valueLines = pdf.splitTextToSize(value, contentWidth / 2);
+      pdf.text(valueLines[0], pageWidth - margin - 3, yPosition + 2.5, { align: "right" });
+
+      yPosition += 6.5;
     });
     yPosition += 8;
 
     // Appliances
     if (data.features?.appliances && data.features.appliances.length > 0) {
       checkPageBreak(20);
-      pdf.setFontSize(12);
+
+      pdf.setFontSize(11);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(30, 58, 138);
+      pdf.setTextColor(30, 41, 59);
       pdf.text("Appliances Included", margin, yPosition);
       yPosition += 6;
 
       pdf.setFontSize(9);
       pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(75, 85, 99);
+      pdf.setTextColor(71, 85, 105);
       const appliancesText = data.features.appliances.join(", ");
-      const splitAppliances = pdf.splitTextToSize(appliancesText, contentWidth);
-      pdf.text(splitAppliances, margin, yPosition);
-      yPosition += splitAppliances.length * 4 + 8;
+      const splitAppliances = pdf.splitTextToSize(appliancesText, contentWidth - 6);
+      pdf.text(splitAppliances, margin + 3, yPosition);
+      yPosition += splitAppliances.length * 4.5 + 8;
     }
 
     // Pool Features
     if (data.features?.poolFeatures && data.features.poolFeatures.length > 0) {
       checkPageBreak(20);
-      pdf.setFontSize(12);
+
+      pdf.setFontSize(11);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(30, 58, 138);
+      pdf.setTextColor(30, 41, 59);
       pdf.text("Pool Features", margin, yPosition);
       yPosition += 6;
 
       pdf.setFontSize(9);
       pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(75, 85, 99);
+      pdf.setTextColor(71, 85, 105);
       const poolText = data.features.poolFeatures.join(", ");
-      const splitPool = pdf.splitTextToSize(poolText, contentWidth);
-      pdf.text(splitPool, margin, yPosition);
-      yPosition += splitPool.length * 4 + 8;
+      const splitPool = pdf.splitTextToSize(poolText, contentWidth - 6);
+      pdf.text(splitPool, margin + 3, yPosition);
+      yPosition += splitPool.length * 4.5 + 8;
     }
 
     // ========================================
-    // INVESTMENT STRENGTHS
+    // INVESTMENT ANALYSIS
     // ========================================
     checkPageBreak(50);
-    pdf.setFontSize(16);
-    pdf.setTextColor(30, 58, 138);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Investment Strengths", margin, yPosition);
-    yPosition += 10;
 
+    pdf.setFontSize(14);
+    pdf.setTextColor(30, 41, 59);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Investment Analysis", margin, yPosition);
+    yPosition += 8;
+
+    // Strengths section
     const strengths = data.insights?.keyStrengths || [];
     if (strengths.length > 0) {
+      pdf.setFontSize(12);
+      pdf.setTextColor(5, 150, 105);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Investment Strengths", margin, yPosition);
+      yPosition += 7;
+
       strengths.forEach((strength, index) => {
-        checkPageBreak(15);
-        // Green number circle
-        pdf.setFillColor(220, 252, 231);
-        pdf.circle(margin + 4, yPosition + 1, 3.5, "F");
+        checkPageBreak(14);
+
+        const strengthLines = pdf.splitTextToSize(strength, contentWidth - 14);
+        const itemHeight = strengthLines.length * 4.5 + 7;
+
+        pdf.setFillColor(236, 253, 245);
+        pdf.roundedRect(margin, yPosition, contentWidth, itemHeight, 2, 2, "F");
+
+        // Number badge
+        pdf.setFillColor(16, 185, 129);
+        pdf.circle(margin + 5.5, yPosition + 5.5, 3.5, "F");
         pdf.setFontSize(8);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(21, 128, 61);
-        pdf.text((index + 1).toString(), margin + 4, yPosition + 3, {
+        pdf.setTextColor(255, 255, 255);
+        pdf.text((index + 1).toString(), margin + 5.5, yPosition + 7, {
           align: "center",
         });
 
-        pdf.setFontSize(10);
+        // Strength text
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "normal");
-        pdf.setTextColor(22, 101, 52);
-        const splitStrength = pdf.splitTextToSize(strength, contentWidth - 15);
-        pdf.text(splitStrength, margin + 11, yPosition + 4);
-        yPosition += splitStrength.length * 5 + 4;
+        pdf.setTextColor(6, 78, 59);
+        pdf.text(strengthLines, margin + 12, yPosition + 5);
+        yPosition += itemHeight + 3;
       });
     } else {
-      pdf.setFontSize(10);
+      pdf.setFontSize(9);
       pdf.setFont("helvetica", "italic");
-      pdf.setTextColor(156, 163, 175);
-      pdf.text("No strengths data available", margin, yPosition);
-      yPosition += 10;
+      pdf.setTextColor(148, 163, 184);
+      pdf.text("No strengths data available", margin + 3, yPosition);
+      yPosition += 8;
     }
-    yPosition += 10;
+    yPosition += 8;
 
-    // ========================================
-    // POTENTIAL RISKS
-    // ========================================
+    // Risks section
     checkPageBreak(50);
-    pdf.setFontSize(16);
-    pdf.setTextColor(30, 58, 138);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Potential Risks", margin, yPosition);
-    yPosition += 10;
 
     const risks = data.insights?.keyRisks || [];
     if (risks.length > 0) {
+      pdf.setFontSize(12);
+      pdf.setTextColor(220, 38, 38);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Potential Risks", margin, yPosition);
+      yPosition += 7;
+
       risks.forEach((risk, index) => {
-        checkPageBreak(15);
-        // Red number circle
-        pdf.setFillColor(254, 226, 226);
-        pdf.circle(margin + 4, yPosition + 1, 3.5, "F");
+        checkPageBreak(14);
+
+        const riskLines = pdf.splitTextToSize(risk, contentWidth - 14);
+        const itemHeight = riskLines.length * 4.5 + 7;
+
+        pdf.setFillColor(254, 242, 242);
+        pdf.roundedRect(margin, yPosition, contentWidth, itemHeight, 2, 2, "F");
+
+        // Number badge
+        pdf.setFillColor(239, 68, 68);
+        pdf.circle(margin + 5.5, yPosition + 5.5, 3.5, "F");
         pdf.setFontSize(8);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(185, 28, 28);
-        pdf.text((index + 1).toString(), margin + 4, yPosition + 3, {
+        pdf.setTextColor(255, 255, 255);
+        pdf.text((index + 1).toString(), margin + 5.5, yPosition + 7, {
           align: "center",
         });
 
-        pdf.setFontSize(10);
+        // Risk text
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "normal");
-        pdf.setTextColor(153, 27, 27);
-        const splitRisk = pdf.splitTextToSize(risk, contentWidth - 15);
-        pdf.text(splitRisk, margin + 11, yPosition + 4);
-        yPosition += splitRisk.length * 5 + 4;
+        pdf.setTextColor(127, 29, 29);
+        pdf.text(riskLines, margin + 12, yPosition + 5);
+        yPosition += itemHeight + 3;
       });
     } else {
-      pdf.setFontSize(10);
+      pdf.setFontSize(9);
       pdf.setFont("helvetica", "italic");
-      pdf.setTextColor(156, 163, 175);
-      pdf.text("No risks data available", margin, yPosition);
-      yPosition += 10;
+      pdf.setTextColor(148, 163, 184);
+      pdf.text("No risks data available", margin + 3, yPosition);
+      yPosition += 8;
     }
-    yPosition += 10;
+    yPosition += 8;
 
     // ========================================
     // RED FLAGS
@@ -570,56 +622,64 @@ export async function exportToPDF(data: PropertyData) {
       data.insights.redFlags.length > 0 &&
       data.insights.redFlags[0] !== "None identified"
     ) {
-      checkPageBreak(50);
-      pdf.setFontSize(16);
+      checkPageBreak(40);
+
+      pdf.setFontSize(12);
       pdf.setTextColor(220, 38, 38);
       pdf.setFont("helvetica", "bold");
-      pdf.text("⚠ Red Flags", margin, yPosition);
-      yPosition += 10;
+      pdf.text("Red Flags", margin, yPosition);
+      yPosition += 7;
 
       data.insights.redFlags.forEach((flag) => {
-        const flagText = pdf.splitTextToSize(`⚠ ${flag}`, contentWidth - 14);
-        const boxHeight = Math.max(10, flagText.length * 5 + 6);
+        const flagText = pdf.splitTextToSize(flag, contentWidth - 12);
+        const boxHeight = Math.max(10, flagText.length * 4.5 + 8);
 
-        checkPageBreak(boxHeight + 2);
+        checkPageBreak(boxHeight + 3);
+
         pdf.setFillColor(254, 242, 242);
-        pdf.roundedRect(margin, yPosition, contentWidth, boxHeight, 2, 2, "F");
+        pdf.setDrawColor(252, 165, 165);
+        pdf.setLineWidth(0.3);
+        pdf.roundedRect(margin, yPosition, contentWidth, boxHeight, 2, 2, "FD");
 
         pdf.setFontSize(9);
         pdf.setFont("helvetica", "normal");
         pdf.setTextColor(127, 29, 29);
-        pdf.text(flagText, margin + 5, yPosition + 5);
+        pdf.text(flagText, margin + 6, yPosition + 5);
         yPosition += boxHeight + 3;
       });
-      yPosition += 10;
+      yPosition += 8;
     }
 
     // ========================================
     // HIDDEN GEMS
     // ========================================
     if (data.insights?.hiddenGems && data.insights.hiddenGems.length > 0) {
-      checkPageBreak(50);
-      pdf.setFontSize(16);
+      checkPageBreak(40);
+
+      pdf.setFontSize(12);
       pdf.setTextColor(217, 119, 6);
       pdf.setFont("helvetica", "bold");
-      pdf.text("✨ Hidden Gems", margin, yPosition);
-      yPosition += 10;
+      pdf.text("Hidden Gems", margin, yPosition);
+      yPosition += 7;
 
       data.insights.hiddenGems.forEach((gem) => {
-        const gemText = pdf.splitTextToSize(`✨ ${gem}`, contentWidth - 14);
-        const boxHeight = Math.max(10, gemText.length * 5 + 6);
+        const gemText = pdf.splitTextToSize(gem, contentWidth - 12);
+        const boxHeight = Math.max(10, gemText.length * 4.5 + 8);
 
-        checkPageBreak(boxHeight + 2);
-        pdf.setFillColor(254, 243, 199);
-        pdf.roundedRect(margin, yPosition, contentWidth, boxHeight, 2, 2, "F");
+        checkPageBreak(boxHeight + 3);
+
+        pdf.setFillColor(254, 252, 232);
+        pdf.setDrawColor(251, 191, 36);
+        pdf.setLineWidth(0.3);
+        pdf.roundedRect(margin, yPosition, contentWidth, boxHeight, 2, 2, "FD");
 
         pdf.setFontSize(9);
         pdf.setFont("helvetica", "normal");
         pdf.setTextColor(120, 53, 15);
-        pdf.text(gemText, margin + 5, yPosition + 5);
+        pdf.text(gemText, margin + 6, yPosition + 5);
         yPosition += boxHeight + 3;
       });
-      yPosition += 10;
+      yPosition += 8;
     }
 
     // ========================================
@@ -629,75 +689,85 @@ export async function exportToPDF(data: PropertyData) {
       data.insights?.negotiationStrategy &&
       data.insights.negotiationStrategy.length > 0
     ) {
-      checkPageBreak(50);
-      pdf.setFontSize(16);
-      pdf.setTextColor(30, 58, 138);
+      checkPageBreak(40);
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(30, 41, 59);
       pdf.setFont("helvetica", "bold");
       pdf.text("Negotiation Strategies", margin, yPosition);
-      yPosition += 10;
+      yPosition += 7;
 
       data.insights.negotiationStrategy.forEach((strategy, index) => {
-        checkPageBreak(15);
-        // Gold number circle
-        pdf.setFillColor(254, 243, 199);
-        pdf.circle(margin + 4, yPosition + 1, 3.5, "F");
+        checkPageBreak(14);
+
+        const strategyLines = pdf.splitTextToSize(strategy, contentWidth - 14);
+        const itemHeight = strategyLines.length * 4.5 + 7;
+
+        pdf.setFillColor(254, 252, 232);
+        pdf.roundedRect(margin, yPosition, contentWidth, itemHeight, 2, 2, "F");
+
+        // Number badge
+        pdf.setFillColor(245, 158, 11);
+        pdf.circle(margin + 5.5, yPosition + 5.5, 3.5, "F");
         pdf.setFontSize(8);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(146, 64, 14);
-        pdf.text((index + 1).toString(), margin + 4, yPosition + 3, {
+        pdf.setTextColor(255, 255, 255);
+        pdf.text((index + 1).toString(), margin + 5.5, yPosition + 7, {
           align: "center",
         });
 
-        pdf.setFontSize(10);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "normal");
         pdf.setTextColor(120, 53, 15);
-        const splitStrategy = pdf.splitTextToSize(strategy, contentWidth - 15);
-        pdf.text(splitStrategy, margin + 11, yPosition + 4);
-        yPosition += splitStrategy.length * 5 + 4;
+        pdf.text(strategyLines, margin + 12, yPosition + 5);
+        yPosition += itemHeight + 3;
       });
-      yPosition += 10;
+      yPosition += 8;
     }
 
     // ========================================
     // PROPERTY TAXES
     // ========================================
     if (data.costs) {
-      checkPageBreak(30);
-      pdf.setFontSize(16);
-      pdf.setTextColor(30, 58, 138);
+      checkPageBreak(28);
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(30, 41, 59);
       pdf.setFont("helvetica", "bold");
       pdf.text("Property Taxes", margin, yPosition);
-      yPosition += 10;
+      yPosition += 8;
 
-      pdf.setFillColor(243, 244, 246);
-      pdf.roundedRect(margin, yPosition, contentWidth, 20, 3, 3, "F");
+      pdf.setFillColor(248, 250, 252);
+      pdf.setDrawColor(226, 232, 240);
+      pdf.setLineWidth(0.3);
+      pdf.roundedRect(margin, yPosition, contentWidth, 18, 2, 2, "FD");
 
-      pdf.setFontSize(10);
+      pdf.setFontSize(9);
       pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(107, 114, 128);
-      pdf.text("Annual Property Tax", margin + 5, yPosition + 8);
+      pdf.setTextColor(100, 116, 139);
+      pdf.text("Annual Property Tax", margin + 5, yPosition + 7);
 
       pdf.setFontSize(14);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(31, 41, 55);
+      pdf.setTextColor(30, 41, 59);
       pdf.text(
         data.costs.annualPropertyTax
           ? formatExactPrice(data.costs.annualPropertyTax)
           : "N/A",
         pageWidth - margin - 5,
-        yPosition + 8,
+        yPosition + 7,
         { align: "right" },
       );
 
-      pdf.setFontSize(9);
+      pdf.setFontSize(8);
       pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(107, 114, 128);
+      pdf.setTextColor(100, 116, 139);
       pdf.text(
         `Tax Year: ${data.costs.taxYear || "N/A"}`,
         margin + 5,
-        yPosition + 15,
+        yPosition + 14,
       );
-      yPosition += 28;
+      yPosition += 26;
     }
 
     // ========================================
@@ -705,64 +775,78 @@ export async function exportToPDF(data: PropertyData) {
     // ========================================
     if (data.schools && data.schools.length > 0) {
       checkPageBreak(60);
-      pdf.setFontSize(16);
-      pdf.setTextColor(30, 58, 138);
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(30, 41, 59);
       pdf.setFont("helvetica", "bold");
       pdf.text("Nearby Schools", margin, yPosition);
-      yPosition += 10;
+      yPosition += 8;
 
-      data.schools.forEach((school) => {
+      data.schools.forEach((school, index) => {
         checkPageBreak(20);
-        pdf.setFillColor(249, 250, 251);
-        pdf.roundedRect(margin, yPosition, contentWidth, 18, 3, 3, "F");
 
-        pdf.setFontSize(11);
+        pdf.setFillColor(249, 250, 251);
+        pdf.setDrawColor(226, 232, 240);
+        pdf.setLineWidth(0.3);
+        pdf.roundedRect(margin, yPosition, contentWidth, 17, 2, 2, "FD");
+
+        // School name
+        pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(31, 41, 55);
+        pdf.setTextColor(30, 41, 59);
         pdf.text(school.name || "Unknown School", margin + 5, yPosition + 6);
 
-        pdf.setFontSize(9);
+        // School details
+        pdf.setFontSize(8);
         pdf.setFont("helvetica", "normal");
-        pdf.setTextColor(107, 114, 128);
+        pdf.setTextColor(100, 116, 139);
         pdf.text(
           `${school.grades} | ${school.type}`,
           margin + 5,
           yPosition + 11,
         );
 
-        // Rating
-        pdf.setFontSize(12);
+        // Rating badge
+        pdf.setFillColor(245, 158, 11);
+        pdf.circle(pageWidth - margin - 16, yPosition + 8.5, 5, "F");
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(217, 119, 6);
-        pdf.text(`${school.rating}/10`, pageWidth - margin - 5, yPosition + 6, {
-          align: "right",
+        pdf.setTextColor(255, 255, 255);
+        pdf.text(`${school.rating}`, pageWidth - margin - 16, yPosition + 10.5, {
+          align: "center",
         });
 
-        pdf.setFontSize(9);
+        pdf.setFontSize(6);
+        pdf.setTextColor(100, 116, 139);
+        pdf.text("/10", pageWidth - margin - 10, yPosition + 10.5);
+
+        // Distance
+        pdf.setFontSize(8);
         pdf.setFont("helvetica", "normal");
-        pdf.setTextColor(107, 114, 128);
+        pdf.setTextColor(100, 116, 139);
         pdf.text(
           `${school.distance} mi`,
           pageWidth - margin - 5,
-          yPosition + 11,
+          yPosition + 14,
           { align: "right" },
         );
 
-        yPosition += 22;
+        yPosition += 20;
       });
-      yPosition += 5;
+      yPosition += 6;
     }
 
     // ========================================
     // COMPARABLE PROPERTIES
     // ========================================
     if (data.comparables && data.comparables.length > 0) {
-      checkPageBreak(80);
-      pdf.setFontSize(16);
-      pdf.setTextColor(30, 58, 138);
+      checkPageBreak(75);
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(30, 41, 59);
       pdf.setFont("helvetica", "bold");
       pdf.text("Comparable Properties", margin, yPosition);
-      yPosition += 10;
+      yPosition += 8;
 
       // Table header
       pdf.setFillColor(30, 58, 138);
@@ -781,7 +865,7 @@ export async function exportToPDF(data: PropertyData) {
       let xPos = margin + 2;
       ["Address", "Price", "Beds/Baths", "Sqft", "$/Sqft"].forEach(
         (header, i) => {
-          pdf.text(header, xPos, yPosition + 5);
+          pdf.text(header, xPos, yPosition + 5.5);
           xPos += colWidths[i] || 0;
         },
       );
@@ -790,74 +874,80 @@ export async function exportToPDF(data: PropertyData) {
       // Table rows
       data.comparables.slice(0, 8).forEach((comp, index) => {
         checkPageBreak(8);
+
         if (index % 2 === 0) {
           pdf.setFillColor(249, 250, 251);
-          pdf.rect(margin, yPosition - 2, contentWidth, 7, "F");
+          pdf.rect(margin, yPosition - 0.5, contentWidth, 7.5, "F");
         }
 
         pdf.setFontSize(8);
         pdf.setFont("helvetica", "normal");
-        pdf.setTextColor(31, 41, 55);
+        pdf.setTextColor(30, 41, 59);
 
         xPos = margin + 2;
         const addressShort =
           comp.address.substring(0, 30) +
           (comp.address.length > 30 ? "..." : "");
-        pdf.text(addressShort, xPos, yPosition + 3);
+        pdf.text(addressShort, xPos, yPosition + 4);
         xPos += colWidths[0] || 0;
 
+        pdf.setFont("helvetica", "bold");
         pdf.text(
           comp.price ? formatExactPrice(comp.price) : "N/A",
           xPos,
-          yPosition + 3,
+          yPosition + 4,
         );
         xPos += colWidths[1] || 0;
 
+        pdf.setFont("helvetica", "normal");
         pdf.text(
           `${comp.bedrooms || 0}/${comp.bathrooms || 0}`,
           xPos,
-          yPosition + 3,
+          yPosition + 4,
         );
         xPos += colWidths[2] || 0;
 
         pdf.text(
           comp.squareFeet ? formatNumber(comp.squareFeet) : "N/A",
           xPos,
-          yPosition + 3,
+          yPosition + 4,
         );
         xPos += colWidths[3] || 0;
 
         pdf.text(
-          comp.pricePerSqft ? `$${comp.pricePerSqft.toFixed(2)}` : "N/A",
+          comp.pricePerSqft ? `$${comp.pricePerSqft.toFixed(0)}` : "N/A",
           xPos,
-          yPosition + 3,
+          yPosition + 4,
         );
 
-        yPosition += 7;
+        yPosition += 7.5;
       });
 
-      // Average comparison
-      yPosition += 5;
-      checkPageBreak(20);
+      // Summary comparison
+      yPosition += 4;
+      checkPageBreak(18);
+
       pdf.setFillColor(239, 246, 255);
-      pdf.roundedRect(margin, yPosition, contentWidth, 15, 3, 3, "F");
+      pdf.setDrawColor(191, 219, 254);
+      pdf.setLineWidth(0.3);
+      pdf.roundedRect(margin, yPosition, contentWidth, 15, 2, 2, "FD");
 
       const avgPrice =
         data.comparables.reduce((sum, c) => sum + (c.price || 0), 0) /
         data.comparables.length;
 
-      pdf.setFontSize(10);
+      pdf.setFontSize(9);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(30, 58, 138);
-      pdf.text("Average Comp Price:", margin + 5, yPosition + 6);
-      pdf.text(formatExactPrice(avgPrice), margin + 60, yPosition + 6);
+      pdf.setTextColor(30, 64, 175);
+      pdf.text("Average Price:", margin + 5, yPosition + 6);
+      pdf.text(formatExactPrice(avgPrice), margin + 50, yPosition + 6);
 
-      pdf.text("This Property:", margin + 5, yPosition + 12);
+      pdf.text("This Property:", margin + 5, yPosition + 11);
       pdf.setTextColor(217, 119, 6);
       pdf.text(
         listPrice ? formatExactPrice(listPrice) : "N/A",
-        margin + 60,
-        yPosition + 12,
+        margin + 50,
+        yPosition + 11,
       );
 
       yPosition += 20;
@@ -871,41 +961,74 @@ export async function exportToPDF(data: PropertyData) {
       pdf.setPage(i);
 
       // Footer separator line
-      pdf.setDrawColor(229, 231, 235);
-      pdf.setLineWidth(0.5);
-      pdf.line(margin, pageHeight - 15, pageWidth - margin, pageHeight - 15);
+      pdf.setDrawColor(226, 232, 240);
+      pdf.setLineWidth(0.3);
+      pdf.line(margin, pageHeight - 16, pageWidth - margin, pageHeight - 16);
 
-      // Footer text
+      // Company branding
       pdf.setFontSize(8);
-      pdf.setTextColor(156, 163, 175);
-      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(71, 85, 105);
+      pdf.setFont("helvetica", "bold");
       pdf.text(
-        `Four Corner Properties - Premium Investment Analysis`,
+        "Four Corner Properties",
         pageWidth / 2,
-        pageHeight - 10,
+        pageHeight - 11,
         { align: "center" },
       );
+
+      pdf.setFontSize(7);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(148, 163, 184);
+      pdf.text(
+        "Premium Investment Analysis",
+        pageWidth / 2,
+        pageHeight - 7,
+        { align: "center" },
+      );
+
+      // Page numbers
+      pdf.setFontSize(7);
+      pdf.setTextColor(100, 116, 139);
       pdf.text(
         `Page ${i} of ${totalPages}`,
         pageWidth - margin,
-        pageHeight - 10,
+        pageHeight - 9,
         { align: "right" },
       );
 
+      // Zillow link
       if (data.zillowUrl && typeof data.zillowUrl === "string") {
         pdf.setFontSize(7);
         pdf.setTextColor(59, 130, 246);
-        pdf.text("View on Zillow", margin, pageHeight - 10);
+        pdf.text("View on Zillow", margin, pageHeight - 9);
       }
     }
 
-    pdf.save(
-      `${data.propertyOverview.streetAddress.replace(/[^a-z0-9]/gi, "_")}_Comprehensive_Analysis.pdf`,
-    );
+    // Save PDF
+    const fileName = `${data.propertyOverview.streetAddress.replace(/[^a-z0-9]/gi, "_")}_Analysis_${new Date().toISOString().split('T')[0]}.pdf`;
+    pdf.save(fileName);
   } catch (error) {
     console.error("PDF export error:", error);
     throw new Error("Failed to export PDF");
   }
+}
+
+// Helper function to get grade color
+function getGradeColor(grade: string): [number, number, number] {
+  const gradeColors: Record<string, [number, number, number]> = {
+    "A+": [5, 150, 105],   // Emerald-600
+    "A": [16, 185, 129],   // Emerald-500
+    "A-": [52, 211, 153],  // Emerald-400
+    "B+": [59, 130, 246],  // Blue-500
+    "B": [99, 102, 241],   // Indigo-500
+    "B-": [139, 92, 246],  // Violet-500
+    "C+": [245, 158, 11],  // Amber-500
+    "C": [251, 146, 60],   // Orange-400
+    "C-": [251, 113, 133], // Rose-400
+    "D": [239, 68, 68],    // Red-500
+    "F": [220, 38, 38],    // Red-600
+  };
+  return gradeColors[grade] || [100, 116, 139]; // Slate-500 default
 }
 
 // Export to Word (DOCX)
@@ -953,7 +1076,7 @@ export async function exportToWord(data: PropertyData) {
                   text: data.aiAnalysis?.buyingGrade || "N/A",
                   bold: true,
                   size: 48,
-                  color: "3b82f6", // Blue theme
+                  color: "3b82f6",
                 }),
               ],
               spacing: { after: 400 },
@@ -966,7 +1089,7 @@ export async function exportToWord(data: PropertyData) {
             }),
             new Paragraph({
               text:
-                data.aiAnalysis?.recommendation ||
+                safeString(data.aiAnalysis?.recommendation) ||
                 "No recommendation available",
               spacing: { after: 400 },
             }),
@@ -985,37 +1108,19 @@ export async function exportToWord(data: PropertyData) {
               spacing: { after: 100 },
             }),
             new Paragraph({
-              text: `5-Year Projection: ${data.appreciation?.year5 ? formatExactPrice(data.appreciation.year5) : "N/A"}`,
+              text: `Square Feet: ${data.propertyOverview?.squareFeet ? formatNumber(data.propertyOverview.squareFeet) : "N/A"}`,
               spacing: { after: 100 },
             }),
             new Paragraph({
-              text: `Days on Zillow: ${data.zillow?.daysOnZillow || "N/A"}`,
-              spacing: { after: 400 },
-            }),
-
-            new Paragraph({
-              text: "Property Details",
-              heading: HeadingLevel.HEADING_3,
-              spacing: { after: 200 },
-            }),
-            new Paragraph({
-              text: `Bedrooms: ${data.factsAndFeatures?.bedrooms || "N/A"}`,
+              text: `Bedrooms: ${data.propertyOverview?.bedrooms || "N/A"}`,
               spacing: { after: 100 },
             }),
             new Paragraph({
-              text: `Bathrooms: ${data.factsAndFeatures?.bathrooms || "N/A"}`,
+              text: `Bathrooms: ${data.propertyOverview?.bathrooms || "N/A"}`,
               spacing: { after: 100 },
             }),
             new Paragraph({
-              text: `Square Feet: ${data.factsAndFeatures?.squareFeet ? formatNumber(data.factsAndFeatures.squareFeet) : "N/A"}`,
-              spacing: { after: 100 },
-            }),
-            new Paragraph({
-              text: `Year Built: ${data.property?.yearBuilt || "N/A"}`,
-              spacing: { after: 100 },
-            }),
-            new Paragraph({
-              text: `Property Type: ${data.property?.propertyType || "N/A"}`, // ✅ FIXED
+              text: `Year Built: ${data.propertyOverview?.yearBuilt || "N/A"}`,
               spacing: { after: 400 },
             }),
 
@@ -1024,7 +1129,7 @@ export async function exportToWord(data: PropertyData) {
               heading: HeadingLevel.HEADING_3,
               spacing: { after: 200 },
             }),
-            ...(data.keyStrengths || []).map(
+            ...(data.insights?.keyStrengths || []).map(
               (strength) =>
                 new Paragraph({
                   text: `• ${strength}`,
@@ -1042,7 +1147,7 @@ export async function exportToWord(data: PropertyData) {
               heading: HeadingLevel.HEADING_3,
               spacing: { after: 200 },
             }),
-            ...(data.keyRisks || []).map(
+            ...(data.insights?.keyRisks || []).map(
               (risk) =>
                 new Paragraph({
                   text: `• ${risk}`,
@@ -1061,7 +1166,7 @@ export async function exportToWord(data: PropertyData) {
               spacing: { before: 400 },
             }),
             new Paragraph({
-              text: data.zillow?.url || "",
+              text: data.zillowUrl || "",
               alignment: AlignmentType.CENTER,
             }),
           ],
@@ -1070,10 +1175,8 @@ export async function exportToWord(data: PropertyData) {
     });
 
     const blob = await Packer.toBlob(doc);
-    saveAs(
-      blob,
-      `${data.propertyOverview.streetAddress.replace(/[^a-z0-9]/gi, "_")}_Analysis.docx`,
-    );
+    const fileName = `${data.propertyOverview.streetAddress.replace(/[^a-z0-9]/gi, "_")}_Analysis.docx`;
+    saveAs(blob, fileName);
   } catch (error) {
     console.error("DOCX export error:", error);
     throw new Error("Failed to export Word document");
@@ -1103,30 +1206,25 @@ export async function exportToText(data: PropertyData) {
 
     text += `AI RECOMMENDATION\n`;
     text += `${"-".repeat(60)}\n`;
-    text += `${data.aiAnalysis?.recommendation || "No recommendation available"}\n\n`;
+    text += `${safeString(data.aiAnalysis?.recommendation) || "No recommendation available"}\n\n`;
 
     text += `VALUE ASSESSMENT\n`;
     text += `${"-".repeat(60)}\n`;
-    text += `${data.aiAnalysis?.valueAssessment || "No assessment available"}\n\n`;
+    text += `${safeString(data.aiAnalysis?.valueAssessment) || "No assessment available"}\n\n`;
 
     text += `KEY METRICS\n`;
     text += `${"-".repeat(60)}\n`;
     text += `List Price:              ${data.propertyOverview?.listPrice ? formatExactPrice(data.propertyOverview.listPrice) : "N/A"}\n`;
     text += `Zestimate:               ${data.propertyOverview?.zestimate ? formatExactPrice(data.propertyOverview.zestimate) : "N/A"}\n`;
-    text += `5-Year Projection:       ${data.appreciation?.year5 ? formatExactPrice(data.appreciation.year5) : "N/A"}\n`;
-    text += `Days on Zillow:          ${data.zillow?.daysOnZillow || "N/A"}\n\n`;
-
-    text += `PROPERTY DETAILS\n`;
-    text += `${"-".repeat(60)}\n`;
-    text += `Bedrooms:                ${data.factsAndFeatures?.bedrooms || "N/A"}\n`;
-    text += `Bathrooms:               ${data.factsAndFeatures?.bathrooms || "N/A"}\n`;
-    text += `Square Feet:             ${data.factsAndFeatures?.squareFeet ? formatNumber(data.factsAndFeatures.squareFeet) : "N/A"}\n`;
-    text += `Year Built:              ${data.property?.yearBuilt || "N/A"}\n`;
-    text += `Property Type:           ${data.property?.propertyType || "N/A"}\n\n`; // ✅ FIXED
+    text += `Price per Sq Ft:         ${data.propertyOverview?.pricePerSqft ? `$${data.propertyOverview.pricePerSqft.toFixed(2)}` : "N/A"}\n`;
+    text += `Square Feet:             ${data.propertyOverview?.squareFeet ? formatNumber(data.propertyOverview.squareFeet) : "N/A"}\n`;
+    text += `Bedrooms:                ${data.propertyOverview?.bedrooms || "N/A"}\n`;
+    text += `Bathrooms:               ${data.propertyOverview?.bathrooms || "N/A"}\n`;
+    text += `Year Built:              ${data.propertyOverview?.yearBuilt || "N/A"}\n\n`;
 
     text += `INVESTMENT STRENGTHS\n`;
     text += `${"-".repeat(60)}\n`;
-    const strengths = data.keyStrengths || [];
+    const strengths = data.insights?.keyStrengths || [];
     if (strengths.length > 0) {
       strengths.forEach((strength, index) => {
         text += `${index + 1}. ${strength}\n`;
@@ -1138,7 +1236,7 @@ export async function exportToText(data: PropertyData) {
 
     text += `POTENTIAL RISKS\n`;
     text += `${"-".repeat(60)}\n`;
-    const risks = data.keyRisks || [];
+    const risks = data.insights?.keyRisks || [];
     if (risks.length > 0) {
       risks.forEach((risk, index) => {
         text += `${index + 1}. ${risk}\n`;
@@ -1151,14 +1249,12 @@ export async function exportToText(data: PropertyData) {
     text += `═══════════════════════════════════════════════════════════════\n`;
     text += `Generated by Four Corner Properties\n`;
     text += `Date: ${new Date().toLocaleDateString()}\n`;
-    text += `Zillow Listing: ${data.zillow?.url || "N/A"}\n`;
+    text += `Zillow Listing: ${data.zillowUrl || "N/A"}\n`;
     text += `═══════════════════════════════════════════════════════════════\n`;
 
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    saveAs(
-      blob,
-      `${data.propertyOverview.streetAddress.replace(/[^a-z0-9]/gi, "_")}_Analysis.txt`,
-    );
+    const fileName = `${data.propertyOverview.streetAddress.replace(/[^a-z0-9]/gi, "_")}_Analysis.txt`;
+    saveAs(blob, fileName);
   } catch (error) {
     console.error("TXT export error:", error);
     throw new Error("Failed to export text file");

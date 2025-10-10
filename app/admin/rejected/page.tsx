@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 interface RejectedListing {
   id: string;
@@ -49,13 +50,7 @@ export default function RejectedListingsPage() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg text-gray-600">
-          Loading rejected listings...
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading rejected listings..." />;
   }
 
   return (

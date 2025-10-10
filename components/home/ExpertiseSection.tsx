@@ -50,7 +50,7 @@ const ExpertiseSection: React.FC = () => {
       content:
         "Exclusive access to carefully selected properties, handpicked for their design, location, and long-term value.",
       image:
-        "https://i.ibb.co/k2tVRjSB/68ada709a6656f55ea938436-Service-Img.jpg",
+        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103377/68ada709a6656f55ea938436-Service-Img_rw4nrv.jpg",
     },
     {
       id: 2,
@@ -58,7 +58,7 @@ const ExpertiseSection: React.FC = () => {
       content:
         "Personalized guidance through every stage of the buying process, ensuring a seamless experience from search to closing.",
       image:
-        "https://i.ibb.co/8g7prgrd/68afe686a8b0e8104f58a45c-Untitled-design-6.png",
+        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103374/68afe686a8b0e8104f58a45c-Untitled-design-6_zydsft.png",
     },
     {
       id: 3,
@@ -66,7 +66,7 @@ const ExpertiseSection: React.FC = () => {
       content:
         "Strategic positioning, market insight, and professional staging to present each property at its absolute best.",
       image:
-        "https://i.ibb.co/TMLpzvvj/68afe5de92b348d581323a93-Untitled-design-4.png",
+        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103343/68afe5de92b348d581323a93-Untitled-design-4_hopcuy.png",
     },
     {
       id: 4,
@@ -74,7 +74,7 @@ const ExpertiseSection: React.FC = () => {
       content:
         "In-depth market analysis and accurate property valuations to support informed decisions and maximize returns.",
       image:
-        "https://i.ibb.co/ZpSb94fM/68afe75043f22ac1dc01fa9d-Untitled-design-7.png",
+        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103266/68afe75043f22ac1dc01fa9d-Untitled-design-7_dr8s7i.png",
     },
     {
       id: 5,
@@ -82,7 +82,7 @@ const ExpertiseSection: React.FC = () => {
       content:
         "Expert advice for identifying, acquiring, and managing investment properties with strong growth potential.",
       image:
-        "https://i.ibb.co/1YPmjzcJ/68afdae20eb3f0d6726a690c-Untitled-design-3.png",
+        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103465/68afdae20eb3f0d6726a690c-Untitled-design-3_x4ontk.png",
     },
   ];
 

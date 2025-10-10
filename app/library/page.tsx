@@ -21,6 +21,7 @@ import PropertyCard from "@/components/library/PropertyCard";
 import PropertyListItem from "@/components/library/PropertyListItem";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 type ViewMode = "grid" | "list";
 type SortBy = "date" | "price" | "grade";
@@ -350,14 +351,7 @@ export default function LibraryPage() {
   };
 
   if (status === "loading" || isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 border-4 border-luxury-blue border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-white/70">Loading library...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading library..." />;
   }
 
   return (

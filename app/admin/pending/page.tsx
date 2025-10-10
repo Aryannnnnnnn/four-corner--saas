@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { showToast } from "@/app/lib/utils/toast";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 interface PendingListing {
   id: string;
@@ -130,11 +131,7 @@ export default function PendingListingsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg text-gray-600">Loading pending listings...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading pending listings..." />;
   }
 
   return (

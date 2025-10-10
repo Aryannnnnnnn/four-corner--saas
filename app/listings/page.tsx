@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Header from "@/components/layout/Header";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { PropertyListing } from "@/app/lib/types/listings";
 
 export default function ListingsPage() {
@@ -83,9 +84,7 @@ export default function ListingsPage() {
     return (
       <>
         <Header />
-        <div className="min-h-screen flex items-center justify-center mt-20">
-          <div className="text-lg">Loading listings...</div>
-        </div>
+        <LoadingSpinner message="Loading listings..." />
       </>
     );
   }

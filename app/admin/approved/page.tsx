@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 interface ApprovedListing {
   id: string;
@@ -48,13 +49,7 @@ export default function ApprovedListingsPage() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg text-gray-600">
-          Loading approved listings...
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading approved listings..." />;
   }
 
   return (

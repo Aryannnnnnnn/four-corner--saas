@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Card from "@/components/ui/Card";
 import Header from "@/components/layout/Header";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { showToast } from "@/app/lib/utils/toast";
 import { logger } from "@/app/lib/utils/logger";
 
@@ -84,11 +85,7 @@ export default function ListPropertyPage() {
 
   // Redirect if not authenticated
   if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading..." />;
   }
 
   if (status === "unauthenticated") {

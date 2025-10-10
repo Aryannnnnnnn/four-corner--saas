@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Header from "@/components/layout/Header";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { PropertyListing } from "@/app/lib/types/listings";
 
 export default function ListingDetailPage() {
@@ -45,9 +46,7 @@ export default function ListingDetailPage() {
     return (
       <>
         <Header />
-        <div className="min-h-screen flex items-center justify-center mt-20">
-          <div className="text-lg">Loading...</div>
-        </div>
+        <LoadingSpinner message="Loading listing..." />
       </>
     );
   }

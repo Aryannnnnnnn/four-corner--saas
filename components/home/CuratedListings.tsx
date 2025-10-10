@@ -47,35 +47,35 @@ const CuratedListings: React.FC = () => {
       id: 1,
       address: "196 Glastenview Dr, Shaftsbury, VT 05262",
       image:
-        "https://i.ibb.co/0VMWskXg/68b767a79208d443bd7f87e9-f975965f05957c3e1bf21f1f59d747bb-uncropped-scaled-within-1536-1152.webp",
+        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103424/68b767a79208d443bd7f87e9-f975965f05957c3e1bf21f1f59d747bb-uncropped-scaled-within-1536-1152_l5izfv.webp",
       href: "/property/1",
     },
     {
       id: 2,
       address: "441 Guilford St, Brattleboro, VT 05301",
       image:
-        "https://i.ibb.co/SXp00Typ/68b750c2de3cd6a8088bf23f-c02bff851bfd9c354bf2a526bec80f31-uncropped-scaled-within-1536-1152.webp",
+        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103415/68b750c2de3cd6a8088bf23f-c02bff851bfd9c354bf2a526bec80f31-uncropped-scaled-within-1536-1152_otyds8.webp",
       href: "/property/2",
     },
     {
       id: 3,
       address: "60 Brookside Dr, Killington, VT 05751",
       image:
-        "https://i.ibb.co/20tWwzJw/68b744c052141201ce324765-dcd5df55acef53f1175fd45791216c21-uncropped-scaled-within-1536-1152.webp",
+        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103406/68b744c052141201ce324765-dcd5df55acef53f1175fd45791216c21-uncropped-scaled-within-1536-1152_rnvlrk.webp",
       href: "/property/3",
     },
     {
       id: 4,
       address: "290 Barts Hill Rd, Killington, VT 05751",
       image:
-        "https://i.ibb.co/v4j0HMPY/68b71cd250e706efd2a17611-a5b9b3e465864eadec6d2f7b6ca76e5c-uncropped-scaled-within-1536-1152.webp",
+        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103397/68b71cd250e706efd2a17611-a5b9b3e465864eadec6d2f7b6ca76e5c-uncropped-scaled-within-1536-1152_k0xpfq.webp",
       href: "/property/4",
     },
     {
       id: 5,
       address: "107 Top Ridge, Mendon, VT 05701",
       image:
-        "https://i.ibb.co/8DmT1rXk/68b7123cab8a1dc30fe61c45-fd0a925dded62699f1d1db928326c62f-cc-ft-384.webp",
+        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103386/68b7123cab8a1dc30fe61c45-fd0a925dded62699f1d1db928326c62f-cc-ft-384_b2by53.webp",
       href: "/property/5",
     },
   ];
@@ -286,7 +286,7 @@ const PropertyCard: React.FC<{ property: PropertyListing }> = ({
       <div className="p-4 flex items-center justify-between flex-1">
         <div className="flex-1 pr-3">
           <p
-            className="text-black/90 text-2xl md:text-xl lg:text-4xl font-medium leading-snug"
+            className="text-black/90 text-2xl md:text-xl lg:text-2xl font-medium leading-snug"
             style={{ fontFamily: "Coconat" }}
           >
             {property.address}

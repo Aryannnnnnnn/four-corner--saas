@@ -71,49 +71,49 @@ const Footer: React.FC = () => {
             <nav className="space-y-3">
               <a
                 href="/"
-                className="block text-gray-700 text-base hover:text-black transition-colors duration-300"
+                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
               >
                 Home
               </a>
               <a
                 href="/dashboard"
-                className="block text-gray-700 text-base hover:text-black transition-colors duration-300"
+                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
               >
                 Dashboard
               </a>
               <a
                 href="/analyze-your-property"
-                className="block text-gray-700 text-base hover:text-black transition-colors duration-300"
+                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
               >
                 Analyze Property
               </a>
               <a
                 href="/about"
-                className="block text-gray-700 text-base hover:text-black transition-colors duration-300"
+                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
               >
                 About
               </a>
               <a
                 href="/library"
-                className="block text-gray-700 text-base hover:text-black transition-colors duration-300"
+                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
               >
                 Library
               </a>
               <a
                 href="/projects"
-                className="block text-gray-700 text-base hover:text-black transition-colors duration-300"
+                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
               >
                 Projects
               </a>
               <a
                 href="/stories"
-                className="block text-gray-700 text-base hover:text-black transition-colors duration-300"
+                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
               >
                 Stories
               </a>
               <a
                 href="/contact"
-                className="block text-gray-700 text-base hover:text-black transition-colors duration-300"
+                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
               >
                 Contact
               </a>
@@ -131,10 +131,10 @@ const Footer: React.FC = () => {
 
             <div className="space-y-3">
               <a
-                href="https://instagram.com/fourcornerproperties"
+                href="https://instagram.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-gray-700 text-base hover:text-black transition-colors duration-300"
+                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
               >
                 Instagram
               </a>

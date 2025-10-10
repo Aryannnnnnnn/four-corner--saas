@@ -9,6 +9,7 @@ import AnalysisResults from "@/components/analysis/AnalysisResults";
 import LoadingScreen from "@/components/analysis/LoadingScreen";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { propertyApi } from "@/lib/utils/api";
 import { logger } from "@/app/lib/utils/logger";
 
@@ -117,14 +118,7 @@ export default function AnalysisPage() {
   };
 
   if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 border-4 border-luxury-gold border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-white/70">Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading..." />;
   }
 
   if (isAnalyzing) {

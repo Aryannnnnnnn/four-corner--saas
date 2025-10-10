@@ -103,8 +103,12 @@
 
   .luxury-button:hover {
     background-color: #2563eb;
-    transform: scale(1.05);
+    transform: translateY(-1px);
     box-shadow: 0 10px 25px -5px rgb(59 130 246 / 0.5);
+  }
+
+  .luxury-button:active {
+    transform: translateY(0px);
   }
 
   .luxury-input {

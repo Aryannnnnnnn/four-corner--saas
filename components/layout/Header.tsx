@@ -15,6 +15,7 @@ import {
   User,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -69,22 +70,27 @@ export default function Header() {
 
   // Company dropdown items (non-clickable parent)
   const companyItems = [
-    { name: "About", href: "https://fourcornervt.com/about", icon: BookOpen },
+    { name: "About", href: "/about", icon: BookOpen },
     {
       name: "Stories",
-      href: "https://fourcornervt.com/case-studies",
+      href: "/case-studies",
       icon: BookMarked,
     },
     {
       name: "Projects",
-      href: "https://fourcornervt.com/projects",
+      href: "/projects",
       icon: FolderOpen,
     },
   ];
 
   // Close dropdowns when clicking outside or on route change
   useEffect(() => {
-    const handleClickOutside = () => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      // Don't close if clicking inside a dropdown or on the profile button
+      if (target.closest('.dropdown-container')) {
+        return;
+      }
       setDashboardDropdownOpen(false);
       setCompanyDropdownOpen(false);
       setProfileDropdownOpen(false);
@@ -106,16 +112,21 @@ export default function Header() {
       <div className="max-w-[90vw] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-4">
-            <img
+          <Link href="/" className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <Image
               src="/logo.png"
               alt="Four Corner Properties"
-              className="h-12 sm:h-14 w-auto"
+              width={150}
+              height={56}
+              priority
+              quality={100}
+              className="h-12 sm:h-14 w-auto object-contain"
+              unoptimized
             />
           </Link>
 
           {/* Desktop Navigation - Centered */}
-          <nav className="hidden xl:flex items-center justify-left ml-8 flex-1 space-x-4 2xl:space-x-6">
+          <nav className="hidden xl:flex items-center justify-left ml-8 flex-1 space-x-[22px]">
             {/* 1. Home Navigation */}
             {homeNavigation.map((item) => (
               <Link
@@ -146,48 +157,6 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* 3. Dashboard with Dropdown */}
-            <div
-              className="relative group"
-              onMouseEnter={() => setDashboardDropdownOpen(true)}
-              onMouseLeave={() => setDashboardDropdownOpen(false)}
-            >
-              <Link
-                href="/dashboard"
-                className={cn(
-                  "flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
-                  pathname === "/dashboard" && "text-gray-900 border-blue-600",
-                )}
-              >
-                <Home className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
-                <span>Dashboard</span>
-                <ChevronDown className="w-3 h-3 opacity-60" />
-              </Link>
-
-              {/* Dashboard Dropdown */}
-              <div
-                className={cn(
-                  "absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50",
-                  dashboardDropdownOpen
-                    ? "opacity-100 visible translate-y-0"
-                    : "opacity-0 invisible -translate-y-2",
-                )}
-              >
-                {dashboardItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={cn(
-                      "block px-6 py-4 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors border-b border-gray-100 last:border-b-0",
-                      pathname === item.href && "text-gray-900 bg-gray-50",
-                    )}
-                  >
-                    <span>{item.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
             {/* Company with Dropdown (non-clickable) */}
             <div
               className="relative group"
@@ -213,7 +182,6 @@ export default function Header() {
                   <Link
                     key={item.name}
                     href={item.href}
-                    target="_blank"
                     rel="noopener noreferrer"
                     className="block px-6 py-4 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors border-b border-gray-100 last:border-b-0"
                   >
@@ -285,61 +253,107 @@ export default function Header() {
           </nav>
 
           {/* Authentication Section - Right Side */}
-          <div className="hidden xl:block">
-            {session ? (
-              <div className="flex items-center space-x-3 xl:space-x-4">
-                {/* Profile Dropdown */}
-                <div
-                  className="relative group"
-                  onMouseEnter={() => setProfileDropdownOpen(true)}
-                  onMouseLeave={() => setProfileDropdownOpen(false)}
-                >
-                  <button className="flex items-center justify-center w-8 h-8 xl:w-9 xl:h-9 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-white font-semibold text-sm hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg">
-                    {session.user?.name?.[0]?.toUpperCase() ||
-                      session.user?.email?.[0]?.toUpperCase() ||
-                      "U"}
-                  </button>
+          <div className="hidden xl:flex items-center space-x-3 xl:space-x-4">
+            {/* Dashboard with Dropdown - Before Profile */}
+            <div
+              className="relative group"
+              onMouseEnter={() => setDashboardDropdownOpen(true)}
+              onMouseLeave={() => setDashboardDropdownOpen(false)}
+            >
+              <Link
+                href="/dashboard"
+                className={cn(
+                  "flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
+                  pathname === "/dashboard" && "text-gray-900 border-blue-600",
+                )}
+              >
+                <Home className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
+                <span>Dashboard</span>
+                <ChevronDown className="w-3 h-3 opacity-60" />
+              </Link>
 
-                  {/* Profile Dropdown Menu */}
-                  <div
+              {/* Dashboard Dropdown */}
+              <div
+                className={cn(
+                  "absolute top-full right-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50",
+                  dashboardDropdownOpen
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2",
+                )}
+              >
+                {dashboardItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
                     className={cn(
-                      "absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50 rounded-lg",
-                      profileDropdownOpen
-                        ? "opacity-100 visible translate-y-0"
-                        : "opacity-0 invisible -translate-y-2",
+                      "block px-6 py-4 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors border-b border-gray-100 last:border-b-0",
+                      pathname === item.href && "text-gray-900 bg-gray-50",
                     )}
                   >
-                    <Link
-                      href="/profile"
-                      className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100"
-                    >
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4" />
-                        <span className="font-medium">Profile</span>
-                      </div>
-                    </Link>
-                    <button
-                      onClick={() => signOut({ callbackUrl: "/" })}
-                      className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                    >
-                      <div className="flex items-center gap-2">
-                        <LogOut className="w-4 h-4" />
-                        <span className="font-medium">Sign Out</span>
-                      </div>
-                    </button>
-                  </div>
+                    <span>{item.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {session ? (
+              <div
+                className="relative group dropdown-container"
+                onMouseEnter={() => setProfileDropdownOpen(true)}
+                onMouseLeave={() => setProfileDropdownOpen(false)}
+              >
+                <Link
+                  href="/profile"
+                  className="flex items-center justify-center w-8 h-8 xl:w-9 xl:h-9 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-white font-semibold text-sm hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg"
+                  onClick={() => setProfileDropdownOpen(false)}
+                >
+                  {session.user?.name?.[0]?.toUpperCase() ||
+                    session.user?.email?.[0]?.toUpperCase() ||
+                    "U"}
+                </Link>
+
+                {/* Profile Dropdown Menu */}
+                <div
+                  className={cn(
+                    "absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50 rounded-lg",
+                    profileDropdownOpen
+                      ? "opacity-100 visible translate-y-0"
+                      : "opacity-0 invisible -translate-y-2",
+                  )}
+                >
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100"
+                    onClick={() => setProfileDropdownOpen(false)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      <span className="font-medium">Profile</span>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setProfileDropdownOpen(false);
+                      signOut({ callbackUrl: "/" });
+                    }}
+                    className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <LogOut className="w-4 h-4" />
+                      <span className="font-medium">Sign Out</span>
+                    </div>
+                  </button>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center">
-                <Link
-                  href="/login"
-                  className="group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap"
-                >
-                  <User className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
-                  Sign In
-                </Link>
-              </div>
+              <Link
+                href="/login"
+                className="group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap"
+              >
+                <User className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
+                Sign In
+              </Link>
             )}
           </div>
 
