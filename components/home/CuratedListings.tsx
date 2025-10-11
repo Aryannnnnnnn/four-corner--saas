@@ -109,7 +109,7 @@ const CuratedListings: React.FC = () => {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#21266c] mb-2">
             Home Listings in Your Area
           </h2>
-          <p className="text-base text-gray-600">Los Angeles, CA</p>
+          <p className="text-base text-gray-600">Vermont</p>
         </div>
 
         {/* Grid Layout - All Properties */}

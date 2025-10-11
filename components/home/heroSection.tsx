@@ -59,7 +59,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   ];
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-hidden">
       <Header />
       {/* Background Image with Overlay */}
       <div
@@ -80,9 +80,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           backgroundBlendMode: "overlay",
         }}
       />
-      <div className="relative z-10 h-full">
+      <div className="relative z-10 min-h-screen flex items-end">
         {/* Main Content - Bottom Positioned */}
-        <div className="absolute bottom-0 left-0 right-0 pb-8 sm:pb-12 md:pb-16 lg:pb-20 px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
+        <div className="w-full pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 md:pb-16 lg:pb-20 px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
           <div className="w-full max-w-[1800px] mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
               {/* Left Side - Logo, Title and Links */}
