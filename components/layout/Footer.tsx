@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
           {/* Company Information */}
           <div className="space-y-4">
             <h3
-              className="text-black text-xl md:text-2xl text-[#21266c] font-medium mb-3"
+              className="text-xl md:text-2xl text-[#21266c] font-medium mb-3"
               style={{ fontFamily: "Coconat" }}
             >
               Four Corner Properties
@@ -48,19 +48,10 @@ const Footer: React.FC = () => {
                 info@fourcornerpropertiesvt.com
               </a>
             </div>
-
-            <div className="pt-3 space-y-1">
-              <p className="text-[#21266c] text-sm">
-               <span className="font-bold"> © 2025 Four Corner Properties LLC. </span> All Rights Reserved.
-              </p>
-              <p className="text-gray-600 text-sm">
-                Powered By Empire 325 Marketing
-              </p>
-            </div>
           </div>
 
           {/* Middle Columns Group - Navigation, Saas, Socials */}
-          <div className="lg:col-span-3 grid grid-cols-1 font-bold md:grid-cols-3 gap-8 lg:gap-16 xl:gap-28">
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-16 xl:gap-28">
             {/* Navigation */}
             <div className="space-y-4">
               <h4
@@ -291,6 +282,26 @@ const Footer: React.FC = () => {
             height={100}
             className="mx-auto"
           />
+        </div>
+        <div className="mt-4 w-full text-left text-gray-500 text-xs leading-snug px-2">
+          <p>
+            <span className="font-semibold text-[#21266c] text-lg">© 2025 Four Corner Properties.</span> All Rights Reserved.
+          </p>
+          <p>
+            Powered By <span className="font-semibold text-gray-500">Empire 325 Marketing</span>
+          </p>
+          <p>
+            Four Corner Properties is a licensed real estate brokerage operating in the State of Vermont. We proudly support the principles of the Fair Housing Act and the Equal Opportunity Act. Each transaction is handled in accordance with Vermont Real Estate Commission rules and state regulations.
+          </p>
+          <p>
+            The information provided on this site, including property data and market analyses, is deemed reliable but not guaranteed. All listings and property information are subject to change, errors, omissions, prior sale, or withdrawal without notice. Users are encouraged to verify all property details independently through qualified professionals such as appraisers, surveyors, or inspectors.
+          </p>
+          <p>
+            Our platform also offers property analysis and listing tools for informational purposes only. Use of these tools does not constitute professional advice or establish a client–broker relationship unless expressly agreed to in writing.
+          </p>
+          <p className="font-medium text-[#21266c] tracking-wide pt-2">
+            Fair Housing • Equal Opportunity • Licensed in Vermont
+          </p>
         </div>
       </div>
     </footer>

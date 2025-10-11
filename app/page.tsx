@@ -4,12 +4,16 @@ import FAQSection from "@/components/home/FAQSection";
 import HeroSection from "@/components/home/heroSection";
 import VermontStorySection from "@/components/home/VermontStorySection";
 import Footer from "@/components/layout/Footer";
+import ExpertiseSection from "@/components/home/ExpertiseSection";
+import CaseStudiesSection from "@/components/home/CaseStudiesSection";
 
 const Home = () => {
   return (
     <>
       <HeroSection />
       <CuratedListings />
+      <ExpertiseSection />
+      <CaseStudiesSection />
       <RedefiningRealEstateSection />
       <VermontStorySection />
       <FAQSection />

@@ -76,7 +76,7 @@ export default function ContactPage() {
 
             {/* Right Column - Contact Form */}
             <div className="bg-white p-8 sm:p-10 lg:p-12 rounded-lg shadow-sm">
-              <h2 className="text-2xl sm:text-3xl font-serif text-gray-900 mb-8">
+              <h2 className="text-2xl sm:text-3xl font-serif text-[#21266c] mb-8">
                 Let's get in touch
               </h2>
 
@@ -199,7 +199,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting || !agreeToContact}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 bg-gray-900 text-white font-medium text-sm tracking-wide uppercase hover:bg-gray-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 bg-[#21266c] text-white font-medium text-sm tracking-wide uppercase hover:bg-gray-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
                   <ArrowRight className="w-4 h-4" />

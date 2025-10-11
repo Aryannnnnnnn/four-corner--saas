@@ -104,7 +104,7 @@ const VermontStorySection: React.FC = () => {
                   Sell Your Property
                 </span>
                 <div className="relative z-10 w-6 h-6 flex items-center justify-center">
-                  <ArrowRight className="w-4 h-4 text-white transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight className="w-5 h-5 text-white transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </button>
 
@@ -120,16 +120,18 @@ const VermontStorySection: React.FC = () => {
 
               {/* Book A Call Button - Outlined */}
                <button
-                className="group relative overflow-hidden bg-gradient-to-r from-luxury-blue to-blue-600 hover:from-luxury-blue/80 hover:to-blue-600/80 rounded-full px-8 py-4 flex items-center justify-center sm:justify-start gap-3 transition-all duration-300 ease-out min-w-fit"
+                className="group relative overflow-hidden bg-gradient-to-r from-luxury-blue to-blue-600 rounded-full px-8 py-4 flex items-center justify-center sm:justify-start gap-3 transition-all duration-300 ease-out min-w-fit"
                 style={{ fontFamily: "Coconat" }}
                 onClick={() => window.location.href = "/contact"}
               >
+                {/* Sliding Background for invert effect */}
+                <div className="absolute inset-0 bg-white rounded-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
 
-                <span className="relative z-10 text-white font-medium text-lg">
+                <span className="relative z-10 text-white group-hover:text-[#21266c] font-medium text-lg transition-colors duration-300">
                   Book a Call
                 </span>
                 <div className="relative z-10 w-6 h-6 flex items-center justify-center">
-                  <ArrowRight className="w-4 h-4 text-white transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight className="w-5 h-5 text-white group-hover:text-[#21266c] transition-all duration-300 group-hover:translate-x-1" />
                 </div>
               </button>
             </div>

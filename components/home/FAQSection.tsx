@@ -90,7 +90,7 @@ const FAQSection: React.FC = () => {
           <div className="lg:sticky lg:top-24 space-y-8">
             {/* FAQ Title */}
             <h2
-              className="text-black text-center lg:text-left text-[min(2.5rem,7vw)] sm:text-[min(3rem,6vw)] md:text-[min(3.5rem,5vw)] lg:text-[min(52px,4.5vw)] text-[#21266c] leading-[1.1] tracking-[-0.72px]"
+              className="text-center lg:text-left text-[min(2.5rem,7vw)] sm:text-[min(3rem,6vw)] md:text-[min(3.5rem,5vw)] lg:text-[min(52px,4.5vw)] text-[#21266c] leading-[1.1] tracking-[-0.72px]"
               style={{ fontFamily: "Coconat" }}
             >
               {["Frequently", "Asked", "Questions"].map((word, index) => (
@@ -167,8 +167,8 @@ const FAQSection: React.FC = () => {
                   <div
                     className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 ease-in-out ${
                       expandedIndex === index
-                        ? "bg-blue-50 border-[#21266c]"
-                        : "bg-black/5 border-black/20 group-hover:border-[#21266c] group-hover:bg-blue-50"
+                        ? "bg-black/5 border-[#21266c]"
+                        : "bg-black/5 border-black/20"
                     }`}
                   >
                     <Plus className={`w-5 h-5 transition-all duration-500 ease-in-out transform ${

@@ -149,7 +149,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                     Home Financing
                   </a>
                   <a
-                    href="#"
+                    href="https://fourcornerpropertiesvt.com/wp-content/uploads/2022/06/How%20to%20use%20VT%20ANR%20Atlas%202020.pdf"
+                    target="_blank"
                     className="text-white/90 hover:text-white backdrop-blur-3xl drop-shadow-lg rounded-full p-3 transition-colors text-sm sm:text-base md:text-lg font-normal tracking-normal"
                     style={{
                       opacity: isLoaded ? 1 : 0,

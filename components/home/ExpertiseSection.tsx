@@ -1,19 +1,10 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
-interface ExpertiseItem {
-  id: number;
-  title: string;
-  content: string;
-  image: string;
-}
-
 const ExpertiseSection: React.FC = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -27,7 +18,7 @@ const ExpertiseSection: React.FC = () => {
         }
       },
       {
-        threshold: 0.3, // Trigger when 30% of the section is visible
+        threshold: 0.3,
         rootMargin: "-50px 0px -50px 0px",
       },
     );
@@ -43,213 +34,175 @@ const ExpertiseSection: React.FC = () => {
     };
   }, []);
 
-  const expertiseItems: ExpertiseItem[] = [
-    {
-      id: 1,
-      title: "Private Property Listings",
-      content:
-        "Exclusive access to carefully selected properties, handpicked for their design, location, and long-term value.",
-      image:
-        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103377/68ada709a6656f55ea938436-Service-Img_rw4nrv.jpg",
-    },
-    {
-      id: 2,
-      title: "Buyer Representation",
-      content:
-        "Personalized guidance through every stage of the buying process, ensuring a seamless experience from search to closing.",
-      image:
-        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103374/68afe686a8b0e8104f58a45c-Untitled-design-6_zydsft.png",
-    },
-    {
-      id: 3,
-      title: "Seller Advisory & Staging",
-      content:
-        "Strategic positioning, market insight, and professional staging to present each property at its absolute best.",
-      image:
-        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103343/68afe5de92b348d581323a93-Untitled-design-4_hopcuy.png",
-    },
-    {
-      id: 4,
-      title: "Market Insights & Valuations",
-      content:
-        "In-depth market analysis and accurate property valuations to support informed decisions and maximize returns.",
-      image:
-        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103266/68afe75043f22ac1dc01fa9d-Untitled-design-7_dr8s7i.png",
-    },
-    {
-      id: 5,
-      title: "Investment Property Guidance",
-      content:
-        "Expert advice for identifying, acquiring, and managing investment properties with strong growth potential.",
-      image:
-        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103465/68afdae20eb3f0d6726a690c-Untitled-design-3_x4ontk.png",
-    },
+  const stats = [
+    { value: "X+", label: "Properties\nSold" },
+    { value: "100%", label: "Client\nSatisfaction" },
+    { value: "X+", label: "Years of\nExperience" },
+    { value: "$X Million", label: "Total Sales\nVolume" },
   ];
-
-  const handleBoxClick = (index: number) => {
-    setActiveIndex(index);
-    setExpandedIndex(expandedIndex === index ? null : index);
-  };
 
   return (
     <section
       ref={sectionRef}
-      className="bg-white min-h-screen flex flex-col items-center justify-center p-4 md:p-8 lg:p-12 overflow-hidden"
+      className="bg-white py-16 sm:py-20 lg:py-24 overflow-hidden relative"
     >
-      {/* Section Heading with HeroSection-style Animation */}
-      <div className="mb-16 w-full max-w-[1800px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-        <h2
-          className="text-black text-center lg:max-w-[50%] md:text-left text-[min(2.5rem,7vw)] sm:text-[min(3rem,6vw)] md:text-[min(3.5rem,5vw)] lg:text-[min(52px,4.5vw)] leading-[1.1] tracking-[-0.72px]"
-          style={{ fontFamily: "Coconat" }}
-        >
-          {[
-            "Heartfelt",
-            "Expertise",
-            "for",
-            "Vermont's",
-            "Finest",
-            "Homes",
-          ].map((word, index) => (
-            <span
-              key={index}
-              className={`inline-block mr-4 opacity-0 ${isVisible ? "animate-word-appear" : ""}`}
-              style={{
-                animationDelay: isVisible ? `${index * 0.15}s` : "0s",
-                animationFillMode: "forwards",
-              }}
-            >
-              {word}
-            </span>
-          ))}
-        </h2>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="w-full max-w-[1800px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          {/* Left Side - Expandable Boxes */}
-          <div className="space-y-4">
-            {expertiseItems.map((item, index) => (
-              <div
-                key={item.id}
-                className={`group bg-black/5 border rounded-xl overflow-hidden cursor-pointer transition-all duration-700 ease-in-out ${
-                  expandedIndex === index
-                    ? "border-blue-600"
-                    : "border-black/10"
-                } ${
-                  isVisible ? "animate-fadeInUp" : "opacity-0"
-                }`}
-                style={{
-                  animationDelay: isVisible ? `${index * 0.1 + 0.5}s` : "0s",
-                  animationFillMode: "forwards",
-                }}
-                onClick={() => handleBoxClick(index)}
-              >
-                {/* Box Header */}
-                <div className="px-[5%] py-6 flex items-center justify-between">
-                  <h3
-                    className="text-black text-xl md:text-2xl font-medium pr-4"
-                    style={{ fontFamily: "Coconat" }}
-                  >
-                    {item.title}
-                  </h3>
-                  <div
-                    className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 ease-in-out ${
-                      expandedIndex === index
-                        ? "bg-blue-50 border-blue-600"
-                        : "bg-black/5 border-black/20 group-hover:border-blue-600 group-hover:bg-blue-50"
-                    }`}
-                  >
-                    <Plus className={`w-5 h-5 transition-all duration-500 ease-in-out transform ${
-                      expandedIndex === index ? "rotate-45 text-blue-600" : "rotate-0 text-black/70 group-hover:text-blue-600"
-                    }`} />
-                  </div>
-                </div>
-
-                {/* Expandable Content */}
-                <div
-                  className={`overflow-hidden transition-all duration-500 ease-out ${
-                    expandedIndex === index
-                      ? "max-h-[500px] opacity-100"
-                      : "max-h-0 opacity-0"
-                  }`}
-                  style={{
-                    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                >
-                  <div
-                    className={`px-[5%] pb-6 relative transition-all duration-400 ease-out ${
-                      expandedIndex === index ? "pt-4" : "pt-0"
-                    }`}
-                  >
-                    {/* Custom border */}
-                    <div
-                      className={`absolute top-0 left-1/2 -translate-x-1/2 w-[90%] transition-all duration-400 ${
-                        expandedIndex === index
-                          ? "bg-blue-600"
-                          : "bg-black/30"
-                      }`}
-                      style={{ height: '1px' }}
-                    ></div>
-                    <p
-                      className={`text-black/80 text-base md:text-lg leading-relaxed transition-all duration-400 ease-out ${
-                        expandedIndex === index
-                          ? "transform translate-y-0 opacity-100 delay-100"
-                          : "transform translate-y-0 opacity-0 delay-0"
-                      }`}
-                    >
-                      {item.content}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Right Side - Image Gallery */}
-          <div className="lg:sticky lg:top-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 relative">
+          {/* Left Side - Images with Creative Layout */}
+          <div className="lg:col-span-7 relative">
+            {/* Main Large Image */}
             <div
-              className={`relative w-full rounded-2xl overflow-hidden shadow-2xl transition-all duration-700 ${
-                isVisible ? "animate-fadeInRight" : "opacity-0"
-              }`}
+              className={`relative rounded-3xl overflow-hidden shadow-2xl ${isVisible ? "animate-fadeInLeft" : "opacity-0"}`}
               style={{
-                aspectRatio: "4/3",
-                animationDelay: isVisible ? "0.8s" : "0s",
+                animationDelay: "0.2s",
                 animationFillMode: "forwards",
               }}
             >
               <img
-                src={
-                  expertiseItems[activeIndex]?.image ||
-                  expertiseItems[0]?.image ||
-                  ""
-                }
-                alt={
-                  expertiseItems[activeIndex]?.title ||
-                  expertiseItems[0]?.title ||
-                  "Expertise image"
-                }
-                className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
-                key={activeIndex} // Force re-render for smooth transitions
+                src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173041/todd-kent-178j8tJrNlc-unsplash_txkfnv.jpg"
+                alt="Vermont Real Estate"
+                className="w-full h-[500px] lg:h-[600px] object-cover"
               />
+            </div>
 
-              {/* Image Overlay with Title */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-start p-6"></div>
+            {/* Floating Small Image - Top Right */}
+            <div
+              className={`absolute -top-8 right-4 lg:right-8 w-48 h-52 rounded-2xl overflow-hidden shadow-xl border-4 border-white ${isVisible ? "animate-scaleIn" : "opacity-0"}`}
+              style={{
+                animationDelay: "0.6s",
+                animationFillMode: "forwards",
+              }}
+            >
+              <img
+                src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760102913/team-1_l8m6i1.png"
+                alt="Interior"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Floating Stats Card - Bottom Left */}
+            <div
+              className={`absolute -bottom-6 left-8 bg-white p-6 rounded-2xl shadow-2xl border border-gray-100 ${isVisible ? "animate-fadeInUp" : "opacity-0"}`}
+              style={{
+                animationDelay: "0.8s",
+                animationFillMode: "forwards",
+              }}
+            >
+              <div className="text-[#21266c] text-5xl font-light mb-1" style={{ fontFamily: "Coconat" }}>
+                X+
+              </div>
+              <div className="text-gray-500 text-xs uppercase tracking-wider">
+                Years of Excellence
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side - Content with Asymmetric Layout */}
+          <div className="lg:col-span-5 space-y-8">
+            {/* Decorative Line */}
+            <div
+              className={`w-20 h-1 bg-[#21266c] ${isVisible ? "animate-slideRight" : "opacity-0"}`}
+              style={{
+                animationDelay: "0.3s",
+                animationFillMode: "forwards",
+              }}
+            ></div>
+
+            {/* Our Story */}
+            <div
+              className={`${isVisible ? "animate-fadeInRight" : "opacity-0"}`}
+              style={{
+                animationDelay: "0.4s",
+                animationFillMode: "forwards",
+              }}
+            >
+              <h3
+                className="text-[#21266c] text-3xl sm:text-4xl lg:text-5xl font-light mb-6 leading-tight"
+                style={{ fontFamily: "Coconat" }}
+              >
+                Our Story
+              </h3>
+              <p className="text-gray-600 text-base leading-relaxed mb-4">
+                Only one network of agents represents the longest standing leader in the world. At the very heart of innovation, an exceptional luxury real estate network boasting Four Corner's unparalleled presence.
+              </p>
+              <p className="text-gray-600 text-base leading-relaxed mb-6">
+                Through this comes far more than 300+ networks of homes for sale. Individuals have come to associate their entire luxury lifestyles with our brand.
+              </p>
+
+              <button className="inline-flex items-center gap-2 text-[#21266c] font-semibold text-sm border-b-2 border-[#21266c] pb-1 hover:gap-4 transition-all duration-300"
+              onClick={() => window.location.href = "/about"}
+              >
+                <span>SEE DETAILS</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Floating Stats - Staggered */}
+            <div className="space-y-6 pt-8">
+              <div
+                className={`flex items-end gap-12 ${isVisible ? "animate-fadeInRight" : "opacity-0"}`}
+                style={{
+                  animationDelay: "0.6s",
+                  animationFillMode: "forwards",
+                }}
+              >
+                <div>
+                  <div className="text-[#21266c] text-5xl font-light mb-2" style={{ fontFamily: "Coconat" }}>
+                    X+
+                  </div>
+                  <div className="text-gray-500 text-xs uppercase tracking-wider">
+                    Properties<br />Sold
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[#21266c] text-5xl font-light mb-2" style={{ fontFamily: "Coconat" }}>
+                    100%
+                  </div>
+                  <div className="text-gray-500 text-xs uppercase tracking-wider">
+                    Client<br />Satisfaction
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className={`bg-gray-50 p-6 rounded-2xl ${isVisible ? "animate-fadeInRight" : "opacity-0"}`}
+                style={{
+                  animationDelay: "0.8s",
+                  animationFillMode: "forwards",
+                }}
+              >
+                <div className="text-[#21266c] text-4xl font-light mb-3" style={{ fontFamily: "Coconat" }}>
+                  $X Million
+                </div>
+                <div className="text-gray-500 text-xs uppercase tracking-wider mb-4">
+                  Total Sales Volume
+                </div>
+                <button
+                  onClick={() => window.location.href = "/about"}
+                  className="inline-flex items-center gap-2 text-[#21266c] font-semibold text-sm hover:gap-4 transition-all duration-300"
+                >
+                  <span>EXPLORE MORE</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Decorative Background Element */}
+      <div className="absolute top-20 right-0 w-96 h-96 bg-[#21266c]/5 rounded-full blur-3xl -z-10"></div>
+
       {/* CSS Animations */}
       <style jsx>{`
-        @keyframes fadeInUp {
+        @keyframes fadeInLeft {
           0% {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateX(-30px);
           }
           100% {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateX(0);
           }
         }
 
@@ -264,29 +217,57 @@ const ExpertiseSection: React.FC = () => {
           }
         }
 
-        @keyframes wordAppear {
+        @keyframes fadeInUp {
           0% {
             opacity: 0;
-            transform: scale(0.8) translateY(20px);
-            filter: blur(22px);
+            transform: translateY(20px);
           }
           100% {
             opacity: 1;
-            transform: scale(1) translateY(0);
-            filter: blur(0);
+            transform: translateY(0);
           }
         }
 
-        .animate-word-appear {
-          animation: wordAppear 0.6s ease-out both;
+        @keyframes scaleIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
         }
 
-        .animate-fadeInUp {
-          animation: fadeInUp 0.6s ease-out both;
+        @keyframes slideRight {
+          0% {
+            opacity: 0;
+            width: 0;
+          }
+          100% {
+            opacity: 1;
+            width: 5rem;
+          }
+        }
+
+        .animate-fadeInLeft {
+          animation: fadeInLeft 0.8s ease-out both;
         }
 
         .animate-fadeInRight {
-          animation: fadeInRight 0.6s ease-out both;
+          animation: fadeInRight 0.8s ease-out both;
+        }
+
+        .animate-fadeInUp {
+          animation: fadeInUp 0.8s ease-out both;
+        }
+
+        .animate-scaleIn {
+          animation: scaleIn 0.6s ease-out both;
+        }
+
+        .animate-slideRight {
+          animation: slideRight 0.8s ease-out both;
         }
       `}</style>
     </section>
