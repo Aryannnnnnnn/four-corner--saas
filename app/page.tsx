@@ -1,5 +1,5 @@
 import CuratedListings from "@/components/home/CuratedListings";
-import ExpertiseSection from "@/components/home/ExpertiseSection";
+import RedefiningRealEstateSection from "@/components/home/RedefiningRealEstateSection";
 import FAQSection from "@/components/home/FAQSection";
 import HeroSection from "@/components/home/heroSection";
 import VermontStorySection from "@/components/home/VermontStorySection";
@@ -10,7 +10,7 @@ const Home = () => {
     <>
       <HeroSection />
       <CuratedListings />
-      <ExpertiseSection />
+      <RedefiningRealEstateSection />
       <VermontStorySection />
       <FAQSection />
       <Footer />

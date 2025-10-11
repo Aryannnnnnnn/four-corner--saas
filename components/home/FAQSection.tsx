@@ -90,7 +90,7 @@ const FAQSection: React.FC = () => {
           <div className="lg:sticky lg:top-24 space-y-8">
             {/* FAQ Title */}
             <h2
-              className="text-black text-center lg:text-left text-[min(2.5rem,7vw)] sm:text-[min(3rem,6vw)] md:text-[min(3.5rem,5vw)] lg:text-[min(52px,4.5vw)] leading-[1.1] tracking-[-0.72px]"
+              className="text-black text-center lg:text-left text-[min(2.5rem,7vw)] sm:text-[min(3rem,6vw)] md:text-[min(3.5rem,5vw)] lg:text-[min(52px,4.5vw)] text-[#21266c] leading-[1.1] tracking-[-0.72px]"
               style={{ fontFamily: "Coconat" }}
             >
               {["Frequently", "Asked", "Questions"].map((word, index) => (
@@ -124,7 +124,7 @@ const FAQSection: React.FC = () => {
 
               {/* Contact Us Button */}
               <button
-                className="group bg-blue-600 border-2 border-blue-600 rounded-full px-4 py-1 flex items-center gap-3 transition-all duration-300 ease-out"
+                className="group bg-[#21266c] border-2 border-[#21266c] rounded-full px-4 py-1 flex items-center gap-3 transition-all duration-300 ease-out"
                 style={{ fontFamily: "Coconat" }}
               >
                 {/* Button Content */}
@@ -145,7 +145,7 @@ const FAQSection: React.FC = () => {
                 key={item.id}
                 className={`group bg-black/5 border rounded-xl overflow-hidden cursor-pointer transition-all duration-700 ease-in-out ${
                   expandedIndex === index
-                    ? "border-blue-600"
+                    ? "border-[#21266c]"
                     : "border-black/10"
                 } ${
                   isVisible ? "animate-fadeInUp" : "opacity-0"
@@ -167,12 +167,12 @@ const FAQSection: React.FC = () => {
                   <div
                     className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 ease-in-out ${
                       expandedIndex === index
-                        ? "bg-blue-50 border-blue-600"
-                        : "bg-black/5 border-black/20 group-hover:border-blue-600 group-hover:bg-blue-50"
+                        ? "bg-blue-50 border-[#21266c]"
+                        : "bg-black/5 border-black/20 group-hover:border-[#21266c] group-hover:bg-blue-50"
                     }`}
                   >
                     <Plus className={`w-5 h-5 transition-all duration-500 ease-in-out transform ${
-                      expandedIndex === index ? "rotate-45 text-blue-600" : "rotate-0 text-black/70 group-hover:text-blue-600"
+                      expandedIndex === index ? "rotate-45 text-[#21266c]" : "rotate-0 text-black/70 group-hover:text-[#21266c]"
                     }`} />
                   </div>
                 </div>
@@ -197,7 +197,7 @@ const FAQSection: React.FC = () => {
                     <div
                       className={`absolute top-0 left-1/2 -translate-x-1/2 w-[90%] transition-all duration-400 ${
                         expandedIndex === index
-                          ? "bg-blue-600"
+                          ? "bg-[#21266c]"
                           : "bg-black/30"
                       }`}
                       style={{ height: '1px' }}

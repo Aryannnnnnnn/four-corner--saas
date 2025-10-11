@@ -151,7 +151,7 @@ const TeamSection: React.FC = () => {
         {/* Section Heading with ExpertiseSection-style Animation */}
         <div className="mb-16 w-full max-w-[1800px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
           <h2
-            className="text-black text-center lg:max-w-[50%] md:text-left text-[min(2.5rem,7vw)] sm:text-[min(3rem,6vw)] md:text-[min(3.5rem,5vw)] lg:text-[min(52px,4.5vw)] leading-[1.1] tracking-[-0.72px]"
+            className="text-black text-center lg:max-w-[50%] md:text-left text-[#21266c] text-[min(2.5rem,7vw)] sm:text-[min(3rem,6vw)] md:text-[min(3.5rem,5vw)] lg:text-[min(52px,4.5vw)] leading-[1.1] tracking-[-0.72px]"
             style={{ fontFamily: "Coconat" }}
           >
             {titleWords.map((word, index) => (
@@ -207,7 +207,7 @@ const TeamSection: React.FC = () => {
                   </h3>
 
                   {/* Title */}
-                  <p className="text-sm font-semibold text-blue-400 uppercase tracking-wider mb-4">
+                  <p className="text-sm font-semibold text-[#21266c] uppercase tracking-wider mb-4">
                     {member.title}
                   </p>
 
@@ -259,7 +259,7 @@ const TeamSection: React.FC = () => {
                 <h2 className="text-2xl sm:text-3xl lg:text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: "Coconat" }}>
                   {selectedMember.name}
                 </h2>
-                <p className="text-blue-600 font-semibold text-sm sm:text-base uppercase tracking-wider mb-3">
+                <p className="text-[#21266c] font-semibold text-sm sm:text-base uppercase tracking-wider mb-3">
                   {selectedMember.title}
                 </p>
 

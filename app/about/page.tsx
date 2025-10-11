@@ -1,3 +1,4 @@
+import AboutHero from "@/components/about/AboutHero";
 import BrandBenefitSection from "@/components/about/BrandBenefitSection";
 import TeamSection from "@/components/about/TeamSection";
 import CuratedListings from "@/components/home/CuratedListings";
@@ -9,6 +10,7 @@ const About = () => {
   return (
     <>
       <Header />
+      <AboutHero />
       <BrandBenefitSection />
       <TeamSection />
       <CuratedListings />

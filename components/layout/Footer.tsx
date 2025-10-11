@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
           {/* Company Information */}
           <div className="space-y-4">
             <h3
-              className="text-black text-xl md:text-2xl font-medium mb-3"
+              className="text-black text-xl md:text-2xl text-[#21266c] font-medium mb-3"
               style={{ fontFamily: "Coconat" }}
             >
               Four Corner Properties
@@ -50,7 +50,7 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="pt-3 space-y-1">
-              <p className="text-gray-600 text-sm">
+              <p className="text-[#21266c] text-sm">
                <span className="font-bold"> © 2025 Four Corner Properties LLC. </span> All Rights Reserved.
               </p>
               <p className="text-gray-600 text-sm">
@@ -60,11 +60,11 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Middle Columns Group - Navigation, Saas, Socials */}
-          <div className="lg:col-span-3 grid grid-cols-1 font-medium md:grid-cols-3 gap-8 lg:gap-16 xl:gap-28">
+          <div className="lg:col-span-3 grid grid-cols-1 font-bold md:grid-cols-3 gap-8 lg:gap-16 xl:gap-28">
             {/* Navigation */}
             <div className="space-y-4">
               <h4
-                className="text-black text-lg md:text-xl font-medium"
+                className="text-[#21266c] text-lg md:text-xl font-medium"
                 style={{ fontFamily: "Coconat" }}
               >
                 Navigation
@@ -73,31 +73,31 @@ const Footer: React.FC = () => {
               <nav className="space-y-3" style={{ fontFamily: "Inter" }}>
                 <a
                   href="/"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Home
                 </a>
                 <a
                   href="/about"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   About
                 </a>
                 <a
                   href="/listings"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Check Our Listings
                 </a>
                 <a
                   href="/stories"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Stories
                 </a>
                 <a
                   href="/contact"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Contact Us
                 </a>
@@ -107,7 +107,7 @@ const Footer: React.FC = () => {
             {/* Saas */}
             <div className="space-y-4">
               <h4
-                className="text-black text-lg md:text-xl font-medium"
+                className="text-[#21266c] text-lg md:text-xl font-medium"
                 style={{ fontFamily: "Coconat" }}
               >
                 Saas
@@ -116,49 +116,49 @@ const Footer: React.FC = () => {
               <nav className="space-y-3" style={{ fontFamily: "Inter" }}>
                 <a
                   href="/dashboard"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Dashboard
                 </a>
               <a
                   href="/analyze-your-property"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Analyze Property
                 </a>
                 <a
                   href="/list-property"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Sell Your Property
                 </a>
                 <a
                   href="/search"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Find a home
                 </a>
                 <a
                   href="/library"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Library
                 </a>
                 <a
                   href="/library"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Profile
                 </a>
                 <a
                   href="/library"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Settings
                 </a>
                 <a
                   href="/"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Help/Tutorials
                 </a>
@@ -168,7 +168,7 @@ const Footer: React.FC = () => {
             {/* Socials */}
             <div className="space-y-4">
               <h4
-                className="text-black text-lg md:text-xl font-medium"
+                className="text-[#21266c] text-lg md:text-xl font-medium"
                 style={{ fontFamily: "Coconat" }}
               >
                 Socials
@@ -179,7 +179,7 @@ const Footer: React.FC = () => {
                   href="https://instagram.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Instagram
                 </a>
@@ -187,7 +187,7 @@ const Footer: React.FC = () => {
                   href="https://instagram.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Facebook
                 </a>
@@ -195,7 +195,7 @@ const Footer: React.FC = () => {
                   href="https://instagram.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   LinkedIn Network
                 </a>
@@ -203,7 +203,7 @@ const Footer: React.FC = () => {
                   href="https://instagram.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   X.com
                 </a>
@@ -214,7 +214,7 @@ const Footer: React.FC = () => {
           {/* Newsletter Signup */}
           <div className="space-y-6">
             <h4
-              className="text-black text-lg md:text-xl font-medium"
+              className="text-[#21266c] text-lg md:text-xl font-medium"
               style={{ fontFamily: "Coconat" }}
             >
               Let's Discover Your Dream Vermont Home

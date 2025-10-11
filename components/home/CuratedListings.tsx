@@ -106,7 +106,7 @@ const CuratedListings: React.FC = () => {
           <p className="text-xs sm:text-sm font-semibold text-gray-500 tracking-widest uppercase mb-4">
             FIND A HOME
           </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-gray-900 mb-2">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#21266c] mb-2">
             Home Listings in Your Area
           </h2>
           <p className="text-base text-gray-600">Los Angeles, CA</p>
@@ -123,7 +123,7 @@ const CuratedListings: React.FC = () => {
         <div className="text-center">
           <a
             href="/listings"
-            className="inline-flex items-center rounded-md gap-2 px-8 py-3 bg-blue-600 text-white font-medium text-sm tracking-wide uppercase transition-all duration-300 group"
+            className="inline-flex items-center rounded-md gap-2 px-8 py-3 bg-[#21266c] text-white font-medium text-sm tracking-wide uppercase transition-all duration-300 group"
           >
             VIEW MORE HOUSES
             <ArrowUpRight className="w-6 h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
@@ -186,7 +186,7 @@ const PropertyCard: React.FC<{ property: PropertyListing }> = ({
     >
       {/* Price and Status */}
       <div className="flex items-center justify-between pt-6 pb-4">
-        <h3 className="text-2xl sm:text-3xl font-normal text-gray-900">
+        <h3 className="text-2xl sm:text-3xl font-normal text-[#21266c]">
           {property.price}
         </h3>
         <span className="text-xs font-semibold text-gray-900 tracking-wide uppercase">
