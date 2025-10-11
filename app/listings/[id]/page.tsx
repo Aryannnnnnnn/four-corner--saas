@@ -449,7 +449,7 @@ export default function ListingDetailPage() {
                       (window.location.href = `mailto:${listing.contact_email}?subject=Inquiry about ${listing.title}`)
                     }
                   >
-                    Contact Seller
+                    Contact Agent
                   </Button>
                 </div>
 

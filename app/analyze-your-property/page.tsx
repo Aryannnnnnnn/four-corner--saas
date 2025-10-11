@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Shield, TrendingUp, Zap } from "lucide-react";
+import { Library, Search, Shield, TrendingUp, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -53,36 +53,47 @@ export default function HomePage() {
             estate professionals.
           </p>
 
-          {/* Search Bar */}
-          <div className="glass-card p-2 sm:p-3 max-w-3xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
-            <div className="flex items-center flex-1 min-w-0">
-              <Search className="w-5 h-5 sm:w-6 sm:h-6 text-luxury-blue ml-3 flex-shrink-0" />
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleAnalyze()}
-                placeholder="Enter any USA property address..."
-                className="flex-1 bg-transparent border-none outline-none text-white placeholder:text-gray-400 text-base sm:text-lg px-2 min-w-0"
-              />
+          {/* Search Bar with Library Button */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-5xl mx-auto px-4">
+            <div className="glass-card p-2 sm:p-3 flex-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 rounded-full">
+              <div className="flex items-center flex-1 min-w-0">
+                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-luxury-blue ml-3 flex-shrink-0" />
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleAnalyze()}
+                  placeholder="Enter any USA property address..."
+                  className="flex-1 bg-transparent border-none outline-none text-white placeholder:text-gray-400 text-base sm:text-lg px-2 min-w-0"
+                />
+              </div>
+              <button
+                onClick={handleAnalyze}
+                disabled={isAnalyzing}
+                className="luxury-button shrink-0 text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed px-2 sm:px-6"
+              >
+                {isAnalyzing ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                    <span className="hidden sm:inline">Analyzing...</span>
+                    <span className="sm:hidden">Loading</span>
+                  </span>
+                ) : (
+                  <>
+                    <span className="hidden sm:inline">Analyze Property</span>
+                    <span className="sm:hidden">Analyze</span>
+                  </>
+                )}
+              </button>
             </div>
+
+            {/* View My Library Button */}
             <button
-              onClick={handleAnalyze}
-              disabled={isAnalyzing}
-              className="luxury-button shrink-0 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => router.push("/library")}
+              className="glass-card border border-luxury-blue/30 px-4 sm:px-6 py-5 rounded-full text-sm sm:text-base text-luxury-blue hover:bg-luxury-blue/10 hover:border-luxury-blue/50 transition-all flex items-center justify-center gap-2 shrink-0"
             >
-              {isAnalyzing ? (
-                <span className="flex items-center gap-2">
-                  <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                  <span className="hidden sm:inline">Analyzing...</span>
-                  <span className="sm:hidden">Loading</span>
-                </span>
-              ) : (
-                <>
-                  <span className="hidden sm:inline">Analyze Property</span>
-                  <span className="sm:hidden">Analyze</span>
-                </>
-              )}
+              <Library className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="whitespace-nowrap">View My Library</span>
             </button>
           </div>
 

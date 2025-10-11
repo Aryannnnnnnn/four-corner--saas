@@ -21,18 +21,18 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-white text-black border-t border-gray-200">
       {/* Main Footer Content */}
-      <div className="w-[90vw] mx-auto py-16 md:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+      <div className="w-[90vw] mx-auto py-8 md:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_auto_auto_1fr] gap-8 lg:gap-16">
           {/* Company Information */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <h3
-              className="text-black text-xl md:text-2xl font-medium mb-6"
+              className="text-black text-xl md:text-2xl font-medium mb-3"
               style={{ fontFamily: "Coconat" }}
             >
               Four Corner Properties
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-2">
               <p className="text-gray-700 text-base leading-relaxed">
                 469 Main St., Bennington, VT 05201
               </p>
@@ -49,9 +49,9 @@ const Footer: React.FC = () => {
               </a>
             </div>
 
-            <div className="pt-6 space-y-2">
+            <div className="pt-3 space-y-1">
               <p className="text-gray-600 text-sm">
-                © 2025 Four Corner Properties LLC. All Rights Reserved.
+               <span className="font-bold"> © 2025 Four Corner Properties LLC. </span> All Rights Reserved.
               </p>
               <p className="text-gray-600 text-sm">
                 Powered By Empire 325 Marketing
@@ -59,85 +59,155 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Navigation */}
-          <div className="space-y-6">
-            <h4
-              className="text-black text-lg md:text-xl font-medium"
-              style={{ fontFamily: "Coconat" }}
-            >
-              Navigation
-            </h4>
+          {/* Middle Columns Group - Navigation, Saas, Socials */}
+          <div className="lg:col-span-3 grid grid-cols-1 font-medium md:grid-cols-3 gap-8 lg:gap-16 xl:gap-28">
+            {/* Navigation */}
+            <div className="space-y-4">
+              <h4
+                className="text-black text-lg md:text-xl font-medium"
+                style={{ fontFamily: "Coconat" }}
+              >
+                Navigation
+              </h4>
 
-            <nav className="space-y-3">
-              <a
-                href="/"
-                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
-              >
-                Home
-              </a>
-              <a
-                href="/dashboard"
-                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
-              >
-                Dashboard
-              </a>
-              <a
-                href="/analyze-your-property"
-                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
-              >
-                Analyze Property
-              </a>
-              <a
-                href="/about"
-                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
-              >
-                About
-              </a>
-              <a
-                href="/library"
-                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
-              >
-                Library
-              </a>
-              <a
-                href="/projects"
-                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
-              >
-                Projects
-              </a>
-              <a
-                href="/stories"
-                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
-              >
-                Stories
-              </a>
-              <a
-                href="/contact"
-                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
-              >
-                Contact
-              </a>
-            </nav>
-          </div>
+              <nav className="space-y-3" style={{ fontFamily: "Inter" }}>
+                <a
+                  href="/"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Home
+                </a>
+                <a
+                  href="/about"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  About
+                </a>
+                <a
+                  href="/listings"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Check Our Listings
+                </a>
+                <a
+                  href="/stories"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Stories
+                </a>
+                <a
+                  href="/contact"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Contact Us
+                </a>
+              </nav>
+            </div>
 
-          {/* Socials */}
-          <div className="space-y-6">
-            <h4
-              className="text-black text-lg md:text-xl font-medium"
-              style={{ fontFamily: "Coconat" }}
-            >
-              Socials
-            </h4>
-
-            <div className="space-y-3">
-              <a
-                href="https://instagram.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+            {/* Saas */}
+            <div className="space-y-4">
+              <h4
+                className="text-black text-lg md:text-xl font-medium"
+                style={{ fontFamily: "Coconat" }}
               >
-                Instagram
-              </a>
+                Saas
+              </h4>
+
+              <nav className="space-y-3" style={{ fontFamily: "Inter" }}>
+                <a
+                  href="/dashboard"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Dashboard
+                </a>
+              <a
+                  href="/analyze-your-property"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Analyze Property
+                </a>
+                <a
+                  href="/list-property"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Sell Your Property
+                </a>
+                <a
+                  href="/search"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Find a home
+                </a>
+                <a
+                  href="/library"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Library
+                </a>
+                <a
+                  href="/library"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Profile
+                </a>
+                <a
+                  href="/library"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Settings
+                </a>
+                <a
+                  href="/"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Help/Tutorials
+                </a>
+              </nav>
+            </div>
+
+            {/* Socials */}
+            <div className="space-y-4">
+              <h4
+                className="text-black text-lg md:text-xl font-medium"
+                style={{ fontFamily: "Coconat" }}
+              >
+                Socials
+              </h4>
+
+              <div className="space-y-3" style={{ fontFamily: "Inter" }}>
+                <a
+                  href="https://instagram.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Instagram
+                </a>
+               <a
+                  href="https://instagram.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  Facebook
+                </a>
+                <a
+                  href="https://instagram.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  LinkedIn Network
+                </a>
+                <a
+                  href="https://instagram.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-gray-700 text-base hover:text-blue-500 transition-colors duration-300"
+                >
+                  X.com
+                </a>
+              </div>
             </div>
           </div>
 
@@ -159,23 +229,49 @@ const Footer: React.FC = () => {
             </p>
 
             {/* Email Signup Form */}
-            <form onSubmit={handleNewsletterSubmit} className="mt-6">
+            <form
+              onSubmit={(e) => {
+              handleNewsletterSubmit(e);
+              // Show toast on submit
+              if (typeof window !== "undefined") {
+                // Simple toast implementation
+                const toast = document.createElement("div");
+                toast.textContent = "Email submitted";
+                toast.style.position = "fixed";
+                toast.style.bottom = "32px";
+                toast.style.left = "50%";
+                toast.style.transform = "translateX(-50%)";
+                toast.style.background = "#222";
+                toast.style.color = "#fff";
+                toast.style.padding = "12px 24px";
+                toast.style.borderRadius = "999px";
+                toast.style.fontSize = "1rem";
+                toast.style.zIndex = "9999";
+                toast.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                toast.remove();
+                }, 2500);
+              }
+              }}
+              className="mt-6"
+            >
               <div className="flex items-center bg-gray-100 border border-gray-300 rounded-full overflow-hidden transition-colors duration-300 focus-within:border-gray-400">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="flex-1 bg-transparent px-6 py-3 text-black placeholder-gray-500 text-base focus:outline-none"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="group p-3 m-1 bg-gray-800 hover:bg-black rounded-full transition-colors duration-300 flex items-center justify-center"
-                  aria-label="Subscribe to newsletter"
-                >
-                  <ArrowRight className="w-5 h-5 text-white transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="flex-1 bg-transparent px-6 py-3 text-black placeholder-gray-500 text-base focus:outline-none"
+                required
+              />
+              <button
+                type="submit"
+                className="group p-3 m-1 bg-gray-800 hover:bg-black rounded-full transition-colors duration-300 flex items-center justify-center"
+                aria-label="Subscribe to newsletter"
+              >
+                <ArrowRight className="w-5 h-5 text-white transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
               </div>
             </form>
           </div>
@@ -186,7 +282,7 @@ const Footer: React.FC = () => {
       <div className="border-t border-gray-200"></div>
 
       {/* Bottom Logo Section */}
-      <div className="w-[90vw] mx-auto py-16 md:py-20">
+      <div className="w-[90vw] mx-auto py-8 md:py-10">
         <div className="text-center">
           <Image
             src="/logo.png"

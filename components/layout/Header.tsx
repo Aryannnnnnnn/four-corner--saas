@@ -6,7 +6,6 @@ import {
   ChevronDown,
   FolderOpen,
   Home,
-  Library,
   LogOut,
   Menu,
   PlusCircle,
@@ -26,7 +25,6 @@ export default function Header() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [dashboardDropdownOpen, setDashboardDropdownOpen] = useState(false);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
@@ -37,9 +35,6 @@ export default function Header() {
     { name: "Our Listings", href: "/listings", icon: FolderOpen },
   ];
 
-  const settingsNavigation = [
-    { name: "Settings", href: "/settings", icon: Settings },
-  ];
 
   const analyzeNavigation = [
     {
@@ -59,14 +54,13 @@ export default function Header() {
 
   // Other navigation items (after the main ones)
   const otherNavigation: Array<{ name: string; href: string; icon: any }> = [
-    // Add any additional items here if needed
+        {
+      name: "Contact Us",
+      href: "/contact",
+      icon: PlusCircle,
+    },
   ];
 
-  // Dashboard dropdown items
-  const dashboardItems = [
-    { name: "My Listings", href: "/my-listings", icon: Search },
-    { name: "View Library", href: "/library", icon: Library },
-  ];
 
   // Company dropdown items (non-clickable parent)
   const companyItems = [
@@ -91,7 +85,6 @@ export default function Header() {
       if (target.closest('.dropdown-container')) {
         return;
       }
-      setDashboardDropdownOpen(false);
       setCompanyDropdownOpen(false);
       setProfileDropdownOpen(false);
     };
@@ -102,7 +95,6 @@ export default function Header() {
 
   useEffect(() => {
     // Close dropdowns when route changes
-    setDashboardDropdownOpen(false);
     setCompanyDropdownOpen(false);
     setProfileDropdownOpen(false);
   }, [pathname]);
@@ -126,7 +118,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation - Centered */}
-          <nav className="hidden xl:flex items-center justify-left ml-8 flex-1 space-x-[22px]">
+          <nav className="hidden xl:flex items-center justify-center ml-8 flex-1 space-x-[22px]">
             {/* 1. Home Navigation */}
             {homeNavigation.map((item) => (
               <Link
@@ -137,7 +129,6 @@ export default function Header() {
                   pathname === item.href && "text-gray-900 border-blue-600",
                 )}
               >
-                <item.icon className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                 <span>{item.name}</span>
               </Link>
             ))}
@@ -152,7 +143,6 @@ export default function Header() {
                   pathname === item.href && "text-gray-900 border-blue-600",
                 )}
               >
-                <item.icon className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                 <span>{item.name}</span>
               </Link>
             ))}
@@ -164,7 +154,6 @@ export default function Header() {
               onMouseLeave={() => setCompanyDropdownOpen(false)}
             >
               <div className="flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 cursor-default pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap">
-                <BookOpen className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                 <span>Company</span>
                 <ChevronDown className="w-3 h-3 opacity-60" />
               </div>
@@ -183,7 +172,7 @@ export default function Header() {
                     key={item.name}
                     href={item.href}
                     rel="noopener noreferrer"
-                    className="block px-6 py-4 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors border-b border-gray-100 last:border-b-0"
+                    className="block px-6 py-4 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors border-b border-gray-100 last:border-b-0 hover:border-blue-600"
                   >
                     <span>{item.name}</span>
                   </Link>
@@ -191,22 +180,7 @@ export default function Header() {
               </div>
             </div>
 
-            {/* 3. Settings Navigation */}
-            {settingsNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
-                  pathname === item.href && "text-gray-900 border-blue-600",
-                )}
-              >
-                <item.icon className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
-                <span>{item.name}</span>
-              </Link>
-            ))}
-
-            {/* 4. Analyze Navigation */}
+            {/* 3. Analyze Navigation */}
             {analyzeNavigation.map((item) => (
               <Link
                 key={item.name}
@@ -216,12 +190,11 @@ export default function Header() {
                   pathname === item.href && "text-gray-900 border-blue-600",
                 )}
               >
-                <item.icon className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                 <span>{item.name}</span>
               </Link>
             ))}
 
-            {/* 5. Sell Property Navigation */}
+            {/* 4. Sell Property Navigation */}
             {sellPropertyNavigation.map((item) => (
               <Link
                 key={item.name}
@@ -231,12 +204,11 @@ export default function Header() {
                   pathname === item.href && "text-gray-900 border-blue-600",
                 )}
               >
-                <item.icon className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                 <span>{item.name}</span>
               </Link>
             ))}
 
-            {/* 6. Other Navigation (if any items exist) */}
+            {/* 5. Other Navigation (if any items exist) */}
             {otherNavigation.map((item) => (
               <Link
                 key={item.name}
@@ -246,57 +218,16 @@ export default function Header() {
                   pathname === item.href && "text-gray-900 border-blue-600",
                 )}
               >
-                <item.icon className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                 <span>{item.name}</span>
               </Link>
             ))}
           </nav>
 
           {/* Authentication Section - Right Side */}
-          <div className="hidden xl:flex items-center space-x-3 xl:space-x-4">
-            {/* Dashboard with Dropdown - Before Profile */}
-            <div
-              className="relative group"
-              onMouseEnter={() => setDashboardDropdownOpen(true)}
-              onMouseLeave={() => setDashboardDropdownOpen(false)}
-            >
-              <Link
-                href="/dashboard"
-                className={cn(
-                  "flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
-                  pathname === "/dashboard" && "text-gray-900 border-blue-600",
-                )}
-              >
-                <Home className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
-                <span>Dashboard</span>
-                <ChevronDown className="w-3 h-3 opacity-60" />
-              </Link>
-
-              {/* Dashboard Dropdown */}
-              <div
-                className={cn(
-                  "absolute top-full right-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50",
-                  dashboardDropdownOpen
-                    ? "opacity-100 visible translate-y-0"
-                    : "opacity-0 invisible -translate-y-2",
-                )}
-              >
-                {dashboardItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={cn(
-                      "block px-6 py-4 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors border-b border-gray-100 last:border-b-0",
-                      pathname === item.href && "text-gray-900 bg-gray-50",
-                    )}
-                  >
-                    <span>{item.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
+          <div className="hidden xl:flex items-center space-x-3">
             {session ? (
+              <>
+                {/* Profile Icon with Dropdown */}
               <div
                 className="relative group dropdown-container"
                 onMouseEnter={() => setProfileDropdownOpen(true)}
@@ -322,6 +253,16 @@ export default function Header() {
                   )}
                 >
                   <Link
+                    href="/dashboard"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100"
+                    onClick={() => setProfileDropdownOpen(false)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Home className="w-4 h-4" />
+                      <span className="font-medium">Dashboard</span>
+                    </div>
+                  </Link>
+                  <Link
                     href="/profile"
                     className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100"
                     onClick={() => setProfileDropdownOpen(false)}
@@ -346,6 +287,18 @@ export default function Header() {
                   </button>
                 </div>
               </div>
+
+                {/* Settings Gear Icon */}
+                <Link
+                  href="/settings"
+                  className={cn(
+                    "flex items-center justify-center w-8 h-8 xl:w-9 xl:h-9 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-200",
+                    pathname === "/settings" && "text-gray-900 bg-gray-100",
+                  )}
+                >
+                  <Settings className="w-4 h-4 xl:w-5 xl:h-5" />
+                </Link>
+              </>
             ) : (
               <Link
                 href="/login"
@@ -406,35 +359,6 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* 3. Dashboard Section */}
-            <Link
-              href="/dashboard"
-              className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
-                pathname === "/dashboard" && "text-blue-600 bg-blue-50",
-              )}
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <Home className="w-4 h-4" />
-              <span className="font-medium">Dashboard</span>
-            </Link>
-
-            {/* Dashboard Subitems */}
-            {dashboardItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-8 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors text-sm",
-                  pathname === item.href && "text-blue-600 bg-blue-50",
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <item.icon className="w-3 h-3" />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            ))}
-
             {/* 3. Company Section Header */}
             <div className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 cursor-default">
               <BookOpen className="w-4 h-4" />
@@ -456,23 +380,7 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* 4. Settings Navigation */}
-            {settingsNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
-                  pathname === item.href && "text-blue-600 bg-blue-50",
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <item.icon className="w-4 h-4" />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            ))}
-
-            {/* 5. Analyze Navigation */}
+            {/* 4. Analyze Navigation */}
             {analyzeNavigation.map((item) => (
               <Link
                 key={item.name}
@@ -488,7 +396,7 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* 6. Sell Property Navigation */}
+            {/* 5. Sell Property Navigation */}
             {sellPropertyNavigation.map((item) => (
               <Link
                 key={item.name}
@@ -504,7 +412,7 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* 7. Other Navigation (if any items exist) */}
+            {/* 6. Other Navigation (if any items exist) */}
             {otherNavigation.map((item) => (
               <Link
                 key={item.name}
@@ -521,6 +429,17 @@ export default function Header() {
             ))}
             {session ? (
               <>
+                <Link
+                  href="/settings"
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
+                    pathname === "/settings" && "text-blue-600 bg-blue-50",
+                  )}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Settings className="w-4 h-4" />
+                  <span className="font-medium">Settings</span>
+                </Link>
                 <Link
                   href="/profile"
                   className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"

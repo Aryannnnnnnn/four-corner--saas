@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowRight, Plus } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -124,18 +124,15 @@ const FAQSection: React.FC = () => {
 
               {/* Contact Us Button */}
               <button
-                className="group relative overflow-hidden bg-black/10 hover:bg-black/10 border border-black/30 hover:border-black/50 rounded-full px-4 py-1 flex items-center gap-3 transition-all duration-300 ease-out"
+                className="group bg-blue-600 border-2 border-blue-600 rounded-full px-4 py-1 flex items-center gap-3 transition-all duration-300 ease-out"
                 style={{ fontFamily: "Coconat" }}
               >
-                {/* Sliding Background */}
-                <div className="absolute inset-0 bg-black/20 rounded-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-
                 {/* Button Content */}
-                <span className="relative z-10 text-black font-medium text-lg">
+                <span className="py-2 text-white font-medium text-lg">
                   Contact Us
                 </span>
-                <div className="relative z-10 w-8 h-8 flex items-center justify-center transition-colors duration-300">
-                  <ArrowRight className="w-6 h-6 text-black/70 group-hover:text-black transition-colors duration-300" />
+                <div className="w-8 h-8 flex items-center justify-center">
+                  <ArrowRight className="w-6 h-6 text-white transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </button>
             </div>
@@ -146,7 +143,11 @@ const FAQSection: React.FC = () => {
             {faqItems.map((item, index) => (
               <div
                 key={item.id}
-                className={`bg-black/5 border border-black/10 rounded-xl overflow-hidden cursor-pointer transition-all duration-700 ease-in-out hover:bg-black/10 hover:border-black/20 ${
+                className={`group bg-black/5 border rounded-xl overflow-hidden cursor-pointer transition-all duration-700 ease-in-out ${
+                  expandedIndex === index
+                    ? "border-blue-600"
+                    : "border-black/10"
+                } ${
                   isVisible ? "animate-fadeInUp" : "opacity-0"
                 }`}
                 style={{
@@ -156,7 +157,7 @@ const FAQSection: React.FC = () => {
                 onClick={() => handleBoxClick(index)}
               >
                 {/* Question Header */}
-                <div className="p-6 flex items-center justify-between">
+                <div className="px-[5%] py-6 flex items-center justify-between">
                   <h3
                     className="text-black text-lg md:text-xl font-medium pr-4"
                     style={{ fontFamily: "Coconat" }}
@@ -164,13 +165,15 @@ const FAQSection: React.FC = () => {
                     {item.question}
                   </h3>
                   <div
-                    className={`w-10 h-10 rounded-full border border-black/30 flex items-center justify-center transition-all duration-500 ease-in-out transform hover:border-black/50 ${
+                    className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 ease-in-out ${
                       expandedIndex === index
-                        ? "rotate-90 bg-black/10"
-                        : "rotate-0 bg-black/5"
+                        ? "bg-blue-50 border-blue-600"
+                        : "bg-black/5 border-black/20 group-hover:border-blue-600 group-hover:bg-blue-50"
                     }`}
                   >
-                    <ChevronRight className="w-4 h-4 text-black/70 transition-all duration-500 ease-in-out" />
+                    <Plus className={`w-5 h-5 transition-all duration-500 ease-in-out transform ${
+                      expandedIndex === index ? "rotate-45 text-blue-600" : "rotate-0 text-black/70 group-hover:text-blue-600"
+                    }`} />
                   </div>
                 </div>
 
@@ -186,10 +189,19 @@ const FAQSection: React.FC = () => {
                   }}
                 >
                   <div
-                    className={`px-6 pb-6 border-t border-black/30 transition-all duration-400 ease-out ${
+                    className={`px-[5%] pb-6 relative transition-all duration-400 ease-out ${
                       expandedIndex === index ? "pt-4" : "pt-0"
                     }`}
                   >
+                    {/* Custom border */}
+                    <div
+                      className={`absolute top-0 left-1/2 -translate-x-1/2 w-[90%] transition-all duration-400 ${
+                        expandedIndex === index
+                          ? "bg-blue-600"
+                          : "bg-black/30"
+                      }`}
+                      style={{ height: '1px' }}
+                    ></div>
                     <p
                       className={`text-black/80 text-base md:text-lg leading-relaxed transition-all duration-400 ease-out ${
                         expandedIndex === index

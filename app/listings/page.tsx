@@ -19,7 +19,6 @@ export default function ListingsPage() {
     minPrice: "",
     maxPrice: "",
     bedrooms: "all",
-    city: "",
   });
 
   useEffect(() => {
@@ -71,12 +70,6 @@ export default function ListingsPage() {
     ) {
       return false;
     }
-    if (
-      filters.city &&
-      !listing.city.toLowerCase().includes(filters.city.toLowerCase())
-    ) {
-      return false;
-    }
     return true;
   });
 
@@ -111,13 +104,21 @@ export default function ListingsPage() {
       <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 mt-20">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Property Listings
-            </h1>
-            <p className="mt-2 text-gray-600">
-              Browse our collection of {listings.length} available properties
-            </p>
+          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Property Listings
+              </h1>
+              <p className="mt-2 text-gray-600">
+                Browse our collection of {listings.length} available properties
+              </p>
+            </div>
+            <Button
+              onClick={() => router.push("/my-listings")}
+              className="sm:self-start"
+            >
+              My Listings
+            </Button>
           </div>
 
           {/* Filters */}
@@ -216,22 +217,6 @@ export default function ListingsPage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
                 />
               </div>
-
-              {/* City Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  City
-                </label>
-                <input
-                  type="text"
-                  value={filters.city}
-                  onChange={(e) =>
-                    setFilters({ ...filters, city: e.target.value })
-                  }
-                  placeholder="Search by city"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-                />
-              </div>
             </div>
 
             <div className="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
@@ -248,7 +233,6 @@ export default function ListingsPage() {
                     minPrice: "",
                     maxPrice: "",
                     bedrooms: "all",
-                    city: "",
                   })
                 }
                 className="text-sm"

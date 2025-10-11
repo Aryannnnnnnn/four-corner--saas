@@ -155,27 +155,37 @@ export default function ProfilePage() {
                   <h1 className="font-display text-3xl sm:text-4xl font-bold mb-3 text-gradient">
                     {session?.user?.name || "User"}
                   </h1>
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-white/70 text-sm">
-                    <span className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-luxury-blue" />
-                      {session?.user?.email}
-                    </span>
-                    {location && (
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-white/70 text-sm">
                       <span className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-luxury-blue" />
-                        {location}
+                        <Mail className="w-4 h-4 text-luxury-blue" />
+                        {session?.user?.email}
                       </span>
-                    )}
+                      {location && (
+                        <span className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-luxury-blue" />
+                          {location}
+                        </span>
+                      )}
+                    </div>
+                    <Button
+                      variant="secondary"
+                      onClick={() => router.push("/settings")}
+                      className="bg-luxury-blue/10 border-luxury-blue/30 text-luxury-blue hover:bg-luxury-blue/20 w-fit"
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit Profile
+                    </Button>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 shrink-0">
                   <Button
                     variant="secondary"
-                    onClick={() => router.push("/settings")}
+                    onClick={() => router.push("/dashboard")}
                     className="bg-luxury-blue/10 border-luxury-blue/30 text-luxury-blue hover:bg-luxury-blue/20"
                   >
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit Profile
+                    <Home className="w-4 h-4 mr-2" />
+                    Dashboard
                   </Button>
                   <Button
                     variant="secondary"

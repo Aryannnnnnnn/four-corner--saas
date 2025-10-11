@@ -95,12 +95,13 @@ const VermontStorySection: React.FC = () => {
               <button
                 className="group relative overflow-hidden bg-transparent border-2 border-white/30 hover:border-white/50 rounded-full px-8 py-4 flex items-center justify-center sm:justify-start gap-3 transition-all duration-300 ease-out min-w-fit"
                 style={{ fontFamily: "Coconat" }}
+                onClick={() => window.location.href = '/list-property'}
               >
                 {/* Sliding Background */}
                 <div className="absolute inset-0 bg-white/10 rounded-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
 
                 <span className="relative z-10 text-white font-medium text-lg">
-                  Contact Us
+                  Sell Your Property
                 </span>
                 <div className="relative z-10 w-6 h-6 flex items-center justify-center">
                   <ArrowRight className="w-4 h-4 text-white transition-transform duration-300 group-hover:translate-x-1" />
@@ -119,11 +120,10 @@ const VermontStorySection: React.FC = () => {
 
               {/* Book A Call Button - Outlined */}
                <button
-                className="group relative overflow-hidden bg-gradient-to-r from-luxury-blue to-blue-600 hover:from-luxury-blue/90 hover:to-blue-600/90 rounded-full px-8 py-4 flex items-center justify-center sm:justify-start gap-3 transition-all duration-300 ease-out min-w-fit"
+                className="group relative overflow-hidden bg-gradient-to-r from-luxury-blue to-blue-600 hover:from-luxury-blue/80 hover:to-blue-600/80 rounded-full px-8 py-4 flex items-center justify-center sm:justify-start gap-3 transition-all duration-300 ease-out min-w-fit"
                 style={{ fontFamily: "Coconat" }}
+                onClick={() => window.location.href = "/contact"}
               >
-                {/* Sliding Background */}
-                <div className="absolute inset-0 bg-black/10 rounded-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
 
                 <span className="relative z-10 text-white font-medium text-lg">
                   Book a Call
