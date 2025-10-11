@@ -25,18 +25,20 @@ const FAQSection: React.FC = () => {
         }
       },
       {
-        threshold: 0.3,
-        rootMargin: "-50px 0px -50px 0px",
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
       },
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -96,10 +98,10 @@ const FAQSection: React.FC = () => {
               {["Frequently", "Asked", "Questions"].map((word, index) => (
                 <span
                   key={index}
-                  className={`inline-block mr-4 opacity-0 ${isVisible ? "animate-word-appear" : ""}`}
+                  className={`inline-block mr-4 ${isVisible ? "animate-word-appear" : ""}`}
                   style={{
                     animationDelay: isVisible ? `${index * 0.15}s` : "0s",
-                    animationFillMode: "forwards",
+                    animationFillMode: isVisible ? "forwards" : undefined,
                   }}
                 >
                   {word}
@@ -109,10 +111,10 @@ const FAQSection: React.FC = () => {
 
             {/* Description */}
             <div
-              className={`opacity-0 ${isVisible ? "animate-fadeInUp" : ""}`}
+              className={` ${isVisible ? "animate-fadeInUp" : ""}`}
               style={{
                 animationDelay: isVisible ? "0.5s" : "0s",
-                animationFillMode: "forwards",
+                animationFillMode: isVisible ? "forwards" : undefined,
               }}
             >
               <p className="text-black/80 text-lg md:text-xl leading-relaxed mb-6">
@@ -148,11 +150,11 @@ const FAQSection: React.FC = () => {
                     ? "border-[#21266c]"
                     : "border-black/10"
                 } ${
-                  isVisible ? "animate-fadeInUp" : "opacity-0"
+                  isVisible ? "animate-fadeInUp" : ""
                 }`}
                 style={{
                   animationDelay: isVisible ? `${index * 0.1 + 0.8}s` : "0s",
-                  animationFillMode: "forwards",
+                  animationFillMode: isVisible ? "forwards" : undefined,
                 }}
                 onClick={() => handleBoxClick(index)}
               >
@@ -206,7 +208,7 @@ const FAQSection: React.FC = () => {
                       className={`text-black/80 text-base md:text-lg leading-relaxed transition-all duration-400 ease-out ${
                         expandedIndex === index
                           ? "transform translate-y-0 opacity-100 delay-100"
-                          : "transform translate-y-0 opacity-0 delay-0"
+                          : "transform translate-y-0 delay-0"
                       }`}
                     >
                       {item.answer}

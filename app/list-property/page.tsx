@@ -400,28 +400,6 @@ export default function ListPropertyPage() {
     }
   };
 
-  // Cleanup on unmount ONLY (not on every localImages change)
-  useEffect(() => {
-    // Store current images to clean up on unmount
-    const currentImages = localImages;
-
-    return () => {
-      // Clean up timeout
-      if (redirectTimeoutRef.current) {
-        clearTimeout(redirectTimeoutRef.current);
-      }
-      // Clean up image preview URLs only on unmount
-      currentImages.forEach((img) => {
-        try {
-          URL.revokeObjectURL(img.preview);
-        } catch (e) {
-          // Ignore errors if URL already revoked
-        }
-      });
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array - only run on mount/unmount
-
   const nextStep = () => {
     // Validate current step before proceeding
     if (currentStep === 1) {

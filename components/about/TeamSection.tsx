@@ -114,18 +114,20 @@ const TeamSection: React.FC = () => {
         }
       },
       {
-        threshold: 0.3, // Trigger when 30% of the section is visible
-        rootMargin: "-50px 0px -50px 0px",
+        threshold: 0.1, // Trigger when 10% of the section is visible
+        rootMargin: "0px 0px -100px 0px",
       },
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -157,10 +159,10 @@ const TeamSection: React.FC = () => {
             {titleWords.map((word, index) => (
               <span
                 key={index}
-                className={`inline-block mr-4 opacity-0 ${isVisible ? "animate-word-appear" : ""}`}
+                className={`inline-block mr-4 ${isVisible ? "animate-word-appear" : ""}`}
                 style={{
                   animationDelay: isVisible ? `${index * 0.15}s` : "0s",
-                  animationFillMode: "forwards",
+                  animationFillMode: isVisible ? "forwards" : undefined,
                 }}
               >
                 {word}
@@ -175,10 +177,10 @@ const TeamSection: React.FC = () => {
             {teamMembers.map((member, index) => (
               <div
                 key={member.id}
-                className={`${isVisible ? "animate-fadeInUp" : "opacity-0"}`}
+                className={`${isVisible ? "animate-fadeInUp" : ""}`}
                 style={{
                   animationDelay: isVisible ? `${index * 0.1 + 0.5}s` : "0s",
-                  animationFillMode: "forwards",
+                  animationFillMode: isVisible ? "forwards" : undefined,
                 }}
               >
                 <div
@@ -193,7 +195,7 @@ const TeamSection: React.FC = () => {
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
                       <span className="text-white text-sm font-semibold">View ID Card</span>
                     </div>
                   </div>

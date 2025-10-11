@@ -18,18 +18,20 @@ const VermontStorySection: React.FC = () => {
         }
       },
       {
-        threshold: 0.3,
-        rootMargin: "-50px 0px -50px 0px",
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
       },
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -53,10 +55,10 @@ const VermontStorySection: React.FC = () => {
                 (word, index) => (
                   <span
                     key={index}
-                    className={`inline-block mr-4 opacity-0 ${isVisible ? "animate-word-appear" : ""}`}
+                    className={`inline-block mr-4 ${isVisible ? "animate-word-appear" : ""}`}
                     style={{
                       animationDelay: isVisible ? `${index * 0.15}s` : "0s",
-                      animationFillMode: "forwards",
+                      animationFillMode: isVisible ? "forwards" : undefined,
                     }}
                   >
                     {word}
@@ -68,10 +70,10 @@ const VermontStorySection: React.FC = () => {
 
             {/* Description */}
             <div
-              className={`opacity-0 ${isVisible ? "animate-fadeInUp" : ""} mb-10`}
+              className={`${isVisible ? "animate-fadeInUp" : ""} mb-10`}
               style={{
                 animationDelay: isVisible ? "0.8s" : "0s",
-                animationFillMode: "forwards",
+                animationFillMode: isVisible ? "forwards" : undefined,
               }}
             >
               <p className="text-white/80 text-lg md:text-xl lg:text-2xl leading-relaxed max-w-5xl">
@@ -85,10 +87,10 @@ const VermontStorySection: React.FC = () => {
 
             {/* Action Buttons */}
             <div
-              className={`flex flex-col sm:flex-row gap-4 sm:gap-6 opacity-0 ${isVisible ? "animate-fadeInUp" : ""}`}
+              className={`flex flex-col sm:flex-row gap-4 sm:gap-6 ${isVisible ? "animate-fadeInUp" : ""}`}
               style={{
                 animationDelay: isVisible ? "1s" : "0s",
-                animationFillMode: "forwards",
+                animationFillMode: isVisible ? "forwards" : undefined,
               }}
             >
               {/* Contact Us Button - Dark */}

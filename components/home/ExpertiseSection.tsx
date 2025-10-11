@@ -18,18 +18,20 @@ const ExpertiseSection: React.FC = () => {
         }
       },
       {
-        threshold: 0.3,
-        rootMargin: "-50px 0px -50px 0px",
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
       },
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -45,10 +47,10 @@ const ExpertiseSection: React.FC = () => {
           <div className="lg:col-span-7 relative">
             {/* Main Large Image */}
             <div
-              className={`relative rounded-3xl overflow-hidden shadow-2xl ${isVisible ? "animate-fadeInLeft" : "opacity-0"}`}
+              className={`relative rounded-3xl overflow-hidden shadow-2xl ${isVisible ? "animate-fadeInLeft" : ""}`}
               style={{
-                animationDelay: "0.2s",
-                animationFillMode: "forwards",
+                animationDelay: isVisible ? "0.2s" : undefined,
+                animationFillMode: isVisible ? "forwards" : undefined,
               }}
             >
               <img
@@ -60,10 +62,10 @@ const ExpertiseSection: React.FC = () => {
 
             {/* Floating Small Image - Top Right */}
             <div
-              className={`absolute -top-8 right-4 lg:right-8 w-48 h-52 rounded-2xl overflow-hidden shadow-xl border-4 border-white ${isVisible ? "animate-scaleIn" : "opacity-0"}`}
+              className={`absolute -top-8 right-4 lg:right-8 w-48 h-52 rounded-2xl overflow-hidden shadow-xl border-4 border-white ${isVisible ? "animate-scaleIn" : ""}`}
               style={{
-                animationDelay: "0.6s",
-                animationFillMode: "forwards",
+                animationDelay: isVisible ? "0.6s" : undefined,
+                animationFillMode: isVisible ? "forwards" : undefined,
               }}
             >
               <img
@@ -75,10 +77,10 @@ const ExpertiseSection: React.FC = () => {
 
             {/* Floating Stats Card - Bottom Left */}
             <div
-              className={`absolute -bottom-6 left-8 bg-white p-6 rounded-2xl shadow-2xl border border-gray-100 ${isVisible ? "animate-fadeInUp" : "opacity-0"}`}
+              className={`absolute -bottom-6 left-8 bg-white p-6 rounded-2xl shadow-2xl border border-gray-100 ${isVisible ? "animate-fadeInUp" : ""}`}
               style={{
-                animationDelay: "0.8s",
-                animationFillMode: "forwards",
+                animationDelay: isVisible ? "0.8s" : undefined,
+                animationFillMode: isVisible ? "forwards" : undefined,
               }}
             >
               <div className="text-[#21266c] text-5xl font-light mb-1" style={{ fontFamily: "Coconat" }}>
@@ -94,19 +96,19 @@ const ExpertiseSection: React.FC = () => {
           <div className="lg:col-span-5 space-y-8">
             {/* Decorative Line */}
             <div
-              className={`w-20 h-1 bg-[#21266c] ${isVisible ? "animate-slideRight" : "opacity-0"}`}
+              className={`w-20 h-1 bg-[#21266c] ${isVisible ? "animate-slideRight" : ""}`}
               style={{
-                animationDelay: "0.3s",
-                animationFillMode: "forwards",
+                animationDelay: isVisible ? "0.3s" : undefined,
+                animationFillMode: isVisible ? "forwards" : undefined,
               }}
             ></div>
 
             {/* Our Story */}
             <div
-              className={`${isVisible ? "animate-fadeInRight" : "opacity-0"}`}
+              className={`${isVisible ? "animate-fadeInRight" : ""}`}
               style={{
-                animationDelay: "0.4s",
-                animationFillMode: "forwards",
+                animationDelay: isVisible ? "0.4s" : undefined,
+                animationFillMode: isVisible ? "forwards" : undefined,
               }}
             >
               <h3
@@ -133,10 +135,10 @@ const ExpertiseSection: React.FC = () => {
             {/* Floating Stats - Staggered */}
             <div className="space-y-6 pt-8">
               <div
-                className={`flex items-end gap-12 ${isVisible ? "animate-fadeInRight" : "opacity-0"}`}
+                className={`flex items-end gap-12 ${isVisible ? "animate-fadeInRight" : ""}`}
                 style={{
-                  animationDelay: "0.6s",
-                  animationFillMode: "forwards",
+                  animationDelay: isVisible ? "0.6s" : undefined,
+                  animationFillMode: isVisible ? "forwards" : undefined,
                 }}
               >
                 <div>
@@ -158,10 +160,10 @@ const ExpertiseSection: React.FC = () => {
               </div>
 
               <div
-                className={`bg-gray-50 p-6 rounded-2xl ${isVisible ? "animate-fadeInRight" : "opacity-0"}`}
+                className={`bg-gray-50 p-6 rounded-2xl ${isVisible ? "animate-fadeInRight" : ""}`}
                 style={{
-                  animationDelay: "0.8s",
-                  animationFillMode: "forwards",
+                  animationDelay: isVisible ? "0.8s" : undefined,
+                  animationFillMode: isVisible ? "forwards" : undefined,
                 }}
               >
                 <div className="text-[#21266c] text-4xl font-light mb-3" style={{ fontFamily: "Coconat" }}>

@@ -5,17 +5,27 @@ export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
-  // Define protected routes (including root path)
-  const isProtectedRoute =
-    nextUrl.pathname === "/" ||
-    nextUrl.pathname.startsWith("/dashboard") ||
-    nextUrl.pathname.startsWith("/analysis") ||
-    nextUrl.pathname.startsWith("/library") ||
-    nextUrl.pathname.startsWith("/settings") ||
-    nextUrl.pathname.startsWith("/profile");
+  // Define public routes (pages that don't require authentication)
+  const publicRoutes = [
+    "/",
+    "/about",
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/contact",
+    "/listings",
+  ];
+
+  // Check if current path is a public route
+  const isPublicRoute = publicRoutes.some(route => {
+    if (route === "/") {
+      return nextUrl.pathname === "/";
+    }
+    return nextUrl.pathname.startsWith(route);
+  });
 
   // Redirect to login if accessing protected route without auth
-  if (isProtectedRoute && !isLoggedIn) {
+  if (!isPublicRoute && !isLoggedIn) {
     const loginUrl = new URL("/login", nextUrl.origin);
     loginUrl.searchParams.set("callbackUrl", nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
@@ -34,13 +44,6 @@ export default auth((req) => {
 
 export const config = {
   matcher: [
-    "/",
-    "/dashboard/:path*",
-    "/analysis/:path*",
-    "/library/:path*",
-    "/settings/:path*",
-    "/profile/:path*",
-    "/login",
-    "/register",
+    "/((?!api|_next/static|_next/image|favicon.ico|logo.png|luxury.jpg|hero-image-logotype.png).*)",
   ],
 };

@@ -18,18 +18,20 @@ const RedefiningRealEstateSection: React.FC = () => {
         }
       },
       {
-        threshold: 0.3,
-        rootMargin: "-50px 0px -50px 0px",
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
       },
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -44,7 +46,7 @@ const RedefiningRealEstateSection: React.FC = () => {
           {/* Left Side - Image */}
           <div
             className={`relative ${
-              isVisible ? "animate-fadeInLeft" : "opacity-0"
+              isVisible ? "animate-fadeInLeft" : ""
             }`}
             style={{
               animationDelay: isVisible ? "0.2s" : "0s",
@@ -77,7 +79,7 @@ const RedefiningRealEstateSection: React.FC = () => {
           {/* Right Side - Content */}
           <div
             className={`space-y-6 ${
-              isVisible ? "animate-fadeInRight" : "opacity-0"
+              isVisible ? "animate-fadeInRight" : ""
             }`}
             style={{
               animationDelay: isVisible ? "0.4s" : "0s",
@@ -113,7 +115,7 @@ const RedefiningRealEstateSection: React.FC = () => {
           {/* Left Side - Content */}
           <div
             className={`space-y-6 ${
-              isVisible ? "animate-fadeInLeft" : "opacity-0"
+              isVisible ? "animate-fadeInLeft" : ""
             }`}
             style={{
               animationDelay: isVisible ? "0.6s" : "0s",
@@ -149,7 +151,7 @@ const RedefiningRealEstateSection: React.FC = () => {
           {/* Right Side - Image */}
           <div
             className={`relative ${
-              isVisible ? "animate-fadeInRight" : "opacity-0"
+              isVisible ? "animate-fadeInRight" : ""
             }`}
             style={{
               animationDelay: isVisible ? "0.8s" : "0s",

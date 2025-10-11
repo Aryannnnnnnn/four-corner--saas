@@ -16,18 +16,20 @@ export default function AboutHero() {
         }
       },
       {
-        threshold: 0.3,
-        rootMargin: "-50px 0px -50px 0px",
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
       },
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -45,7 +47,7 @@ export default function AboutHero() {
             {/* Eyebrow */}
             <div
               className={`inline-block ${
-                isVisible ? "animate-fadeInUp" : "opacity-0"
+                isVisible ? "animate-fadeInUp" : ""
               }`}
               style={{
                 animationDelay: "0.2s",
@@ -61,7 +63,7 @@ export default function AboutHero() {
             {/* Main Heading */}
             <h1
               className={`text-[#21266c] text-5xl sm:text-6xl lg:text-7xl leading-[1.1] tracking-tight ${
-                isVisible ? "animate-fadeInUp" : "opacity-0"
+                isVisible ? "animate-fadeInUp" : ""
               }`}
               style={{
                 fontFamily: "Coconat",
@@ -77,7 +79,7 @@ export default function AboutHero() {
             {/* Description */}
             <p
               className={`text-lg sm:text-xl text-gray-600 leading-relaxed ${
-                isVisible ? "animate-fadeInUp" : "opacity-0"
+                isVisible ? "animate-fadeInUp" : ""
               }`}
               style={{
                 animationDelay: "0.6s",
@@ -90,7 +92,7 @@ export default function AboutHero() {
             {/* CTA Buttons */}
             <div
               className={`flex flex-col sm:flex-row gap-4 ${
-                isVisible ? "animate-fadeInUp" : "opacity-0"
+                isVisible ? "animate-fadeInUp" : ""
               }`}
               style={{
                 animationDelay: "0.8s",
@@ -116,7 +118,7 @@ export default function AboutHero() {
             {/* Stats */}
             <div
               className={`grid grid-cols-3 gap-6 pt-8 ${
-                isVisible ? "animate-fadeInUp" : "opacity-0"
+                isVisible ? "animate-fadeInUp" : ""
               }`}
               style={{
                 animationDelay: "1s",
@@ -156,7 +158,7 @@ export default function AboutHero() {
           {/* Right Side - Images */}
           <div
             className={`relative ${
-              isVisible ? "animate-fadeInRight" : "opacity-0"
+              isVisible ? "animate-fadeInRight" : ""
             }`}
             style={{
               animationDelay: "0.6s",

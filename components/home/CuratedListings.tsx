@@ -33,9 +33,9 @@ const CuratedListings: React.FC = () => {
       image:
         "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173041/i-do-nothing-but-love-lAyXdl1-Wmc-unsplash_zifosb.jpg",
       address: "637 W 105th Street",
-      city: "Los Angeles",
-      state: "CA",
-      zip: "90044",
+      city: "West Dover",
+      state: "VT",
+      zip: "05356",
       href: "/property/1",
     },
     {
@@ -47,9 +47,9 @@ const CuratedListings: React.FC = () => {
       image:
         "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173039/scott-webb-1ddol8rgUH8-unsplash_d9xtla.jpg",
       address: "4216 Berenice",
-      city: "Los Angeles",
-      state: "CA",
-      zip: "90031",
+      city: "Pittsford",
+      state: "VT",
+      zip: "05763",
       href: "/property/2",
     },
     {
@@ -61,9 +61,9 @@ const CuratedListings: React.FC = () => {
       image:
         "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173040/stephan-bechert-yFV39g6AZ5o-unsplash_t8ho4k.jpg",
       address: "1434 W 92nd St",
-      city: "Los Angeles",
-      state: "CA",
-      zip: "90047",
+      city: "North Hero",
+      state: "VT",
+      zip: "05474",
       href: "/property/3",
     },
     {
@@ -76,9 +76,9 @@ const CuratedListings: React.FC = () => {
       image:
         "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173041/todd-kent-178j8tJrNlc-unsplash_txkfnv.jpg",
       address: "290 Barts Hill Rd",
-      city: "Los Angeles",
-      state: "CA",
-      zip: "90048",
+      city: "Colchester",
+      state: "VT",
+      zip: "05446",
       href: "/property/4",
     },
     {
@@ -91,9 +91,9 @@ const CuratedListings: React.FC = () => {
       image:
         "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173042/i-do-nothing-but-love-txDT94Mqs8k-unsplash_htp3ip.jpg",
       address: "107 Top Ridge",
-      city: "Los Angeles",
-      state: "CA",
-      zip: "90049",
+      city: "Burlington",
+      state: "VT",
+      zip: "05049",
       href: "/property/5",
     },
   ];

@@ -21,18 +21,20 @@ const Carousel: React.FC = () => {
         }
       },
       {
-        threshold: 0.3, // Trigger when 30% of the section is visible
-        rootMargin: "-50px 0px -50px 0px", // Add some margin for better timing
+        threshold: 0.1, // Trigger when 10% of the section is visible
+        rootMargin: "0px 0px -100px 0px", // Trigger before element enters viewport
       },
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -132,10 +134,10 @@ const Carousel: React.FC = () => {
           ].map((word, index) => (
             <span
               key={index}
-              className={`inline-block mr-4 opacity-0 ${isVisible ? "animate-word-appear" : ""}`}
+              className={`inline-block mr-4 ${isVisible ? "animate-word-appear" : ""}`}
               style={{
                 animationDelay: isVisible ? `${index * 0.15}s` : "0s",
-                animationFillMode: "forwards",
+                animationFillMode: isVisible ? "forwards" : undefined,
               }}
             >
               {word}
@@ -185,11 +187,11 @@ const Carousel: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center p-6">
             <div className="text-center text-white">
               <h3
-                className="text-4xl font-normal transition-all duration-[800ms] opacity-0 animate-fade-in"
+                className="text-4xl font-normal transition-all duration-[800ms] animate-fade-in"
                 style={{
                   fontFamily: "Coconat",
                   animationDelay: "200ms",
-                  animationFillMode: "forwards",
+                  animationFillMode: isVisible ? "forwards" : undefined,
                 }}
               >
                 {items[activeIndex]?.title || "Active Item"}
@@ -242,11 +244,11 @@ const Carousel: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center p-4 md:p-6">
               <div className="text-center text-white">
                 <h3
-                  className="text-xl md:text-3xl font-bold transition-all duration-[800ms] opacity-0 animate-fade-in"
+                  className="text-xl md:text-3xl font-bold transition-all duration-[800ms] animate-fade-in"
                   style={{
                     fontFamily: "Coconat",
                     animationDelay: "200ms",
-                    animationFillMode: "forwards",
+                    animationFillMode: isVisible ? "forwards" : undefined,
                   }}
                 >
                   {items[activeIndex]?.title || "Active Item"}
