@@ -34,13 +34,6 @@ const ExpertiseSection: React.FC = () => {
     };
   }, []);
 
-  const stats = [
-    { value: "X+", label: "Properties\nSold" },
-    { value: "100%", label: "Client\nSatisfaction" },
-    { value: "X+", label: "Years of\nExperience" },
-    { value: "$X Million", label: "Total Sales\nVolume" },
-  ];
-
   return (
     <section
       ref={sectionRef}
