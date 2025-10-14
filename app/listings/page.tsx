@@ -354,7 +354,7 @@ export default function ListingsPage() {
                     </div>
 
                     <div className="flex items-center flex-wrap gap-3 md:gap-4 text-sm text-gray-600 mb-3">
-                      {listing.bedrooms && (
+                      {(listing.bedrooms || listing.bedrooms === 0) && (
                         <div className="flex items-center gap-1">
                           <svg
                             className="w-4 h-4 flex-shrink-0"
@@ -364,21 +364,28 @@ export default function ListingsPage() {
                             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                           </svg>
                           <span className="font-medium">
-                            {listing.bedrooms} bed
+                            {listing.bedrooms === -1 ? "N/A" : listing.bedrooms} bed
                           </span>
                         </div>
                       )}
-                      {listing.bathrooms && (
+                      {(listing.bathrooms || listing.bathrooms === 0) && (
                         <div className="flex items-center gap-1">
                           <span className="font-medium">
-                            {listing.bathrooms} bath
+                            {listing.bathrooms === -1 ? "N/A" : listing.bathrooms} bath
                           </span>
                         </div>
                       )}
-                      {listing.square_feet && (
+                      {listing.square_feet && listing.square_feet !== -1 && (
                         <div className="flex items-center gap-1">
                           <span className="font-medium">
                             {listing.square_feet.toLocaleString()} sqft
+                          </span>
+                        </div>
+                      )}
+                      {listing.square_feet === -1 && (
+                        <div className="flex items-center gap-1">
+                          <span className="font-medium">
+                            N/A sqft
                           </span>
                         </div>
                       )}

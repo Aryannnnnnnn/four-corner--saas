@@ -252,27 +252,27 @@ export default function ListPropertyPage() {
       setCurrentStep(2);
       return;
     }
-    if (!formData.bedrooms || formData.bedrooms <= 0) {
+    if (formData.bedrooms === undefined || formData.bedrooms === null) {
       showToast("Number of bedrooms is required", "error");
       setCurrentStep(3);
       return;
     }
-    if (!formData.bathrooms || formData.bathrooms <= 0) {
+    if (formData.bathrooms === undefined || formData.bathrooms === null) {
       showToast("Number of bathrooms is required", "error");
       setCurrentStep(3);
       return;
     }
-    if (!formData.square_feet || formData.square_feet <= 0) {
+    if (formData.square_feet === undefined || formData.square_feet === null) {
       showToast("Square feet is required", "error");
       setCurrentStep(3);
       return;
     }
-    if (!formData.lot_size || formData.lot_size <= 0) {
+    if (formData.lot_size === undefined || formData.lot_size === null) {
       showToast("Lot size is required", "error");
       setCurrentStep(3);
       return;
     }
-    if (!formData.year_built || formData.year_built <= 0) {
+    if (formData.year_built === undefined || formData.year_built === null) {
       showToast("Year built is required", "error");
       setCurrentStep(3);
       return;
@@ -439,11 +439,11 @@ export default function ListPropertyPage() {
     }
     if (currentStep === 3) {
       if (
-        !formData.bedrooms ||
-        !formData.bathrooms ||
-        !formData.square_feet ||
-        !formData.lot_size ||
-        !formData.year_built
+        formData.bedrooms === undefined || formData.bedrooms === null ||
+        formData.bathrooms === undefined || formData.bathrooms === null ||
+        formData.square_feet === undefined || formData.square_feet === null ||
+        formData.lot_size === undefined || formData.lot_size === null ||
+        formData.year_built === undefined || formData.year_built === null
       ) {
         showToast("Please fill in all required property features", "error");
         return;
@@ -749,17 +749,25 @@ export default function ListPropertyPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Bedrooms <span className="text-red-500">*</span>
+                      <span className="text-gray-500 text-xs ml-1">(use "-" for N/A)</span>
                     </label>
                     <Input
-                      type="number"
+                      type="text"
                       placeholder="3"
-                      value={formData.bedrooms || ""}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "bedrooms",
-                          e.target.value ? Number(e.target.value) : undefined,
-                        )
-                      }
+                      value={formData.bedrooms === undefined ? "" : formData.bedrooms === -1 ? "-" : formData.bedrooms}
+                      onChange={(e) => {
+                        const val = e.target.value.trim();
+                        if (val === "-") {
+                          handleInputChange("bedrooms", -1);
+                        } else if (val === "") {
+                          handleInputChange("bedrooms", undefined);
+                        } else {
+                          const num = Number(val);
+                          if (!isNaN(num) && num >= 0) {
+                            handleInputChange("bedrooms", num);
+                          }
+                        }
+                      }}
                       className="w-full"
                       required
                     />
@@ -768,18 +776,25 @@ export default function ListPropertyPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Bathrooms <span className="text-red-500">*</span>
+                      <span className="text-gray-500 text-xs ml-1">(use "-" for N/A)</span>
                     </label>
                     <Input
-                      type="number"
-                      step="0.5"
+                      type="text"
                       placeholder="2.5"
-                      value={formData.bathrooms || ""}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "bathrooms",
-                          e.target.value ? Number(e.target.value) : undefined,
-                        )
-                      }
+                      value={formData.bathrooms === undefined ? "" : formData.bathrooms === -1 ? "-" : formData.bathrooms}
+                      onChange={(e) => {
+                        const val = e.target.value.trim();
+                        if (val === "-") {
+                          handleInputChange("bathrooms", -1);
+                        } else if (val === "") {
+                          handleInputChange("bathrooms", undefined);
+                        } else {
+                          const num = Number(val);
+                          if (!isNaN(num) && num >= 0) {
+                            handleInputChange("bathrooms", num);
+                          }
+                        }
+                      }}
                       className="w-full"
                       required
                     />
@@ -790,17 +805,25 @@ export default function ListPropertyPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Square Feet <span className="text-red-500">*</span>
+                      <span className="text-gray-500 text-xs ml-1">(use "-" for N/A)</span>
                     </label>
                     <Input
-                      type="number"
+                      type="text"
                       placeholder="2000"
-                      value={formData.square_feet || ""}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "square_feet",
-                          e.target.value ? Number(e.target.value) : undefined,
-                        )
-                      }
+                      value={formData.square_feet === undefined ? "" : formData.square_feet === -1 ? "-" : formData.square_feet}
+                      onChange={(e) => {
+                        const val = e.target.value.trim();
+                        if (val === "-") {
+                          handleInputChange("square_feet", -1);
+                        } else if (val === "") {
+                          handleInputChange("square_feet", undefined);
+                        } else {
+                          const num = Number(val);
+                          if (!isNaN(num) && num >= 0) {
+                            handleInputChange("square_feet", num);
+                          }
+                        }
+                      }}
                       className="w-full"
                       required
                     />
@@ -809,18 +832,39 @@ export default function ListPropertyPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Lot Size (acres) <span className="text-red-500">*</span>
+                      <span className="text-gray-500 text-xs ml-1">(use "-" for N/A)</span>
                     </label>
                     <Input
-                      type="number"
-                      step="0.01"
+                      type="text"
                       placeholder="0.5"
-                      value={formData.lot_size || ""}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "lot_size",
-                          e.target.value ? Number(e.target.value) : undefined,
-                        )
+                      value={
+                        formData.lot_size === undefined
+                          ? ""
+                          : formData.lot_size === -1
+                            ? "-"
+                            : String(formData.lot_size)
                       }
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "-") {
+                          handleInputChange("lot_size", -1);
+                        } else if (val === "") {
+                          handleInputChange("lot_size", undefined);
+                        } else {
+                          // Allow numbers and decimals (including partial like "0." or "12.")
+                          if (/^\d*\.?\d*$/.test(val)) {
+                            // Store as string temporarily to allow decimal point typing
+                            if (val.endsWith('.') && !val.includes('..')) {
+                              handleInputChange("lot_size", val as any);
+                            } else {
+                              const num = parseFloat(val);
+                              if (!isNaN(num) && num >= 0) {
+                                handleInputChange("lot_size", num);
+                              }
+                            }
+                          }
+                        }
+                      }}
                       className="w-full"
                       required
                     />
@@ -830,17 +874,25 @@ export default function ListPropertyPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Year Built <span className="text-red-500">*</span>
+                    <span className="text-gray-500 text-xs ml-1">(use "-" for N/A)</span>
                   </label>
                   <Input
-                    type="number"
-                    placeholder="2005"
-                    value={formData.year_built || ""}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "year_built",
-                        e.target.value ? Number(e.target.value) : undefined,
-                      )
-                    }
+                    type="text"
+                    placeholder="2005 or -"
+                    value={formData.year_built === undefined ? "" : formData.year_built === -1 ? "-" : formData.year_built}
+                    onChange={(e) => {
+                      const val = e.target.value.trim();
+                      if (val === "-") {
+                        handleInputChange("year_built", -1);
+                      } else if (val === "") {
+                        handleInputChange("year_built", undefined);
+                      } else {
+                        const num = Number(val);
+                        if (!isNaN(num) && num >= 0) {
+                          handleInputChange("year_built", num);
+                        }
+                      }
+                    }}
                     className="w-full"
                     required
                   />
@@ -1495,14 +1547,14 @@ export default function ListPropertyPage() {
                     <div className="flex gap-4">
                       <div>
                         <p className="text-2xl font-bold text-gray-900">
-                          {formData.bedrooms}
+                          {formData.bedrooms === -1 ? "-" : formData.bedrooms}
                         </p>
                         <p className="text-xs text-gray-600">Bedrooms</p>
                       </div>
                       <div className="border-l border-gray-300"></div>
                       <div>
                         <p className="text-2xl font-bold text-gray-900">
-                          {formData.bathrooms}
+                          {formData.bathrooms === -1 ? "-" : formData.bathrooms}
                         </p>
                         <p className="text-xs text-gray-600">Bathrooms</p>
                       </div>
@@ -1527,7 +1579,7 @@ export default function ListPropertyPage() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-gray-900">
-                        {formData.square_feet?.toLocaleString()}
+                        {formData.square_feet === -1 ? "-" : formData.square_feet?.toLocaleString()}
                       </p>
                       <p className="text-xs text-gray-600">Square Feet</p>
                     </div>
@@ -1552,14 +1604,14 @@ export default function ListPropertyPage() {
                     <div className="flex gap-4">
                       <div>
                         <p className="text-2xl font-bold text-gray-900">
-                          {formData.lot_size}
+                          {formData.lot_size === -1 ? "-" : formData.lot_size}
                         </p>
                         <p className="text-xs text-gray-600">Acres</p>
                       </div>
                       <div className="border-l border-gray-300"></div>
                       <div>
                         <p className="text-2xl font-bold text-gray-900">
-                          {formData.year_built}
+                          {formData.year_built === -1 ? "-" : formData.year_built}
                         </p>
                         <p className="text-xs text-gray-600">Year Built</p>
                       </div>

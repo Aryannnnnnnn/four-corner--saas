@@ -6,6 +6,11 @@ import { auth } from "@/auth";
 import { logger } from "@/app/lib/utils/logger";
 import { deletePropertyImages } from "@/app/lib/utils/s3";
 import { propertyListingRatelimit } from "@/app/lib/ratelimit";
+import {
+  logActivity,
+  getIpFromRequest,
+  getUserAgentFromRequest,
+} from "@/app/lib/utils/activityLogger";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -32,16 +37,26 @@ const propertyListingSchema = z.object({
   longitude: z.number().optional(),
   property_type: z.string().min(1),
   listing_type: z.enum(["sale", "rent"]),
-  bedrooms: z.number().int().min(0),
-  bathrooms: z.number().min(0),
-  square_feet: z.number().int().min(1),
-  lot_size: z.number().min(0),
+  // Allow -1 for N/A, or any number >= 0
+  bedrooms: z.number().int().refine((val) => val === -1 || val >= 0, {
+    message: "Must be -1 (N/A) or a positive number",
+  }),
+  bathrooms: z.number().refine((val) => val === -1 || val >= 0, {
+    message: "Must be -1 (N/A) or a positive number",
+  }),
+  square_feet: z.number().int().refine((val) => val === -1 || val >= 1, {
+    message: "Must be -1 (N/A) or at least 1",
+  }),
+  lot_size: z.number().refine((val) => val === -1 || val >= 0, {
+    message: "Must be -1 (N/A) or a positive number",
+  }),
   lot_size_unit: z.string().optional(),
   year_built: z
     .number()
     .int()
-    .min(1800)
-    .max(new Date().getFullYear() + 2),
+    .refine((val) => val === -1 || (val >= 1800 && val <= new Date().getFullYear() + 2), {
+      message: `Must be -1 (N/A) or between 1800 and ${new Date().getFullYear() + 2}`,
+    }),
   stories: z.number().int().min(1).optional(),
   garage_spaces: z.number().int().min(0).optional(),
   list_price: z.number().min(0),
@@ -265,6 +280,29 @@ export async function POST(req: NextRequest) {
       `)
       .eq("id", listing.id)
       .single();
+
+    // Log listing creation activity
+    try {
+      await logActivity({
+        userId: session.user.id,
+        activityType: "listing_created",
+        metadata: {
+          listing_id: listing.id,
+          title: listingData.title,
+          property_type: listingData.property_type,
+          listing_type: listingData.listing_type,
+          list_price: listingData.list_price,
+          status: listingToInsert.status,
+          city: listingData.city,
+          state: listingData.state,
+        },
+        ipAddress: getIpFromRequest(req),
+        userAgent: getUserAgentFromRequest(req),
+      });
+    } catch (logError) {
+      logger.error("Failed to log listing creation:", logError);
+      // Don't fail the listing creation if logging fails
+    }
 
     return NextResponse.json(
       {

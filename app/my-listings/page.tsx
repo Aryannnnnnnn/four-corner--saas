@@ -187,14 +187,23 @@ export default function MyListingsPage() {
                             ${listing.list_price.toLocaleString()}
                           </div>
                         )}
-                        {listing.bedrooms && <div>{listing.bedrooms} bed</div>}
-                        {listing.bathrooms && (
-                          <div>{listing.bathrooms} bath</div>
+                        {(listing.bedrooms || listing.bedrooms === 0) && (
+                          <div>
+                            {listing.bedrooms === -1 ? "N/A" : listing.bedrooms} bed
+                          </div>
                         )}
-                        {listing.square_feet && (
+                        {(listing.bathrooms || listing.bathrooms === 0) && (
+                          <div>
+                            {listing.bathrooms === -1 ? "N/A" : listing.bathrooms} bath
+                          </div>
+                        )}
+                        {listing.square_feet && listing.square_feet !== -1 && (
                           <div>
                             {listing.square_feet.toLocaleString()} sq ft
                           </div>
+                        )}
+                        {listing.square_feet === -1 && (
+                          <div>N/A sq ft</div>
                         )}
                       </div>
 

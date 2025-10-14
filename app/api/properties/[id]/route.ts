@@ -1,6 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../auth";
+import {
+  logActivity,
+  getIpFromRequest,
+  getUserAgentFromRequest,
+} from "@/app/lib/utils/activityLogger";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -50,6 +55,24 @@ export async function GET(
         { error: "Property not found" },
         { status: 404 },
       );
+    }
+
+    // Log saved property view activity
+    try {
+      await logActivity({
+        userId: session.user.id,
+        activityType: "saved_property_viewed",
+        metadata: {
+          property_id: id,
+          address: data.address,
+          is_favorite: data.is_favorite,
+        },
+        ipAddress: getIpFromRequest(_req),
+        userAgent: getUserAgentFromRequest(_req),
+      });
+    } catch (logError) {
+      console.error("Failed to log property view:", logError);
+      // Don't fail the request if logging fails
     }
 
     return NextResponse.json({ property: data });

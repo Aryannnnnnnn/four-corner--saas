@@ -68,9 +68,11 @@ const RedefiningRealEstateSection: React.FC = () => {
                 <p className="text-3xl font-light text-[#21266c] mb-1" style={{ fontFamily: "Coconat" }}>
                   $365,100
                 </p>
-                <button className="mt-4 flex items-center gap-2 text-xs font-semibold text-[#21266c] hover:text-[#21266c] transition-colors uppercase tracking-wide">
+                <button className="mt-4 flex items-center gap-2 text-xs font-semibold text-[#21266c] hover:text-[#21266c] transition-colors uppercase tracking-wide"
+                onClick={() => window.location.href = '/listings'}
+                >
                   VIEW OUR LISTINGS
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3.5 h-3.5 translate-x-1" />
                 </button>
               </div>
             </div>

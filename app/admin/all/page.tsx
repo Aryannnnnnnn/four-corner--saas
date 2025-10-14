@@ -586,7 +586,7 @@ export default function AllListingsPage() {
                             Bedrooms:
                           </span>
                           <p className="font-medium text-gray-900">
-                            {property.bedrooms || "N/A"}
+                            {property.bedrooms === -1 ? "N/A" : property.bedrooms || "N/A"}
                           </p>
                         </div>
                         <div>
@@ -594,7 +594,7 @@ export default function AllListingsPage() {
                             Bathrooms:
                           </span>
                           <p className="font-medium text-gray-900">
-                            {property.bathrooms || "N/A"}
+                            {property.bathrooms === -1 ? "N/A" : property.bathrooms || "N/A"}
                           </p>
                         </div>
                         <div>
@@ -602,7 +602,7 @@ export default function AllListingsPage() {
                             Sq Ft:
                           </span>
                           <p className="font-medium text-gray-900">
-                            {property.square_feet?.toLocaleString() || "N/A"}
+                            {property.square_feet === -1 ? "N/A" : property.square_feet?.toLocaleString() || "N/A"}
                           </p>
                         </div>
                       </div>

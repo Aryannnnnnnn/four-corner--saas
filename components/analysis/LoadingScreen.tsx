@@ -12,7 +12,7 @@ const loadingSteps = [
   {
     id: 1,
     icon: Search,
-    title: "Searching Zillow Database",
+    title: "Searching Database",
     description: "Finding property information...",
   },
   {

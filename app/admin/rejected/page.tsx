@@ -149,9 +149,9 @@ export default function RejectedListingsPage() {
                       </svg>
                       {listing.property_type}
                     </span>
-                    <span>{listing.bedrooms} bed</span>
-                    <span>{listing.bathrooms} bath</span>
-                    <span>{listing.square_feet.toLocaleString()} sqft</span>
+                    <span>{listing.bedrooms === -1 ? "N/A" : listing.bedrooms} bed</span>
+                    <span>{listing.bathrooms === -1 ? "N/A" : listing.bathrooms} bath</span>
+                    <span>{listing.square_feet === -1 ? "N/A" : listing.square_feet.toLocaleString()} sqft</span>
                   </div>
                   <div className="flex items-center gap-4 mb-3">
                     <span className="text-2xl font-bold text-gray-900">

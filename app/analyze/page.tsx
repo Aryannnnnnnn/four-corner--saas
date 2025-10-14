@@ -174,7 +174,7 @@ function AnalyzeContent() {
             <div className="mt-8 space-y-3 text-white/50 text-sm max-w-md">
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-luxury-blue rounded-full animate-pulse" />
-                <p>Searching Zillow database...</p>
+                <p>Searching database...</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-luxury-blue rounded-full animate-pulse" />

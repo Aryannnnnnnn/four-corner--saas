@@ -2,6 +2,11 @@
 import { createClient } from "@supabase/supabase-js";
 import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
+import {
+  logActivity,
+  getIpFromRequest,
+  getUserAgentFromRequest,
+} from "@/app/lib/utils/activityLogger";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -72,6 +77,31 @@ export async function GET(
         { error: "Listing not found or not available" },
         { status: 404 },
       );
+    }
+
+    // Log listing view activity (only if user is authenticated)
+    if (session?.user?.id) {
+      try {
+        await logActivity({
+          userId: session.user.id,
+          activityType: "listing_viewed",
+          metadata: {
+            listing_id: id,
+            listing_title: data.title,
+            listing_status: data.status,
+            list_price: data.list_price,
+            property_type: data.property_type,
+            bedrooms: data.bedrooms,
+            bathrooms: data.bathrooms,
+            is_owner: isOwner,
+          },
+          ipAddress: getIpFromRequest(_req),
+          userAgent: getUserAgentFromRequest(_req),
+        });
+      } catch (logError) {
+        console.error("Failed to log listing view:", logError);
+        // Don't fail the request if logging fails
+      }
     }
 
     return NextResponse.json({ listing: data }, { status: 200 });

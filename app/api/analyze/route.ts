@@ -2,6 +2,11 @@ import { type NextRequest, NextResponse } from "next/server";
 import { analysisRateLimit } from "@/app/lib/utils/ratelimit";
 import { auth } from "../../../auth";
 import { transformApiResponseToPropertyData } from "../../lib/utils/dataTransform";
+import {
+  logActivity,
+  getIpFromRequest,
+  getUserAgentFromRequest,
+} from "@/app/lib/utils/activityLogger";
 
 // Timeout duration for webhook (2 minutes)
 const WEBHOOK_TIMEOUT = 120000;
@@ -340,6 +345,25 @@ export async function POST(req: NextRequest) {
     } catch (saveError) {
       console.error("Error during auto-save:", saveError);
       // Don't fail the analysis if saving fails
+    }
+
+    // Log the property analysis activity
+    try {
+      await logActivity({
+        userId: session.user.id,
+        activityType: "property_analyzed",
+        metadata: {
+          address: address.trim(),
+          property_type: data.propertyOverview?.propertyType,
+          list_price: data.propertyOverview?.listPrice,
+          estimated_value: data.propertyOverview?.estimatedValue,
+        },
+        ipAddress: getIpFromRequest(req),
+        userAgent: getUserAgentFromRequest(req),
+      });
+    } catch (logError) {
+      console.error("Failed to log activity:", logError);
+      // Don't fail the analysis if logging fails
     }
 
     // Return successful response

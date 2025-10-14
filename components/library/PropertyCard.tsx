@@ -118,14 +118,24 @@ export default function PropertyCard({
           </div>
 
           <div className="flex items-center gap-2 text-xs text-white/60">
-            <span>{property.analysis_data.propertyOverview?.bedrooms} bed</span>
-            <span>•</span>
             <span>
-              {property.analysis_data.propertyOverview?.bathrooms} bath
+              {property.analysis_data.propertyOverview?.bedrooms === -1
+                ? "N/A"
+                : property.analysis_data.propertyOverview?.bedrooms}{" "}
+              bed
             </span>
             <span>•</span>
             <span>
-              {property.analysis_data.propertyOverview?.squareFeet?.toLocaleString()}{" "}
+              {property.analysis_data.propertyOverview?.bathrooms === -1
+                ? "N/A"
+                : property.analysis_data.propertyOverview?.bathrooms}{" "}
+              bath
+            </span>
+            <span>•</span>
+            <span>
+              {property.analysis_data.propertyOverview?.squareFeet === -1
+                ? "N/A"
+                : property.analysis_data.propertyOverview?.squareFeet?.toLocaleString()}{" "}
               sqft
             </span>
           </div>

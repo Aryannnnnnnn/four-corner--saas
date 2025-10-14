@@ -197,7 +197,7 @@ export default function ListingDetailPage() {
                   Features & Amenities
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                  {listing.bedrooms && (
+                  {(listing.bedrooms || listing.bedrooms === 0) && (
                     <div className="flex items-center gap-2">
                       <svg
                         className="w-5 h-5 text-blue-600 flex-shrink-0"
@@ -208,13 +208,13 @@ export default function ListingDetailPage() {
                       </svg>
                       <span className="text-sm text-gray-700">
                         <strong className="text-gray-900">
-                          {listing.bedrooms}
+                          {listing.bedrooms === -1 ? "N/A" : listing.bedrooms}
                         </strong>{" "}
                         Bedrooms
                       </span>
                     </div>
                   )}
-                  {listing.bathrooms && (
+                  {(listing.bathrooms || listing.bathrooms === 0) && (
                     <div className="flex items-center gap-2">
                       <svg
                         className="w-5 h-5 text-blue-600 flex-shrink-0"
@@ -229,13 +229,13 @@ export default function ListingDetailPage() {
                       </svg>
                       <span className="text-sm text-gray-700">
                         <strong className="text-gray-900">
-                          {listing.bathrooms}
+                          {listing.bathrooms === -1 ? "N/A" : listing.bathrooms}
                         </strong>{" "}
                         Bathrooms
                       </span>
                     </div>
                   )}
-                  {listing.square_feet && (
+                  {(listing.square_feet || listing.square_feet === 0) && (
                     <div className="flex items-center gap-2">
                       <svg
                         className="w-5 h-5 text-blue-600 flex-shrink-0"
@@ -246,13 +246,13 @@ export default function ListingDetailPage() {
                       </svg>
                       <span className="text-sm text-gray-700">
                         <strong className="text-gray-900">
-                          {listing.square_feet.toLocaleString()}
+                          {listing.square_feet === -1 ? "N/A" : listing.square_feet.toLocaleString()}
                         </strong>{" "}
                         sqft
                       </span>
                     </div>
                   )}
-                  {listing.lot_size && (
+                  {(listing.lot_size || listing.lot_size === 0) && (
                     <div className="flex items-center gap-2">
                       <svg
                         className="w-5 h-5 text-blue-600 flex-shrink-0"
@@ -267,13 +267,13 @@ export default function ListingDetailPage() {
                       </svg>
                       <span className="text-sm text-gray-700">
                         <strong className="text-gray-900">
-                          {listing.lot_size}
+                          {listing.lot_size === -1 ? "N/A" : listing.lot_size}
                         </strong>{" "}
-                        {listing.lot_size_unit || "acres"} lot
+                        {listing.lot_size !== -1 && (listing.lot_size_unit || "acres")} lot
                       </span>
                     </div>
                   )}
-                  {listing.year_built && (
+                  {(listing.year_built || listing.year_built === 0) && (
                     <div className="flex items-center gap-2">
                       <svg
                         className="w-5 h-5 text-blue-600 flex-shrink-0"
@@ -287,10 +287,16 @@ export default function ListingDetailPage() {
                         />
                       </svg>
                       <span className="text-sm text-gray-700">
-                        Built in{" "}
-                        <strong className="text-gray-900">
-                          {listing.year_built}
-                        </strong>
+                        {listing.year_built === -1 ? (
+                          <strong className="text-gray-900">Year Built: N/A</strong>
+                        ) : (
+                          <>
+                            Built in{" "}
+                            <strong className="text-gray-900">
+                              {listing.year_built}
+                            </strong>
+                          </>
+                        )}
                       </span>
                     </div>
                   )}

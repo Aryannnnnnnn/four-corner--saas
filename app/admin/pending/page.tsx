@@ -234,12 +234,14 @@ export default function PendingListingsPage() {
                         {listing.property_type}
                       </span>
                     </span>
-                    <span className="font-medium">{listing.bedrooms} bed</span>
                     <span className="font-medium">
-                      {listing.bathrooms} bath
+                      {listing.bedrooms === -1 ? "N/A" : listing.bedrooms} bed
                     </span>
                     <span className="font-medium">
-                      {listing.square_feet.toLocaleString()} sqft
+                      {listing.bathrooms === -1 ? "N/A" : listing.bathrooms} bath
+                    </span>
+                    <span className="font-medium">
+                      {listing.square_feet === -1 ? "N/A" : listing.square_feet.toLocaleString()} sqft
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-3 mb-4">

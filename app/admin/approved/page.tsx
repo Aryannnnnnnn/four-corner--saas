@@ -134,9 +134,9 @@ export default function ApprovedListingsPage() {
                   {listing.street_address}, {listing.city}, {listing.state}
                 </p>
                 <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-                  <span>{listing.bedrooms} bed</span>
-                  <span>{listing.bathrooms} bath</span>
-                  <span>{listing.square_feet.toLocaleString()} sqft</span>
+                  <span>{listing.bedrooms === -1 ? "N/A" : listing.bedrooms} bed</span>
+                  <span>{listing.bathrooms === -1 ? "N/A" : listing.bathrooms} bath</span>
+                  <span>{listing.square_feet === -1 ? "N/A" : listing.square_feet.toLocaleString()} sqft</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xl font-bold text-gray-900">

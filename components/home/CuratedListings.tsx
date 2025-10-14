@@ -6,10 +6,10 @@ import type React from "react";
 interface PropertyListing {
   id: number;
   price: string;
-  beds: number;
-  baths: number;
-  halfBaths?: number;
-  sqft?: number;
+  beds: string | number;
+  baths: string | number;
+  halfBaths?: string | number;
+  sqft?: string | number;
   status: string;
   image: string;
   address: string;
@@ -24,77 +24,76 @@ const CuratedListings: React.FC = () => {
   const propertyListings: PropertyListing[] = [
     {
       id: 1,
-      price: "$734,999",
-      beds: 4,
-      baths: 1,
-      halfBaths: 1,
-      sqft: 1384,
+      price: "$1,500,000",
+      beds: 5,
+      baths: 4,
+      sqft: 3640,
       status: "FOR SALE",
       image:
-        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173041/i-do-nothing-but-love-lAyXdl1-Wmc-unsplash_zifosb.jpg",
-      address: "637 W 105th Street",
-      city: "West Dover",
+        "https://fourcorner-property-images.s3.us-east-1.amazonaws.com/property-listings/0a56bf4f-4e3c-4a72-abef-59d4367d5259/1760402018832-d8615b97b0a8ac74-eeded322f67a9d8b31ce7173568b6df0-uncropped_scaled_.webp",
+      address: "96 Old Coach Road",
+      city: "Killington",
       state: "VT",
-      zip: "05356",
-      href: "/property/1",
+      zip: "05751",
+      href: "/listings/46d89c99-e500-4722-a6f1-a04535d2288b",
     },
     {
       id: 2,
-      price: "$850,000",
+      price: "$749,990",
+      beds: 2,
+      baths: 2,
+      status: "FOR SALE",
+      image:
+        "https://fourcorner-property-images.s3.us-east-1.amazonaws.com/property-listings/0a56bf4f-4e3c-4a72-abef-59d4367d5259/1760402321216-bda68873e87ad394-15f942a64c1387e9071f40b44a285f49-uncropped_scaled_.webp",
+      address: "22 old Route 4",
+      city: "Killington",
+      state: "VT",
+      zip: "05751",
+      href: "/listings/c7b99554-e2e0-4744-8c20-ff7854866cfb",
+    },
+    {
+      id: 3,
+      price: "$479,000",
       beds: 2,
       baths: 1,
       status: "FOR SALE",
       image:
-        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173039/scott-webb-1ddol8rgUH8-unsplash_d9xtla.jpg",
-      address: "4216 Berenice",
-      city: "Pittsford",
+        "https://fourcorner-property-images.s3.us-east-1.amazonaws.com/property-listings/0a56bf4f-4e3c-4a72-abef-59d4367d5259/1760402735059-9464f70797cc576f-754f2451f2598415867095f3747108aa-uncropped_scaled_-thumb-lg.webp",
+      address: "1376 Shaftsbury Hollow Road",
+      city: "Shaftsbury",
       state: "VT",
-      zip: "05763",
-      href: "/property/2",
-    },
-    {
-      id: 3,
-      price: "$749,900",
-      beds: 3,
-      baths: 2,
-      status: "FOR SALE",
-      image:
-        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173040/stephan-bechert-yFV39g6AZ5o-unsplash_t8ho4k.jpg",
-      address: "1434 W 92nd St",
-      city: "North Hero",
-      state: "VT",
-      zip: "05474",
-      href: "/property/3",
+      zip: "05262",
+      href: "/listings/645377d4-d332-45d5-adb5-d63bbb165647",
     },
     {
       id: 4,
-      price: "$895,000",
+      price: "$235,000",
       beds: 3,
-      baths: 2,
-      sqft: 1500,
+      baths: 1,
+      sqft: 1010,
       status: "FOR SALE",
       image:
-        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173041/todd-kent-178j8tJrNlc-unsplash_txkfnv.jpg",
-      address: "290 Barts Hill Rd",
-      city: "Colchester",
+        "https://fourcorner-property-images.s3.us-east-1.amazonaws.com/property-listings/0a56bf4f-4e3c-4a72-abef-59d4367d5259/1760403184231-07ed183274e0d48c-735fafa15b1ec1650e6a370f76e3a739-uncropped_scaled_-thumb-lg.webp",
+      address: "4120 Middle Road",
+      city: "Clarendon",
       state: "VT",
-      zip: "05446",
-      href: "/property/4",
+      zip: "05759",
+      href: "/listings/b4f9ff9f-6190-4530-913c-e22164eee960",
     },
     {
       id: 5,
-      price: "$1,200,000",
-      beds: 4,
-      baths: 3,
-      sqft: 2200,
+      price: "$105,000",
+      beds: "N/A",
+      baths: "N/A",
+      sqft: "N/A",
       status: "FOR SALE",
       image:
-        "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173042/i-do-nothing-but-love-txDT94Mqs8k-unsplash_htp3ip.jpg",
-      address: "107 Top Ridge",
-      city: "Burlington",
+        "https://fourcorner-property-images.s3.us-east-1.amazonaws.com/property-listings/0a56bf4f-4e3c-4a72-abef-59d4367d5259/1760405404463-ee86a5e2d23811f5-9390b31c71385745a1224bde7c3010c9-uncropped_scaled_.webp",
+      address: "236-240 Grandview Street",
+      city: "Bennington",
       state: "VT",
-      zip: "05049",
-      href: "/property/5",
+      zip: "05201",
+      href: "/listings/7dfeb12c-e915-4d26-ada6-2ac6efa7ddcc",
     },
   ];
 
