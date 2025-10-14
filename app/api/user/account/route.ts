@@ -21,8 +21,9 @@ const updateAccountSchema = z
   .object({
     name: z.string().min(1).max(100).optional(),
     email: z.string().email().optional(),
+    phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits").optional().or(z.literal("")),
   })
-  .refine((data) => data.name || data.email, {
+  .refine((data) => data.name || data.email || data.phone !== undefined, {
     message: "At least one field must be provided",
   });
 
@@ -48,7 +49,7 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
-    const { name, email } = validation.data;
+    const { name, email, phone } = validation.data;
     const updates: Record<string, string | null> = {};
 
     if (name) {
@@ -73,6 +74,29 @@ export async function PATCH(req: NextRequest) {
 
       updates.email = email.toLowerCase();
       updates.email_verified = null; // Require re-verification
+    }
+
+    if (phone !== undefined) {
+      if (phone === "") {
+        updates.phone = null; // Allow clearing phone number
+      } else {
+        // Check if phone is already taken
+        const { data: existingPhone } = await supabase
+          .from("users")
+          .select("id")
+          .eq("phone", phone)
+          .neq("id", session.user.id)
+          .maybeSingle();
+
+        if (existingPhone) {
+          return NextResponse.json(
+            { error: "Phone number already in use" },
+            { status: 409 },
+          );
+        }
+
+        updates.phone = phone;
+      }
     }
 
     if (Object.keys(updates).length === 0) {

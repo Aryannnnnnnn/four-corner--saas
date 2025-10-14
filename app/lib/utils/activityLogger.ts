@@ -21,6 +21,8 @@ export type ActivityType =
   | "listing_updated"
   | "listing_deleted"
   | "property_searched"
+  | "property_analyzed"
+  | "saved_property_viewed"
   | "user_login"
   | "user_logout"
   | "user_registered"
@@ -242,7 +244,7 @@ export function getIpFromRequest(request: Request): string | undefined {
   const realIp = request.headers.get("x-real-ip");
 
   if (forwarded) {
-    return forwarded.split(",")[0].trim();
+    return forwarded.split(",")[0]?.trim();
   }
 
   return realIp || undefined;

@@ -2,7 +2,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import {
-  logPropertySearch,
+  logActivity,
   getIpFromRequest,
   getUserAgentFromRequest,
 } from "@/app/lib/utils/activityLogger";
@@ -40,39 +40,49 @@ export async function POST(request: NextRequest) {
 
     // Log property search activity (only if user is authenticated)
     const session = await auth();
+    console.log("Search - Session check:", {
+      hasSession: !!session,
+      hasUser: !!session?.user,
+      userId: session?.user?.id
+    });
+
     if (session?.user?.id) {
       try {
         const filters = body.filters || {};
-        await logPropertySearch({
+        console.log("Logging property search for user:", session.user.id);
+
+        // Log to user_activity_log table instead
+        await logActivity({
           userId: session.user.id,
-          searchQuery: body.location || "property search",
-          searchType: body.status_type || "general_search",
-          filtersApplied: {
-            location: body.location,
-            minPrice: filters.minPrice,
-            maxPrice: filters.maxPrice,
-            bedsMin: filters.bedsMin,
-            bedsMax: filters.bedsMax,
-            bathsMin: filters.bathsMin,
-            bathsMax: filters.bathsMax,
-            sqftMin: filters.sqftMin,
-            sqftMax: filters.sqftMax,
-            lotMin: filters.lotMin,
-            lotMax: filters.lotMax,
-            builtYearMin: filters.builtYearMin,
-            builtYearMax: filters.builtYearMax,
-            daysOnZillow: filters.daysOnZillow,
-            hoaMax: filters.hoaMax,
-            homeType: filters.homeType,
-            hasPool: filters.hasPool,
-            hasGarage: filters.hasGarage,
-            hasAC: filters.hasAC,
-            keywords: filters.keywords,
-            sort: filters.sort,
-          },
-          resultsCount: data.totalResults || data.results?.length || 0,
-          resultData: {
-            preview: data.results?.slice(0, 5).map((r: any) => ({
+          activityType: "property_searched",
+          metadata: {
+            search_query: body.location || "property search",
+            search_type: body.status_type || "general_search",
+            filters_applied: {
+              location: body.location,
+              minPrice: filters.minPrice,
+              maxPrice: filters.maxPrice,
+              bedsMin: filters.bedsMin,
+              bedsMax: filters.bedsMax,
+              bathsMin: filters.bathsMin,
+              bathsMax: filters.bathsMax,
+              sqftMin: filters.sqftMin,
+              sqftMax: filters.sqftMax,
+              lotMin: filters.lotMin,
+              lotMax: filters.lotMax,
+              builtYearMin: filters.builtYearMin,
+              builtYearMax: filters.builtYearMax,
+              daysOnZillow: filters.daysOnZillow,
+              hoaMax: filters.hoaMax,
+              homeType: filters.homeType,
+              hasPool: filters.hasPool,
+              hasGarage: filters.hasGarage,
+              hasAC: filters.hasAC,
+              keywords: filters.keywords,
+              sort: filters.sort,
+            },
+            results_count: data.totalResults || data.results?.length || 0,
+            result_preview: data.results?.slice(0, 5).map((r: any) => ({
               address: r.address,
               price: r.price,
               bedrooms: r.bedrooms,
@@ -82,10 +92,14 @@ export async function POST(request: NextRequest) {
           ipAddress: getIpFromRequest(request),
           userAgent: getUserAgentFromRequest(request),
         });
+
+        console.log("Property search logged successfully");
       } catch (logError) {
         console.error("Failed to log property search:", logError);
         // Don't fail the search if logging fails
       }
+    } else {
+      console.log("User not authenticated, skipping search logging");
     }
 
     return NextResponse.json(data, { status: 200 });

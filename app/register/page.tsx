@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Home, Lock, Mail, User } from "lucide-react";
+import { ArrowRight, Home, Lock, Mail, Phone, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -13,6 +13,7 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
   });
@@ -26,13 +27,20 @@ export default function RegisterPage() {
       return;
     }
 
-    if (!formData.email || !formData.password || !formData.confirmPassword) {
+    if (!formData.email || !formData.phone || !formData.password || !formData.confirmPassword) {
       toast.error("Please fill in all fields");
       return;
     }
 
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
       toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // Validate USA phone number (10 digits)
+    const phoneDigits = formData.phone.replace(/\D/g, "");
+    if (phoneDigits.length !== 10) {
+      toast.error("Please enter a valid 10-digit USA phone number");
       return;
     }
 
@@ -55,6 +63,7 @@ export default function RegisterPage() {
         body: JSON.stringify({
           name: formData.name.trim(),
           email: formData.email.trim().toLowerCase(),
+          phone: formData.phone.replace(/\D/g, ""), // Send only digits
           password: formData.password,
         }),
       });
@@ -190,6 +199,44 @@ export default function RegisterPage() {
                 required
               />
             </div>
+          </div>
+
+          {/* Phone Number */}
+          <div className="space-y-2">
+            <label
+              htmlFor="phone"
+              className="text-sm font-medium text-white/80"
+            >
+              Phone Number (USA)
+            </label>
+            <div className="relative">
+              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+              <input
+                id="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => {
+                  // Auto-format phone number as user types
+                  const value = e.target.value.replace(/\D/g, "");
+                  let formatted = value;
+                  if (value.length > 3 && value.length <= 6) {
+                    formatted = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+                  } else if (value.length > 6) {
+                    formatted = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                  } else if (value.length > 0) {
+                    formatted = `(${value}`;
+                  }
+                  setFormData({ ...formData, phone: formatted });
+                }}
+                placeholder="(555) 123-4567"
+                className="luxury-input pl-12 w-full"
+                required
+                maxLength={14}
+              />
+            </div>
+            <p className="text-xs text-white/50">
+              10-digit USA phone number
+            </p>
           </div>
 
           {/* Password */}

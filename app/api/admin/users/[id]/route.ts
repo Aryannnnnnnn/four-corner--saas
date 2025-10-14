@@ -4,7 +4,6 @@ import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { logger } from "@/app/lib/utils/logger";
 import { z } from "zod";
-import bcrypt from "bcryptjs";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -22,17 +21,14 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 const updateUserSchema = z.object({
   name: z.string().min(1).max(255).optional(),
   email: z.string().email().optional(),
+  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits").optional().or(z.literal("")),
   role: z.enum(["user", "admin"]).optional(),
-});
-
-const resetPasswordSchema = z.object({
-  newPassword: z.string().min(8),
 });
 
 // GET - Fetch single user with details
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -51,7 +47,7 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const userId = params.id;
+    const { id: userId } = await params;
 
     // Fetch user with their listings and admin status
     // Use specific foreign keys to avoid ambiguity
@@ -94,7 +90,7 @@ export async function GET(
 // PATCH - Update user
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -113,7 +109,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const userId = params.id;
+    const { id: userId } = await params;
     const body = await req.json();
 
     // Validate input
@@ -231,8 +227,8 @@ export async function PATCH(
 
 // DELETE - Delete user
 export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -251,7 +247,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const userId = params.id;
+    const { id: userId } = await params;
 
     // Prevent admin from deleting themselves
     if (userId === session.user.id) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Eye, EyeOff, Key, Save, Trash2, User } from "lucide-react";
+import { Download, Eye, EyeOff, Key, Phone, Save, Trash2, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
@@ -25,6 +25,7 @@ export default function Settings() {
   const [accountData, setAccountData] = useState({
     name: "",
     email: "",
+    phone: "",
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
@@ -60,6 +61,13 @@ export default function Settings() {
       if (data.settings) {
         // Settings fetched successfully
         console.log("Settings fetched:", data.settings);
+        // Update phone from settings if available
+        if (data.settings.phone) {
+          setAccountData((prev) => ({
+            ...prev,
+            phone: data.settings.phone,
+          }));
+        }
       }
     } catch (error) {
       console.error("Failed to fetch settings:", error);
@@ -79,6 +87,13 @@ export default function Settings() {
   }, [session, checkPasswordExists, fetchSettings]);
 
   const handleUpdateAccount = async () => {
+    // Validate phone number
+    const phoneDigits = accountData.phone.replace(/\D/g, "");
+    if (accountData.phone && phoneDigits.length !== 10) {
+      toast.error("Please enter a valid 10-digit USA phone number");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await fetch("/api/user/account", {
@@ -87,6 +102,7 @@ export default function Settings() {
         body: JSON.stringify({
           name: accountData.name,
           email: accountData.email,
+          phone: phoneDigits, // Send only digits
         }),
       });
 
@@ -310,6 +326,37 @@ export default function Settings() {
                         }
                         placeholder="john@example.com"
                       />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold mb-2">
+                        Phone Number (USA)
+                      </label>
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                        <input
+                          type="tel"
+                          value={accountData.phone}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, "");
+                            let formatted = value;
+                            if (value.length > 3 && value.length <= 6) {
+                              formatted = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+                            } else if (value.length > 6) {
+                              formatted = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                            } else if (value.length > 0) {
+                              formatted = `(${value}`;
+                            }
+                            setAccountData({
+                              ...accountData,
+                              phone: formatted,
+                            });
+                          }}
+                          placeholder="(555) 123-4567"
+                          className="w-full pl-12 px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-luxury-blue text-white placeholder-white/30"
+                          maxLength={14}
+                        />
+                      </div>
                     </div>
 
                     <Button

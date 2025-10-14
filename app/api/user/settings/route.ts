@@ -51,6 +51,13 @@ export async function GET(_req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Fetch user phone from users table
+    const { data: userData } = await supabase
+      .from("users")
+      .select("phone")
+      .eq("id", session.user.id)
+      .single();
+
     const { data, error } = await supabase
       .from("user_settings")
       .select("*")
@@ -89,7 +96,10 @@ export async function GET(_req: NextRequest) {
     };
 
     return NextResponse.json({
-      settings: data || { ...defaultSettings, user_id: session.user.id },
+      settings: {
+        ...(data || { ...defaultSettings, user_id: session.user.id }),
+        phone: userData?.phone || "",
+      },
     });
   } catch (error) {
     console.error("Fetch settings error:", error);

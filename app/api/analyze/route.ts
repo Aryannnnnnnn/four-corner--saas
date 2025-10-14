@@ -356,7 +356,6 @@ export async function POST(req: NextRequest) {
           address: address.trim(),
           property_type: data.propertyOverview?.propertyType,
           list_price: data.propertyOverview?.listPrice,
-          estimated_value: data.propertyOverview?.estimatedValue,
         },
         ipAddress: getIpFromRequest(req),
         userAgent: getUserAgentFromRequest(req),

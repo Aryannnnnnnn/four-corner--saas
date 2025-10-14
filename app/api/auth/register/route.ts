@@ -17,6 +17,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
+  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
 
     // Validate input
     const validatedData = registerSchema.parse(body);
-    const { name, email, password } = validatedData;
+    const { name, email, phone, password } = validatedData;
 
     // Check if user already exists
     const { data: existingUser } = await supabase
@@ -52,7 +53,21 @@ export async function POST(req: NextRequest) {
     if (existingUser) {
       return NextResponse.json(
         { error: "User with this email already exists" },
-        { status: 400 },
+        { status: 409 },
+      );
+    }
+
+    // Check if phone number already exists
+    const { data: existingPhone } = await supabase
+      .from("users")
+      .select("id")
+      .eq("phone", phone)
+      .maybeSingle();
+
+    if (existingPhone) {
+      return NextResponse.json(
+        { error: "User with this phone number already exists" },
+        { status: 409 },
       );
     }
 
@@ -65,6 +80,7 @@ export async function POST(req: NextRequest) {
       .insert({
         name,
         email: email.toLowerCase(),
+        phone,
         email_verified: new Date().toISOString(),
       })
       .select()

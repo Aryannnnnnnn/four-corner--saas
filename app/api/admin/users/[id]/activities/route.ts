@@ -106,7 +106,7 @@ function generateActivityDescription(activityType: string, metadata: any): strin
 // GET - Fetch user activities
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -125,7 +125,7 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const userId = params.id;
+    const { id: userId } = await params;
     const { searchParams } = new URL(req.url);
     const limit = parseInt(searchParams.get("limit") || "50");
     const activityType = searchParams.get("type") || "all";

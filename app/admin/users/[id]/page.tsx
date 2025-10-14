@@ -13,6 +13,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   role: string;
   created_at: string;
   updated_at: string;
@@ -49,6 +50,7 @@ export default function UserDetailPage() {
   const [editForm, setEditForm] = useState({
     name: "",
     email: "",
+    phone: "",
     role: "user",
   });
 
@@ -77,6 +79,7 @@ export default function UserDetailPage() {
       setEditForm({
         name: data.user.name || "",
         email: data.user.email || "",
+        phone: data.user.phone || "",
         role: data.user.role || "user",
       });
     } catch (error) {
@@ -114,7 +117,10 @@ export default function UserDetailPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(editForm),
+        body: JSON.stringify({
+          ...editForm,
+          phone: editForm.phone.replace(/\D/g, ""), // Send only digits
+        }),
       });
 
       if (!response.ok) {
@@ -352,6 +358,7 @@ export default function UserDetailPage() {
                       setEditForm({
                         name: user.name || "",
                         email: user.email || "",
+                        phone: user.phone || "",
                         role: user.role || "user",
                       });
                     }}
@@ -400,6 +407,30 @@ export default function UserDetailPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Phone Number (USA)
+                  </label>
+                  <input
+                    type="tel"
+                    value={editForm.phone}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "");
+                      let formatted = value;
+                      if (value.length > 3 && value.length <= 6) {
+                        formatted = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+                      } else if (value.length > 6) {
+                        formatted = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                      } else if (value.length > 0) {
+                        formatted = `(${value}`;
+                      }
+                      setEditForm({ ...editForm, phone: formatted });
+                    }}
+                    placeholder="(555) 123-4567"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black bg-white"
+                    maxLength={14}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Role
                   </label>
                   <select
@@ -423,6 +454,14 @@ export default function UserDetailPage() {
                 <div>
                   <label className="text-sm font-medium text-gray-500">Email</label>
                   <p className="text-gray-900 mt-1">{user.email}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Phone Number</label>
+                  <p className="text-gray-900 mt-1">
+                    {user.phone ?
+                      `(${user.phone.slice(0, 3)}) ${user.phone.slice(3, 6)}-${user.phone.slice(6, 10)}`
+                      : "Not provided"}
+                  </p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-500">Role</label>

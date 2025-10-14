@@ -3,7 +3,7 @@
 import { ArrowLeft, Filter, Grid3X3, Map, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
@@ -67,7 +67,17 @@ function SearchPageContent() {
     sort: "Homes_for_You",
   });
 
+  // Ref to track if a search is already in progress to prevent duplicate calls
+  const searchInProgress = useRef(false);
+
   const handleSearch = useCallback(async (filters: PropertyFilters) => {
+    // Prevent duplicate searches
+    if (searchInProgress.current) {
+      console.log("Search already in progress, skipping duplicate call");
+      return;
+    }
+
+    searchInProgress.current = true;
     setIsLoading(true);
     try {
       const response = await fetch("/api/search-properties", {
@@ -122,6 +132,7 @@ function SearchPageContent() {
       toast.error(error instanceof Error ? error.message : "Search failed");
     } finally {
       setIsLoading(false);
+      searchInProgress.current = false;
     }
   }, []);
 
