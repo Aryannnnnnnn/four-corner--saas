@@ -4,22 +4,6 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
-interface SoldProperty {
-  id: string;
-  title: string;
-  description: string;
-  address: string;
-  city: string;
-  state: string;
-  list_price: number;
-  sold_price: number;
-  sold_at: string;
-  bedrooms: number;
-  bathrooms: number;
-  square_feet: number;
-  image: string | null;
-}
-
 interface LocalArea {
   id: number;
   title: string;
@@ -30,28 +14,7 @@ interface LocalArea {
 const CaseStudiesSection: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const [soldProperties, setSoldProperties] = useState<SoldProperty[]>([]);
-  const [loading, setLoading] = useState(true);
   const sectionRef = useRef<HTMLElement>(null);
-
-  // Fetch sold properties
-  useEffect(() => {
-    const fetchSoldProperties = async () => {
-      try {
-        const response = await fetch("/api/sold-properties");
-        const data = await response.json();
-        if (data.properties && data.properties.length > 0) {
-          setSoldProperties(data.properties);
-        }
-      } catch (error) {
-        console.error("Error fetching sold properties:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSoldProperties();
-  }, []);
 
   // Intersection Observer to trigger animation when section comes into view
   useEffect(() => {
@@ -114,9 +77,8 @@ const CaseStudiesSection: React.FC = () => {
     },
   ];
 
-  // Determine which data to display - always use local areas instead of sold properties
+  // Use local areas data
   const displayData = localAreas;
-  const isSoldProperties = false;
 
   // Auto-play carousel
   useEffect(() => {
@@ -162,7 +124,7 @@ const CaseStudiesSection: React.FC = () => {
               animationFillMode: "forwards",
             }}
           >
-            {isSoldProperties ? "Recently Sold Properties" : "Our Local Expertise"}
+            Our Local Expertise
           </h2>
         </div>
 
@@ -179,17 +141,8 @@ const CaseStudiesSection: React.FC = () => {
               {displayData[activeIndex] && (
                 <>
                   <img
-                    src={
-                      isSoldProperties
-                        ? (displayData[activeIndex] as SoldProperty).image ||
-                          "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760194633/arlington_kvwmng.png"
-                        : (displayData[activeIndex] as LocalArea).image
-                    }
-                    alt={
-                      isSoldProperties
-                        ? (displayData[activeIndex] as SoldProperty).title
-                        : (displayData[activeIndex] as LocalArea).title
-                    }
+                    src={displayData[activeIndex].image}
+                    alt={displayData[activeIndex].title}
                     className="w-full h-full object-cover transition-all duration-700"
                     key={activeIndex}
                   />
@@ -201,72 +154,18 @@ const CaseStudiesSection: React.FC = () => {
                   {/* Content Overlay */}
                   <div className="absolute bottom-16 sm:bottom-8 left-4 sm:left-8 right-4 sm:right-8 text-white">
                     <div className="max-w-3xl">
-                      {isSoldProperties ? (
-                        <>
-                          <div className="flex items-center gap-3 mb-2 sm:mb-4">
-                            <span className="px-3 py-1 text-xs font-bold uppercase tracking-wider bg-green-600 text-white rounded-full">
-                              SOLD
-                            </span>
-                            <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-white/70">
-                              {(displayData[activeIndex] as SoldProperty).city},{" "}
-                              {(displayData[activeIndex] as SoldProperty).state}
-                            </p>
-                          </div>
-                          <h3
-                            className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-6"
-                            style={{ fontFamily: "Coconat" }}
-                          >
-                            {(displayData[activeIndex] as SoldProperty).title}
-                          </h3>
-                          <p className="text-sm sm:text-base lg:text-lg text-white/95 leading-relaxed mb-4 line-clamp-2 sm:line-clamp-none">
-                            {(displayData[activeIndex] as SoldProperty).description}
-                          </p>
-                          <div className="flex flex-wrap items-center gap-4 text-sm sm:text-base">
-                            <div className="flex items-center gap-2">
-                              <span className="text-white/70">List Price:</span>
-                              <span className="font-bold">
-                                ${(displayData[activeIndex] as SoldProperty).list_price.toLocaleString()}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-white/70">Sold For:</span>
-                              <span className="font-bold text-green-400">
-                                ${(displayData[activeIndex] as SoldProperty).sold_price.toLocaleString()}
-                              </span>
-                            </div>
-                            {(displayData[activeIndex] as SoldProperty).bedrooms > 0 && (
-                              <span className="text-white/90">
-                                {(displayData[activeIndex] as SoldProperty).bedrooms} bed
-                              </span>
-                            )}
-                            {(displayData[activeIndex] as SoldProperty).bathrooms > 0 && (
-                              <span className="text-white/90">
-                                {(displayData[activeIndex] as SoldProperty).bathrooms} bath
-                              </span>
-                            )}
-                            {(displayData[activeIndex] as SoldProperty).square_feet > 0 && (
-                              <span className="text-white/90">
-                                {(displayData[activeIndex] as SoldProperty).square_feet.toLocaleString()} sqft
-                              </span>
-                            )}
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] mb-2 sm:mb-4 text-white/70">
-                            Vermont
-                          </p>
-                          <h3
-                            className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-6"
-                            style={{ fontFamily: "Coconat" }}
-                          >
-                            {(displayData[activeIndex] as LocalArea).title}
-                          </h3>
-                          <p className="text-sm sm:text-base lg:text-lg text-white/95 leading-relaxed line-clamp-3 sm:line-clamp-none">
-                            {(displayData[activeIndex] as LocalArea).description}
-                          </p>
-                        </>
-                      )}
+                      <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] mb-2 sm:mb-4 text-white/70">
+                        Vermont
+                      </p>
+                      <h3
+                        className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-6"
+                        style={{ fontFamily: "Coconat" }}
+                      >
+                        {displayData[activeIndex].title}
+                      </h3>
+                      <p className="text-sm sm:text-base lg:text-lg text-white/95 leading-relaxed line-clamp-3 sm:line-clamp-none">
+                        {displayData[activeIndex].description}
+                      </p>
                     </div>
                   </div>
                 </>
