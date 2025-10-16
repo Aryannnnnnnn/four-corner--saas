@@ -162,7 +162,7 @@ const RedefiningRealEstateSection: React.FC = () => {
           >
             <div className="relative w-full rounded-2xl overflow-hidden shadow-xl">
               <img
-                src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103374/68afe686a8b0e8104f58a45c-Untitled-design-6_zydsft.png"
+                src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760633037/pexels-jakubzerdzicki-29726512_revlil.jpg"
                 alt="Interior Design"
                 className="w-full h-full object-cover"
                 style={{ aspectRatio: "4/3" }}

@@ -72,7 +72,7 @@ export default function BrandBenefitSection() {
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img
-                  src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103266/68afe75043f22ac1dc01fa9d-Untitled-design-7_dr8s7i.png"
+                  src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760632358/house-model-desk-real-estate-agent-holding-magnifying-glass-document-office-min_imktyr.jpg"
                   alt="Property Analysis"
                   className="w-full h-full object-cover"
                   style={{ aspectRatio: "4/3" }}

@@ -179,7 +179,7 @@ export default function AboutHero() {
               {/* Small Image - Bottom Left */}
               <div className="relative rounded-3xl overflow-hidden shadow-xl">
                 <img
-                  src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103374/68afe686a8b0e8104f58a45c-Untitled-design-6_zydsft.png"
+                  src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760631280/pexels-rdne-8293720_jxkgie.jpg "
                   alt="Interior"
                   className="w-full h-full object-cover"
                   style={{ aspectRatio: "1/1" }}

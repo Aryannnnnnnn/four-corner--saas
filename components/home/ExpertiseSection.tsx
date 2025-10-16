@@ -167,7 +167,7 @@ const ExpertiseSection: React.FC = () => {
                 }}
               >
                 <div className="text-[#21266c] text-4xl font-light mb-3" style={{ fontFamily: "Coconat" }}>
-                  $X Million
+                  $27 Million +
                 </div>
                 <div className="text-gray-500 text-xs uppercase tracking-wider mb-4">
                   Total Sales Volume
