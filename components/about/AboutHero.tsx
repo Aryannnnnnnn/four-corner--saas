@@ -128,7 +128,7 @@ export default function AboutHero() {
               <div className="text-center p-4 bg-gray-50 rounded-2xl">
                 <Award className="w-8 h-8 text-[#21266c] mx-auto mb-2" />
                 <p className="text-2xl sm:text-3xl font-light text-[#21266c] mb-1" style={{ fontFamily: "Coconat" }}>
-                  X+
+                  4+
                 </p>
                 <p className="text-xs text-gray-600 uppercase tracking-wider">
                   Years
@@ -137,7 +137,7 @@ export default function AboutHero() {
               <div className="text-center p-4 bg-gray-50 rounded-2xl">
                 <Home className="w-8 h-8 text-[#21266c] mx-auto mb-2" />
                 <p className="text-2xl sm:text-3xl font-light text-[#21266c] mb-1" style={{ fontFamily: "Coconat" }}>
-                  X+
+                  200+
                 </p>
                 <p className="text-xs text-gray-600 uppercase tracking-wider">
                   Properties
@@ -203,7 +203,7 @@ export default function AboutHero() {
                 Trusted Since
               </p>
               <p className="text-3xl font-light text-[#21266c]" style={{ fontFamily: "Coconat" }}>
-                X
+                2021
               </p>
             </div>
           </div>

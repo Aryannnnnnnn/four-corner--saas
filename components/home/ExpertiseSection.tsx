@@ -84,7 +84,7 @@ const ExpertiseSection: React.FC = () => {
               }}
             >
               <div className="text-[#21266c] text-5xl font-light mb-1" style={{ fontFamily: "Coconat" }}>
-                X+
+                4+
               </div>
               <div className="text-gray-500 text-xs uppercase tracking-wider">
                 Years of Excellence
@@ -143,7 +143,7 @@ const ExpertiseSection: React.FC = () => {
               >
                 <div>
                   <div className="text-[#21266c] text-5xl font-light mb-2" style={{ fontFamily: "Coconat" }}>
-                    X+
+                    200+
                   </div>
                   <div className="text-gray-500 text-xs uppercase tracking-wider">
                     Properties<br />Sold

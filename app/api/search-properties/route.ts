@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     // CHANGED: Use /webhook/ instead of /webhook-test/
     const n8nUrl =
-      "https://zyneris.app.n8n.cloud/webhook/zillow-property-search";
+      "https://n8n.srv1067543.hstgr.cloud/webhook/zillow-property-search";
 
     const response = await fetch(n8nUrl, {
       method: "POST",

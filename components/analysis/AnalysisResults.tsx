@@ -111,8 +111,8 @@ export default function AnalysisResults({
 
   const handleShare = async () => {
     const shareData = {
-      title: `Property Analysis - ${data.propertyOverview?.streetAddress || "Property"}`,
-      text: `Check out this property analysis: ${data.propertyOverview?.fullAddress || data.propertyOverview?.streetAddress || "Property"}`,
+      title: `Property Analysis - ${safeString(data.propertyOverview?.streetAddress) || "Property"}`,
+      text: `Check out this property analysis: ${safeString(data.propertyOverview?.fullAddress) || safeString(data.propertyOverview?.streetAddress) || "Property"}`,
       url: window.location.href,
     };
 
@@ -159,8 +159,8 @@ export default function AnalysisResults({
   };
 
   // Safe accessors with new structure
-  const listPrice = data.propertyOverview?.listPrice || 0;
-  const zestimate = data.propertyOverview?.zestimate || 0;
+  const listPrice = Number(data.propertyOverview?.listPrice) || 0;
+  const zestimate = Number(data.propertyOverview?.zestimate) || 0;
 
   // Debug logging to check received values (development only)
   if (process.env.NODE_ENV === "development") {
@@ -169,9 +169,9 @@ export default function AnalysisResults({
     console.log("Extracted listPrice:", listPrice);
     console.log("Raw listPrice from data:", data.propertyOverview?.listPrice);
   }
-  const bedrooms = data.propertyOverview?.bedrooms || 0;
-  const bathrooms = data.propertyOverview?.bathrooms || 0;
-  const squareFeet = data.propertyOverview?.squareFeet || 0;
+  const bedrooms = Number(data.propertyOverview?.bedrooms) || 0;
+  const bathrooms = Number(data.propertyOverview?.bathrooms) || 0;
+  const squareFeet = Number(data.propertyOverview?.squareFeet) || 0;
 
   return (
     <div className="max-w-7xl mx-auto px-6 pt-32 pb-20">
@@ -241,21 +241,21 @@ export default function AnalysisResults({
         <div className="flex flex-col lg:flex-row items-start justify-between gap-6 mb-6">
           <div className="flex-1">
             <h1 className="font-display text-3xl md:text-4xl font-bold mb-2 text-gradient">
-              {data.propertyOverview?.streetAddress || "Property Address"}
+              {safeString(data.propertyOverview?.streetAddress) || "Property Address"}
             </h1>
             <div className="flex items-center gap-2 text-white/70 mb-4">
               <MapPin className="w-5 h-5 text-luxury-blue" />
               <span className="text-base md:text-lg">
-                {data.propertyOverview?.city || "City"},{" "}
-                {data.propertyOverview?.state || "State"}{" "}
-                {data.propertyOverview?.zipcode || "Zip"}
+                {safeString(data.propertyOverview?.city) || "City"},{" "}
+                {safeString(data.propertyOverview?.state) || "State"}{" "}
+                {safeString(data.propertyOverview?.zipcode) || "Zip"}
               </span>
             </div>
             {data.propertyOverview?.neighborhood &&
               data.propertyOverview.neighborhood !== "N/A" && (
                 <p className="text-white/60 text-sm mb-4">
-                  Neighborhood: {data.propertyOverview.neighborhood} | County:{" "}
-                  {data.propertyOverview.county}
+                  Neighborhood: {safeString(data.propertyOverview.neighborhood)} | County:{" "}
+                  {safeString(data.propertyOverview.county)}
                 </p>
               )}
             <div className="flex flex-wrap items-center gap-4 text-sm text-white/60">
@@ -273,7 +273,7 @@ export default function AnalysisResults({
               </span>
               <span className="flex items-center gap-1">
                 <Building className="w-4 h-4" />
-                Built {data.propertyOverview?.yearBuilt || "N/A"}
+                Built {safeString(data.propertyOverview?.yearBuilt) || "N/A"}
               </span>
             </div>
           </div>
@@ -362,7 +362,7 @@ export default function AnalysisResults({
               <div className="flex items-center gap-3 mb-4">
                 <Video className="w-6 h-6 text-luxury-blue" />
                 <h3 className="font-display text-xl font-bold">
-                  Property Videos ({data.media.videoCount})
+                  Property Videos ({safeString(data.media.videoCount)})
                 </h3>
               </div>
               <div className="grid md:grid-cols-2 gap-4">
@@ -474,7 +474,7 @@ export default function AnalysisResults({
               <Card>
                 <h2 className="section-title">Property Description</h2>
                 <p className="text-white/80 text-base md:text-lg leading-relaxed whitespace-pre-wrap">
-                  {data.propertyOverview.description}
+                  {safeString(data.propertyOverview.description)}
                 </p>
                 {data.special?.features && data.special.features.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
@@ -483,7 +483,7 @@ export default function AnalysisResults({
                         key={index}
                         className="px-3 py-1 bg-luxury-blue/20 border border-luxury-blue/30 rounded-full text-sm text-luxury-blue"
                       >
-                        {feature}
+                        {safeString(feature)}
                       </span>
                     ))}
                   </div>
@@ -555,7 +555,7 @@ export default function AnalysisResults({
                           {index + 1}
                         </span>
                       </div>
-                      <p className="text-white/90">{strength}</p>
+                      <p className="text-white/90">{safeString(strength)}</p>
                     </li>
                   ))
                 ) : (
@@ -583,7 +583,7 @@ export default function AnalysisResults({
                           {index + 1}
                         </span>
                       </div>
-                      <p className="text-white/90">{risk}</p>
+                      <p className="text-white/90">{safeString(risk)}</p>
                     </li>
                   ))
                 ) : (
@@ -612,7 +612,7 @@ export default function AnalysisResults({
                         className="flex items-start gap-3 p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl"
                       >
                         <AlertTriangle className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
-                        <p className="text-white/90">{flag}</p>
+                        <p className="text-white/90">{safeString(flag)}</p>
                       </li>
                     ))}
                   </ul>
@@ -633,7 +633,7 @@ export default function AnalysisResults({
                         className="flex items-start gap-3 p-4 bg-luxury-gold/10 border border-luxury-gold/20 rounded-xl"
                       >
                         <Sparkles className="w-5 h-5 text-luxury-gold flex-shrink-0 mt-0.5" />
-                        <p className="text-white/90">{gem}</p>
+                        <p className="text-white/90">{safeString(gem)}</p>
                       </li>
                     ))}
                   </ul>
@@ -659,7 +659,7 @@ export default function AnalysisResults({
                           {index + 1}
                         </span>
                       </div>
-                      <p className="text-white/90">{tip}</p>
+                      <p className="text-white/90">{safeString(tip)}</p>
                     </li>
                   ))}
                 </ul>
@@ -676,7 +676,7 @@ export default function AnalysisResults({
               <div className="p-4 bg-white/5 rounded-xl">
                 <p className="text-white/70 text-sm mb-1">Property Type</p>
                 <p className="font-bold text-xl">
-                  {data.propertyOverview?.propertyType?.replace(/_/g, " ")}
+                  {safeString(data.propertyOverview?.propertyType)?.replace(/_/g, " ")}
                 </p>
               </div>
               <div className="p-4 bg-white/5 rounded-xl">
@@ -699,13 +699,13 @@ export default function AnalysisResults({
                   {data.propertyOverview?.lotSize
                     ? formatNumber(data.propertyOverview.lotSize)
                     : "N/A"}{" "}
-                  {data.propertyOverview?.lotSizeUnit || ""}
+                  {safeString(data.propertyOverview?.lotSizeUnit) || ""}
                 </p>
               </div>
               <div className="p-4 bg-white/5 rounded-xl">
                 <p className="text-white/70 text-sm mb-1">Stories</p>
                 <p className="font-bold text-xl">
-                  {data.propertyOverview?.stories || "N/A"}
+                  {safeString(data.propertyOverview?.stories) || "N/A"}
                 </p>
               </div>
               <div className="p-4 bg-white/5 rounded-xl">
@@ -777,7 +777,7 @@ export default function AnalysisResults({
                         key={index}
                         className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full text-sm"
                       >
-                        {appliance}
+                        {safeString(appliance)}
                       </span>
                     ))}
                   </div>
@@ -797,7 +797,7 @@ export default function AnalysisResults({
                         key={index}
                         className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-full text-sm"
                       >
-                        {feature}
+                        {safeString(feature)}
                       </span>
                     ))}
                   </div>
@@ -857,7 +857,7 @@ export default function AnalysisResults({
                       : "N/A"}
                   </p>
                   <p className="text-white/60 text-sm mt-1">
-                    Tax Year: {data.costs.taxYear}
+                    Tax Year: {safeString(data.costs.taxYear)}
                   </p>
                 </div>
               </div>
@@ -873,17 +873,17 @@ export default function AnalysisResults({
                   <div key={index} className="p-4 bg-white/5 rounded-xl">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="font-bold text-lg">{school.name}</p>
+                        <p className="font-bold text-lg">{safeString(school.name)}</p>
                         <p className="text-white/60 text-sm">
-                          {school.grades} | {school.type}
+                          {safeString(school.grades)} | {safeString(school.type)}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="text-luxury-gold font-bold text-lg">
-                          Rating: {school.rating}/10
+                          Rating: {safeString(school.rating)}/10
                         </p>
                         <p className="text-white/60 text-sm">
-                          {school.distance} miles
+                          {safeString(school.distance)} miles
                         </p>
                       </div>
                     </div>
@@ -954,19 +954,19 @@ export default function AnalysisResults({
                       key={index}
                       className="border-b border-white/10 hover:bg-white/5 transition-colors"
                     >
-                      <td className="py-4 px-4">{comp.address}</td>
+                      <td className="py-4 px-4">{safeString(comp.address)}</td>
                       <td className="py-4 px-4 font-bold">
-                        {comp.price ? formatExactPrice(comp.price) : "N/A"}
+                        {comp.price ? formatExactPrice(Number(comp.price)) : "N/A"}
                       </td>
-                      <td className="py-4 px-4">{comp.bedrooms}</td>
-                      <td className="py-4 px-4">{comp.bathrooms}</td>
+                      <td className="py-4 px-4">{safeString(comp.bedrooms)}</td>
+                      <td className="py-4 px-4">{safeString(comp.bathrooms)}</td>
                       <td className="py-4 px-4">
                         {comp.squareFeet
-                          ? formatNumber(comp.squareFeet)
+                          ? formatNumber(Number(comp.squareFeet))
                           : "N/A"}
                       </td>
                       <td className="py-4 px-4">
-                        ${comp.pricePerSqft?.toFixed(2) || "N/A"}
+                        {comp.pricePerSqft ? `$${Number(comp.pricePerSqft).toFixed(2)}` : "N/A"}
                       </td>
                     </tr>
                   ))
@@ -1008,9 +1008,9 @@ export default function AnalysisResults({
               <div>
                 <p className="text-white/70 text-sm mb-1">Avg $/Sqft</p>
                 <p className="font-display text-xl md:text-2xl font-bold">
-                  {data.propertyOverview?.pricePerSqft
-                    ? `$${data.propertyOverview.pricePerSqft.toFixed(2)}`
-                    : "N/A"}
+          {data.propertyOverview?.pricePerSqft
+            ? `$${Number(data.propertyOverview.pricePerSqft).toFixed(2)}`
+            : "N/A"}
                 </p>
               </div>
             </div>

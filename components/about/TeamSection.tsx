@@ -89,22 +89,6 @@ const TeamSection: React.FC = () => {
     },
     {
       id: 5,
-      name: "Erin Roy",
-      title: "Sales Agent & Lead Realtor",
-      description:
-        "Erin Roy specializes in Vermont’s luxury estates and waterfront properties. Her keen eye for design and market trends helps clients discover unique homes and investment opportunities throughout the region.",
-      imageUrl: "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760102915/team-4_xyb08q.png",
-      email: "erin.roy@fourcorner.com",
-      phone: "(802) 555-0104",
-      license: "VT-RE-2017-004567",
-      yearsExperience: 4,
-      specialties: ["Luxury Estates", "Waterfront Properties", "Land Development"],
-      location: "Burlington, Vermont",
-      languages: ["English"],
-      linkedin: "https://linkedin.com/in/erinroy",
-    },
-    {
-      id: 6,
       name: "Pat Sady",
       title: "Real Estate Agent",
       description:

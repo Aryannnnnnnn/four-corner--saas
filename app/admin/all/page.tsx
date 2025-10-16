@@ -11,12 +11,14 @@ const statusOptions = [
   { value: "all", label: "All Listings", color: "gray" },
   { value: "pending", label: "Pending", color: "yellow" },
   { value: "approved", label: "Approved", color: "green" },
+  { value: "sold", label: "Sold", color: "green" },
   { value: "rejected", label: "Rejected", color: "red" },
 ];
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-800",
   approved: "bg-green-100 text-green-800",
+  sold: "bg-green-600 text-white",
   rejected: "bg-red-100 text-red-800",
 };
 
@@ -38,13 +40,18 @@ export default function AllListingsPage() {
       reject?: boolean;
       pending?: boolean;
       delete?: boolean;
+      sold?: boolean;
     };
   }>({});
+  const [showSoldModal, setShowSoldModal] = useState(false);
+  const [selectedListing, setSelectedListing] = useState<string | null>(null);
+  const [soldPrice, setSoldPrice] = useState<string>("");
+  const [saleNotes, setSaleNotes] = useState<string>("");
 
   // Helper functions for button states
   const setButtonLoading = (
     propertyId: string,
-    action: "approve" | "reject" | "pending" | "delete",
+    action: "approve" | "reject" | "pending" | "delete" | "sold",
     isLoading: boolean,
   ) => {
     setLoadingButtons((prev) => ({
@@ -58,7 +65,7 @@ export default function AllListingsPage() {
 
   const isButtonLoading = (
     propertyId: string,
-    action: "approve" | "reject" | "pending" | "delete",
+    action: "approve" | "reject" | "pending" | "delete" | "sold",
   ) => {
     return loadingButtons[propertyId]?.[action] || false;
   };
@@ -265,6 +272,51 @@ export default function AllListingsPage() {
       );
     } finally {
       setButtonLoading(propertyId, action, false);
+    }
+  };
+
+  const handleMarkAsSold = (property: PropertyListing) => {
+    setSelectedListing(property.id);
+    setSoldPrice(property.list_price?.toString() || "");
+    setSaleNotes("");
+    setShowSoldModal(true);
+  };
+
+  const confirmMarkAsSold = async () => {
+    if (!selectedListing) return;
+
+    setButtonLoading(selectedListing, "sold", true);
+
+    try {
+      const response = await fetch(`/api/admin/listings/${selectedListing}/sold`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sold_price: soldPrice ? parseFloat(soldPrice) : null,
+          sale_notes: saleNotes || null,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Property marked as sold successfully!");
+        setShowSoldModal(false);
+        setSelectedListing(null);
+        setSoldPrice("");
+        setSaleNotes("");
+        // Refresh the list
+        await fetchProperties();
+      } else {
+        toast.error(data.error || "Failed to mark property as sold");
+      }
+    } catch (error) {
+      console.error("Error marking as sold:", error);
+      toast.error("Failed to mark property as sold");
+    } finally {
+      setButtonLoading(selectedListing, "sold", false);
     }
   };
 
@@ -670,17 +722,28 @@ export default function AllListingsPage() {
                       )}
 
                       {property.status === "approved" && (
-                        <button
-                          onClick={() =>
-                            updatePropertyStatus(property.id, "pending")
-                          }
-                          disabled={isButtonLoading(property.id, "pending")}
-                          className="w-full lg:w-auto px-3 py-2 text-xs font-medium text-yellow-600 bg-yellow-50 hover:bg-yellow-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
-                        >
-                          {isButtonLoading(property.id, "pending")
-                            ? "Processing..."
-                            : "Set Pending"}
-                        </button>
+                        <>
+                          <button
+                            onClick={() => handleMarkAsSold(property)}
+                            disabled={isButtonLoading(property.id, "sold")}
+                            className="w-full lg:w-auto px-3 py-2 text-xs font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
+                          >
+                            {isButtonLoading(property.id, "sold")
+                              ? "Processing..."
+                              : "Mark as Sold"}
+                          </button>
+                          <button
+                            onClick={() =>
+                              updatePropertyStatus(property.id, "pending")
+                            }
+                            disabled={isButtonLoading(property.id, "pending")}
+                            className="w-full lg:w-auto px-3 py-2 text-xs font-medium text-yellow-600 bg-yellow-50 hover:bg-yellow-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
+                          >
+                            {isButtonLoading(property.id, "pending")
+                              ? "Processing..."
+                              : "Set Pending"}
+                          </button>
+                        </>
                       )}
 
                       {property.status === "rejected" && (
@@ -712,6 +775,68 @@ export default function AllListingsPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Mark as Sold Modal */}
+      {showSoldModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">
+              Mark Property as Sold
+            </h3>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Sold Price (optional)
+                </label>
+                <input
+                  type="number"
+                  value={soldPrice}
+                  onChange={(e) => setSoldPrice(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-black bg-white"
+                  placeholder="Enter sold price"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Leave as is to use the list price
+                </p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Sale Notes (optional)
+                </label>
+                <textarea
+                  value={saleNotes}
+                  onChange={(e) => setSaleNotes(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-black bg-white"
+                  placeholder="Add any notes about the sale..."
+                  rows={3}
+                />
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowSoldModal(false);
+                  setSelectedListing(null);
+                  setSoldPrice("");
+                  setSaleNotes("");
+                }}
+                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmMarkAsSold}
+                disabled={isButtonLoading(selectedListing || "", "sold")}
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isButtonLoading(selectedListing || "", "sold")
+                  ? "Processing..."
+                  : "Confirm"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

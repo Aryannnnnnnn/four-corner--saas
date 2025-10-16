@@ -67,13 +67,8 @@ export default function Header() {
     { name: "About", href: "/about", icon: BookOpen },
     {
       name: "Stories",
-      href: "/case-studies",
+      href: "/success-stories",
       icon: BookMarked,
-    },
-    {
-      name: "Projects",
-      href: "/projects",
-      icon: FolderOpen,
     },
   ];
 

@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     // Call your original analysis workflow (PRODUCTION webhook)
     const n8nUrl =
-      "https://zyneris.app.n8n.cloud/webhook/zillow-zpid-property-analysis";
+      "https://n8n.srv1067543.hstgr.cloud/webhook/zillow-zpid-property-analysis";
 
     const response = await fetch(n8nUrl, {
       method: "POST",
