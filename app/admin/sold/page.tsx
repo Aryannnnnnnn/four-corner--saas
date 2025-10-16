@@ -220,21 +220,23 @@ export default function SoldListingsPage() {
                     <div>
                       <p className="text-xs text-gray-600 mb-1">List Price</p>
                       <p className="text-lg font-bold text-gray-900">
-                        ${listing.list_price.toLocaleString()}
+                        ${listing.list_price?.toLocaleString() || "N/A"}
                       </p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-600 mb-1">Sold Price</p>
                       <p className="text-lg font-bold text-green-600">
-                        ${listing.sold_price.toLocaleString()}
+                        ${listing.sold_price?.toLocaleString() || listing.list_price?.toLocaleString() || "N/A"}
                       </p>
                     </div>
                   </div>
 
                   <div className="mb-4">
                     <p className="text-xs text-gray-500 mb-1">
-                      Sold on {new Date(listing.sold_at).toLocaleDateString()}{" "}
-                      by {listing.sold_by}
+                      {listing.sold_at
+                        ? `Sold on ${new Date(listing.sold_at).toLocaleDateString()}`
+                        : "Sale date not recorded"}
+                      {listing.sold_by && ` by ${listing.sold_by}`}
                     </p>
                     {listing.sale_notes && (
                       <div className="mt-2 p-3 bg-gray-50 rounded">
