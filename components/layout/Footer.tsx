@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
                   Check Our Listings
                 </a>
                 <a
-                  href="/stories"
+                  href="/success-stories"
                   className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Stories
