@@ -137,9 +137,9 @@ export default function RegisterPage() {
 
           <div className="flex items-center justify-center gap-3">
             <img
-              src="/logo.png"
+              src="/logoo.png"
               alt="Four Corner Properties Logo"
-              className="w-12 h-12 object-contain"
+              className="w-full h-10 sm:h-12 object-contain"
             />
           </div>
 

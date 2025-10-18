@@ -4,7 +4,6 @@ import {
   HeadingLevel,
   Packer,
   Paragraph,
-  TextRun,
 } from "docx";
 import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
@@ -142,7 +141,7 @@ export async function exportToPDF(data: PropertyData) {
     pdf.setTextColor(100, 116, 139);
     pdf.text("GRADE", gradeBoxX + 27.5, gradeBoxY + 28, { align: "center" });
 
-    yPosition += 10;
+    yPosition += 30;
 
     // ========================================
     // EXECUTIVE SUMMARY
@@ -152,9 +151,9 @@ export async function exportToPDF(data: PropertyData) {
 
       const summaryLines = pdf.splitTextToSize(
         safeString(data.aiAnalysis.oneLineSummary),
-        contentWidth - 12,
+        contentWidth - 20,
       );
-      const summaryHeight = summaryLines.length * 5.5 + 14;
+      const summaryHeight = summaryLines.length * 6 + 25;
 
       pdf.setFillColor(239, 246, 255);
       pdf.setDrawColor(191, 219, 254);
@@ -164,12 +163,12 @@ export async function exportToPDF(data: PropertyData) {
       pdf.setFontSize(9);
       pdf.setFont("helvetica", "bold");
       pdf.setTextColor(30, 64, 175);
-      pdf.text("EXECUTIVE SUMMARY", margin + 6, yPosition + 7);
+      pdf.text("EXECUTIVE SUMMARY", margin + 8, yPosition + 8);
 
-      pdf.setFontSize(10);
+      pdf.setFontSize(9.5);
       pdf.setFont("helvetica", "normal");
       pdf.setTextColor(30, 58, 138);
-      pdf.text(summaryLines, margin + 6, yPosition + 13);
+      pdf.text(summaryLines, margin + 10, yPosition + 15);
 
       yPosition += summaryHeight + 8;
     }
@@ -1006,7 +1005,9 @@ export async function exportToPDF(data: PropertyData) {
       if (data.zillowUrl && typeof data.zillowUrl === "string") {
         pdf.setFontSize(7);
         pdf.setTextColor(59, 130, 246);
-        pdf.text("View on Zillow", margin, pageHeight - 9);
+        pdf.textWithLink("View on Zillow", margin, pageHeight - 9, {
+          url: data.zillowUrl
+        });
       }
     }
 
@@ -1044,138 +1045,428 @@ export async function exportToWord(data: PropertyData) {
       throw new Error("Invalid property data provided for export");
     }
 
+    const children: Paragraph[] = [
+      new Paragraph({
+        text: "Four Corner Properties",
+        heading: HeadingLevel.HEADING_1,
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 200 },
+      }),
+      new Paragraph({
+        text: "Premium Real Estate Investment Analysis",
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 400 },
+      }),
+      new Paragraph({
+        text: data.propertyOverview.streetAddress,
+        heading: HeadingLevel.HEADING_2,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `${data.propertyOverview.city}, ${data.propertyOverview.state} ${data.propertyOverview.zipcode}`,
+        spacing: { after: 200 },
+      }),
+      new Paragraph({
+        text: `Investment Grade: ${data.aiAnalysis?.buyingGrade || "N/A"}`,
+        spacing: { after: 400 },
+      }),
+    ];
+
+    // Executive Summary
+    if (data.aiAnalysis?.oneLineSummary) {
+      children.push(
+        new Paragraph({
+          text: "Executive Summary",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        }),
+        new Paragraph({
+          text: safeString(data.aiAnalysis.oneLineSummary),
+          spacing: { after: 400 },
+        })
+      );
+    }
+
+    // Key Metrics
+    children.push(
+      new Paragraph({
+        text: "Key Metrics",
+        heading: HeadingLevel.HEADING_3,
+        spacing: { after: 200 },
+      }),
+      new Paragraph({
+        text: `List Price: ${data.propertyOverview?.listPrice ? formatExactPrice(data.propertyOverview.listPrice) : "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Zestimate: ${data.propertyOverview?.zestimate ? formatExactPrice(data.propertyOverview.zestimate) : "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Price/Sqft: ${data.propertyOverview?.pricePerSqft ? `$${data.propertyOverview.pricePerSqft.toFixed(0)}` : "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Square Feet: ${data.propertyOverview?.squareFeet ? formatNumber(data.propertyOverview.squareFeet) : "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Bedrooms: ${data.propertyOverview?.bedrooms || "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Bathrooms: ${data.propertyOverview?.bathrooms || "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Year Built: ${data.propertyOverview?.yearBuilt || "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `5-Year ROI: ${data.analysisDetails?.estimatedROI5Year || "N/A"}`,
+        spacing: { after: 400 },
+      })
+    );
+
+    // AI Recommendation
+    if (data.aiAnalysis?.recommendation) {
+      children.push(
+        new Paragraph({
+          text: "AI Investment Recommendation",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        }),
+        new Paragraph({
+          text: safeString(data.aiAnalysis.recommendation),
+          spacing: { after: 400 },
+        })
+      );
+    }
+
+    // Value Assessment
+    if (data.aiAnalysis?.valueAssessment) {
+      children.push(
+        new Paragraph({
+          text: "Value Assessment",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        }),
+        new Paragraph({
+          text: safeString(data.aiAnalysis.valueAssessment),
+          spacing: { after: 400 },
+        })
+      );
+    }
+
+    // Best For
+    if (data.analysisDetails?.bestFor) {
+      children.push(
+        new Paragraph({
+          text: `Best For: ${safeString(data.analysisDetails.bestFor)}`,
+          spacing: { after: 400 },
+        })
+      );
+    }
+
+    // Detailed AI Analysis
+    if (data.aiAnalysis?.comprehensiveDescription) {
+      children.push(
+        new Paragraph({
+          text: "Detailed AI Analysis",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        }),
+        new Paragraph({
+          text: safeString(data.aiAnalysis.comprehensiveDescription),
+          spacing: { after: 400 },
+        })
+      );
+    }
+
+    // Price Analysis
+    if (data.analysisDetails?.priceAnalysis) {
+      children.push(
+        new Paragraph({
+          text: "Price Analysis",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        }),
+        new Paragraph({
+          text: safeString(data.analysisDetails.priceAnalysis),
+          spacing: { after: 400 },
+        })
+      );
+    }
+
+    // Property Features
+    children.push(
+      new Paragraph({
+        text: "Property Features & Details",
+        heading: HeadingLevel.HEADING_3,
+        spacing: { after: 200 },
+      }),
+      new Paragraph({
+        text: `Property Type: ${data.propertyOverview?.propertyType?.replace(/_/g, " ") || "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Stories: ${data.propertyOverview?.stories || "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Lot Size: ${data.propertyOverview?.lotSize ? `${formatNumber(data.propertyOverview.lotSize)} ${data.propertyOverview.lotSizeUnit || "sqft"}` : "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Garage Spaces: ${data.features?.garageSpaces || "N/A"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Fireplaces: ${data.features?.fireplaces || "0"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Architecture: ${data.features?.architecturalStyle || "Not Specified"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Heating: ${data.features?.heating || "Not Specified"}`,
+        spacing: { after: 100 },
+      }),
+      new Paragraph({
+        text: `Cooling: ${data.features?.cooling || "Not Specified"}`,
+        spacing: { after: 400 },
+      })
+    );
+
+    // Investment Strengths
+    children.push(
+      new Paragraph({
+        text: "Investment Strengths",
+        heading: HeadingLevel.HEADING_3,
+        spacing: { after: 200 },
+      })
+    );
+    if (data.insights?.keyStrengths && data.insights.keyStrengths.length > 0) {
+      data.insights.keyStrengths.forEach((strength) => {
+        children.push(
+          new Paragraph({
+            text: `• ${strength}`,
+            spacing: { after: 100 },
+          })
+        );
+      });
+    } else {
+      children.push(
+        new Paragraph({
+          text: "No strengths data available",
+          spacing: { after: 100 },
+        })
+      );
+    }
+
+    children.push(
+      new Paragraph({
+        text: "",
+        spacing: { after: 200 },
+      })
+    );
+
+    // Potential Risks
+    children.push(
+      new Paragraph({
+        text: "Potential Risks",
+        heading: HeadingLevel.HEADING_3,
+        spacing: { after: 200 },
+      })
+    );
+    if (data.insights?.keyRisks && data.insights.keyRisks.length > 0) {
+      data.insights.keyRisks.forEach((risk) => {
+        children.push(
+          new Paragraph({
+            text: `• ${risk}`,
+            spacing: { after: 100 },
+          })
+        );
+      });
+    } else {
+      children.push(
+        new Paragraph({
+          text: "No risks data available",
+          spacing: { after: 100 },
+        })
+      );
+    }
+
+    children.push(
+      new Paragraph({
+        text: "",
+        spacing: { after: 200 },
+      })
+    );
+
+    // Red Flags
+    if (data.insights?.redFlags && data.insights.redFlags.length > 0 && data.insights.redFlags[0] !== "None identified") {
+      children.push(
+        new Paragraph({
+          text: "Red Flags",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        })
+      );
+      data.insights.redFlags.forEach((flag) => {
+        children.push(
+          new Paragraph({
+            text: `• ${safeString(flag)}`,
+            spacing: { after: 100 },
+          })
+        );
+      });
+      children.push(
+        new Paragraph({
+          text: "",
+          spacing: { after: 200 },
+        })
+      );
+    }
+
+    // Hidden Gems
+    if (data.insights?.hiddenGems && data.insights.hiddenGems.length > 0) {
+      children.push(
+        new Paragraph({
+          text: "Hidden Gems",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        })
+      );
+      data.insights.hiddenGems.forEach((gem) => {
+        children.push(
+          new Paragraph({
+            text: `• ${safeString(gem)}`,
+            spacing: { after: 100 },
+          })
+        );
+      });
+      children.push(
+        new Paragraph({
+          text: "",
+          spacing: { after: 200 },
+        })
+      );
+    }
+
+    // Negotiation Strategies
+    if (data.insights?.negotiationStrategy && data.insights.negotiationStrategy.length > 0) {
+      children.push(
+        new Paragraph({
+          text: "Negotiation Strategies",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        })
+      );
+      data.insights.negotiationStrategy.forEach((strategy) => {
+        children.push(
+          new Paragraph({
+            text: `• ${safeString(strategy)}`,
+            spacing: { after: 100 },
+          })
+        );
+      });
+      children.push(
+        new Paragraph({
+          text: "",
+          spacing: { after: 200 },
+        })
+      );
+    }
+
+    // Property Taxes
+    if (data.costs) {
+      children.push(
+        new Paragraph({
+          text: "Property Taxes",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        }),
+        new Paragraph({
+          text: `Annual Property Tax: ${data.costs.annualPropertyTax ? formatExactPrice(data.costs.annualPropertyTax) : "N/A"}`,
+          spacing: { after: 100 },
+        }),
+        new Paragraph({
+          text: `Tax Year: ${data.costs.taxYear || "N/A"}`,
+          spacing: { after: 400 },
+        })
+      );
+    }
+
+    // Schools
+    if (data.schools && data.schools.length > 0) {
+      children.push(
+        new Paragraph({
+          text: "Nearby Schools",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        })
+      );
+      data.schools.forEach((school) => {
+        children.push(
+          new Paragraph({
+            text: `${school.name} - Rating: ${school.rating}/10 - ${school.distance} mi`,
+            spacing: { after: 100 },
+          })
+        );
+      });
+      children.push(
+        new Paragraph({
+          text: "",
+          spacing: { after: 200 },
+        })
+      );
+    }
+
+    // Comparables
+    if (data.comparables && data.comparables.length > 0) {
+      children.push(
+        new Paragraph({
+          text: "Comparable Properties",
+          heading: HeadingLevel.HEADING_3,
+          spacing: { after: 200 },
+        })
+      );
+      data.comparables.slice(0, 8).forEach((comp) => {
+        children.push(
+          new Paragraph({
+            text: `${comp.address} - ${comp.price ? formatExactPrice(comp.price) : "N/A"} - ${comp.bedrooms}/${comp.bathrooms} beds/baths - ${comp.squareFeet ? formatNumber(comp.squareFeet) : "N/A"} sqft`,
+            spacing: { after: 100 },
+          })
+        );
+      });
+      children.push(
+        new Paragraph({
+          text: "",
+          spacing: { after: 200 },
+        })
+      );
+    }
+
+    // Footer
+    children.push(
+      new Paragraph({
+        text: `Generated by Four Corner Properties on ${new Date().toLocaleDateString()}`,
+        alignment: AlignmentType.CENTER,
+        spacing: { before: 400 },
+      }),
+      new Paragraph({
+        text: `View on Zillow: ${data.zillowUrl || "N/A"}`,
+        alignment: AlignmentType.CENTER,
+      })
+    );
+
     const doc = new Document({
       sections: [
         {
           properties: {},
-          children: [
-            new Paragraph({
-              text: "Four Corner Properties",
-              heading: HeadingLevel.HEADING_1,
-              alignment: AlignmentType.CENTER,
-              spacing: { after: 200 },
-            }),
-            new Paragraph({
-              text: "Luxury Real Estate Analysis Report",
-              alignment: AlignmentType.CENTER,
-              spacing: { after: 400 },
-            }),
-
-            new Paragraph({
-              text: data.propertyOverview.streetAddress,
-              heading: HeadingLevel.HEADING_2,
-              spacing: { after: 100 },
-            }),
-            new Paragraph({
-              text: `${data.propertyOverview.city}, ${data.propertyOverview.state} ${data.propertyOverview.zipcode}`,
-              spacing: { after: 400 },
-            }),
-
-            new Paragraph({
-              text: "Investment Grade",
-              heading: HeadingLevel.HEADING_3,
-              spacing: { after: 100 },
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: data.aiAnalysis?.buyingGrade || "N/A",
-                  bold: true,
-                  size: 48,
-                  color: "3b82f6",
-                }),
-              ],
-              spacing: { after: 400 },
-            }),
-
-            new Paragraph({
-              text: "AI Recommendation",
-              heading: HeadingLevel.HEADING_3,
-              spacing: { after: 200 },
-            }),
-            new Paragraph({
-              text:
-                safeString(data.aiAnalysis?.recommendation) ||
-                "No recommendation available",
-              spacing: { after: 400 },
-            }),
-
-            new Paragraph({
-              text: "Key Metrics",
-              heading: HeadingLevel.HEADING_3,
-              spacing: { after: 200 },
-            }),
-            new Paragraph({
-              text: `List Price: ${data.propertyOverview?.listPrice ? formatExactPrice(data.propertyOverview.listPrice) : "N/A"}`,
-              spacing: { after: 100 },
-            }),
-            new Paragraph({
-              text: `Zestimate: ${data.propertyOverview?.zestimate ? formatExactPrice(data.propertyOverview.zestimate) : "N/A"}`,
-              spacing: { after: 100 },
-            }),
-            new Paragraph({
-              text: `Square Feet: ${data.propertyOverview?.squareFeet ? formatNumber(data.propertyOverview.squareFeet) : "N/A"}`,
-              spacing: { after: 100 },
-            }),
-            new Paragraph({
-              text: `Bedrooms: ${data.propertyOverview?.bedrooms || "N/A"}`,
-              spacing: { after: 100 },
-            }),
-            new Paragraph({
-              text: `Bathrooms: ${data.propertyOverview?.bathrooms || "N/A"}`,
-              spacing: { after: 100 },
-            }),
-            new Paragraph({
-              text: `Year Built: ${data.propertyOverview?.yearBuilt || "N/A"}`,
-              spacing: { after: 400 },
-            }),
-
-            new Paragraph({
-              text: "Investment Strengths",
-              heading: HeadingLevel.HEADING_3,
-              spacing: { after: 200 },
-            }),
-            ...(data.insights?.keyStrengths || []).map(
-              (strength) =>
-                new Paragraph({
-                  text: `• ${strength}`,
-                  spacing: { after: 100 },
-                }),
-            ),
-
-            new Paragraph({
-              text: "",
-              spacing: { after: 200 },
-            }),
-
-            new Paragraph({
-              text: "Potential Risks",
-              heading: HeadingLevel.HEADING_3,
-              spacing: { after: 200 },
-            }),
-            ...(data.insights?.keyRisks || []).map(
-              (risk) =>
-                new Paragraph({
-                  text: `• ${risk}`,
-                  spacing: { after: 100 },
-                }),
-            ),
-
-            new Paragraph({
-              text: "",
-              spacing: { after: 400 },
-            }),
-
-            new Paragraph({
-              text: `Generated by Four Corner Properties on ${new Date().toLocaleDateString()}`,
-              alignment: AlignmentType.CENTER,
-              spacing: { before: 400 },
-            }),
-            new Paragraph({
-              text: data.zillowUrl || "",
-              alignment: AlignmentType.CENTER,
-            }),
-          ],
+          children,
         },
       ],
     });
@@ -1200,7 +1491,7 @@ export async function exportToText(data: PropertyData) {
 
     text += "═══════════════════════════════════════════════════════════════\n";
     text += "              FOUR CORNER PROPERTIES\n";
-    text += "         Luxury Real Estate Analysis Report\n";
+    text += "       Premium Real Estate Investment Analysis\n";
     text +=
       "═══════════════════════════════════════════════════════════════\n\n";
 
@@ -1210,24 +1501,73 @@ export async function exportToText(data: PropertyData) {
 
     text += `INVESTMENT GRADE: ${data.aiAnalysis?.buyingGrade || "N/A"}\n\n`;
 
-    text += `AI RECOMMENDATION\n`;
-    text += `${"-".repeat(60)}\n`;
-    text += `${safeString(data.aiAnalysis?.recommendation) || "No recommendation available"}\n\n`;
+    // Executive Summary
+    if (data.aiAnalysis?.oneLineSummary) {
+      text += `EXECUTIVE SUMMARY\n`;
+      text += `${"-".repeat(60)}\n`;
+      text += `${safeString(data.aiAnalysis.oneLineSummary)}\n\n`;
+    }
 
-    text += `VALUE ASSESSMENT\n`;
-    text += `${"-".repeat(60)}\n`;
-    text += `${safeString(data.aiAnalysis?.valueAssessment) || "No assessment available"}\n\n`;
-
+    // Key Metrics
     text += `KEY METRICS\n`;
     text += `${"-".repeat(60)}\n`;
     text += `List Price:              ${data.propertyOverview?.listPrice ? formatExactPrice(data.propertyOverview.listPrice) : "N/A"}\n`;
     text += `Zestimate:               ${data.propertyOverview?.zestimate ? formatExactPrice(data.propertyOverview.zestimate) : "N/A"}\n`;
-    text += `Price per Sq Ft:         ${data.propertyOverview?.pricePerSqft ? `$${data.propertyOverview.pricePerSqft.toFixed(2)}` : "N/A"}\n`;
+    text += `Price per Sq Ft:         ${data.propertyOverview?.pricePerSqft ? `$${data.propertyOverview.pricePerSqft.toFixed(0)}` : "N/A"}\n`;
     text += `Square Feet:             ${data.propertyOverview?.squareFeet ? formatNumber(data.propertyOverview.squareFeet) : "N/A"}\n`;
     text += `Bedrooms:                ${data.propertyOverview?.bedrooms || "N/A"}\n`;
     text += `Bathrooms:               ${data.propertyOverview?.bathrooms || "N/A"}\n`;
-    text += `Year Built:              ${data.propertyOverview?.yearBuilt || "N/A"}\n\n`;
+    text += `Year Built:              ${data.propertyOverview?.yearBuilt || "N/A"}\n`;
+    text += `5-Year ROI:              ${data.analysisDetails?.estimatedROI5Year || "N/A"}\n\n`;
 
+    // AI Recommendation
+    if (data.aiAnalysis?.recommendation) {
+      text += `AI INVESTMENT RECOMMENDATION\n`;
+      text += `${"-".repeat(60)}\n`;
+      text += `${safeString(data.aiAnalysis.recommendation)}\n\n`;
+    }
+
+    // Value Assessment
+    if (data.aiAnalysis?.valueAssessment) {
+      text += `VALUE ASSESSMENT\n`;
+      text += `${"-".repeat(60)}\n`;
+      text += `${safeString(data.aiAnalysis.valueAssessment)}\n\n`;
+    }
+
+    // Best For
+    if (data.analysisDetails?.bestFor) {
+      text += `BEST FOR\n`;
+      text += `${"-".repeat(60)}\n`;
+      text += `${safeString(data.analysisDetails.bestFor)}\n\n`;
+    }
+
+    // Detailed AI Analysis
+    if (data.aiAnalysis?.comprehensiveDescription) {
+      text += `DETAILED AI ANALYSIS\n`;
+      text += `${"-".repeat(60)}\n`;
+      text += `${safeString(data.aiAnalysis.comprehensiveDescription)}\n\n`;
+    }
+
+    // Price Analysis
+    if (data.analysisDetails?.priceAnalysis) {
+      text += `PRICE ANALYSIS\n`;
+      text += `${"-".repeat(60)}\n`;
+      text += `${safeString(data.analysisDetails.priceAnalysis)}\n\n`;
+    }
+
+    // Property Features
+    text += `PROPERTY FEATURES & DETAILS\n`;
+    text += `${"-".repeat(60)}\n`;
+    text += `Property Type:           ${data.propertyOverview?.propertyType?.replace(/_/g, " ") || "N/A"}\n`;
+    text += `Stories:                 ${data.propertyOverview?.stories || "N/A"}\n`;
+    text += `Lot Size:                ${data.propertyOverview?.lotSize ? `${formatNumber(data.propertyOverview.lotSize)} ${data.propertyOverview.lotSizeUnit || "sqft"}` : "N/A"}\n`;
+    text += `Garage Spaces:           ${data.features?.garageSpaces || "N/A"}\n`;
+    text += `Fireplaces:              ${data.features?.fireplaces || "0"}\n`;
+    text += `Architecture:            ${data.features?.architecturalStyle || "Not Specified"}\n`;
+    text += `Heating:                 ${data.features?.heating || "Not Specified"}\n`;
+    text += `Cooling:                 ${data.features?.cooling || "Not Specified"}\n\n`;
+
+    // Investment Strengths
     text += `INVESTMENT STRENGTHS\n`;
     text += `${"-".repeat(60)}\n`;
     const strengths = data.insights?.keyStrengths || [];
@@ -1240,6 +1580,7 @@ export async function exportToText(data: PropertyData) {
     }
     text += "\n";
 
+    // Potential Risks
     text += `POTENTIAL RISKS\n`;
     text += `${"-".repeat(60)}\n`;
     const risks = data.insights?.keyRisks || [];
@@ -1252,10 +1593,71 @@ export async function exportToText(data: PropertyData) {
     }
     text += "\n";
 
+    // Red Flags
+    if (data.insights?.redFlags && data.insights.redFlags.length > 0 && data.insights.redFlags[0] !== "None identified") {
+      text += `RED FLAGS\n`;
+      text += `${"-".repeat(60)}\n`;
+      data.insights.redFlags.forEach((flag, index) => {
+        text += `${index + 1}. ${safeString(flag)}\n`;
+      });
+      text += "\n";
+    }
+
+    // Hidden Gems
+    if (data.insights?.hiddenGems && data.insights.hiddenGems.length > 0) {
+      text += `HIDDEN GEMS\n`;
+      text += `${"-".repeat(60)}\n`;
+      data.insights.hiddenGems.forEach((gem, index) => {
+        text += `${index + 1}. ${safeString(gem)}\n`;
+      });
+      text += "\n";
+    }
+
+    // Negotiation Strategies
+    if (data.insights?.negotiationStrategy && data.insights.negotiationStrategy.length > 0) {
+      text += `NEGOTIATION STRATEGIES\n`;
+      text += `${"-".repeat(60)}\n`;
+      data.insights.negotiationStrategy.forEach((strategy, index) => {
+        text += `${index + 1}. ${safeString(strategy)}\n`;
+      });
+      text += "\n";
+    }
+
+    // Property Taxes
+    if (data.costs) {
+      text += `PROPERTY TAXES\n`;
+      text += `${"-".repeat(60)}\n`;
+      text += `Annual Property Tax:     ${data.costs.annualPropertyTax ? formatExactPrice(data.costs.annualPropertyTax) : "N/A"}\n`;
+      text += `Tax Year:                ${data.costs.taxYear || "N/A"}\n\n`;
+    }
+
+    // Schools
+    if (data.schools && data.schools.length > 0) {
+      text += `NEARBY SCHOOLS\n`;
+      text += `${"-".repeat(60)}\n`;
+      data.schools.forEach((school, index) => {
+        text += `${index + 1}. ${school.name} - Rating: ${school.rating}/10 - ${school.distance} mi\n`;
+      });
+      text += "\n";
+    }
+
+    // Comparables
+    if (data.comparables && data.comparables.length > 0) {
+      text += `COMPARABLE PROPERTIES\n`;
+      text += `${"-".repeat(60)}\n`;
+      data.comparables.slice(0, 8).forEach((comp, index) => {
+        text += `${index + 1}. ${comp.address}\n`;
+        text += `   Price: ${comp.price ? formatExactPrice(comp.price) : "N/A"}\n`;
+        text += `   Beds/Baths: ${comp.bedrooms}/${comp.bathrooms}\n`;
+        text += `   Sqft: ${comp.squareFeet ? formatNumber(comp.squareFeet) : "N/A"}\n`;
+        text += `   $/Sqft: ${comp.pricePerSqft ? `$${comp.pricePerSqft.toFixed(0)}` : "N/A"}\n\n`;
+      });
+    }
+
     text += `═══════════════════════════════════════════════════════════════\n`;
     text += `Generated by Four Corner Properties\n`;
     text += `Date: ${new Date().toLocaleDateString()}\n`;
-    text += `Zillow Listing: ${data.zillowUrl || "N/A"}\n`;
+    text += `View on Zillow: ${data.zillowUrl || "N/A"}\n`;
     text += `═══════════════════════════════════════════════════════════════\n`;
 
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });

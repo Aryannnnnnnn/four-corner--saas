@@ -79,10 +79,10 @@ export function transformApiResponseToPropertyData(
     propertyType:
       propertyDetails.homeType || propertyDetails.resoFacts?.homeType || null,
     bedrooms:
-      propertyDetails.bedrooms || propertyDetails.resoFacts?.bedrooms || null,
+      apiResponse.propertyOverview?.bedrooms || propertyDetails.bedrooms || propertyDetails.resoFacts?.bedrooms || null,
     bathrooms:
-      propertyDetails.bathrooms || propertyDetails.resoFacts?.bathrooms || null,
-    fullBathrooms: propertyDetails.resoFacts?.bathroomsFull || null,
+      apiResponse.propertyOverview?.bathrooms || propertyDetails.bathrooms || propertyDetails.resoFacts?.bathrooms || null,
+    fullBathrooms: apiResponse.propertyOverview?.fullBathrooms || propertyDetails.resoFacts?.bathroomsFull || null,
     halfBathrooms: propertyDetails.resoFacts?.bathroomsHalf || null,
     squareFeet:
       propertyDetails.livingAreaValue || propertyDetails.livingArea || null,

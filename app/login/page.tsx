@@ -93,7 +93,7 @@ export default function LoginPage() {
 
           <div className="flex items-center justify-center mb-4 sm:mb-6">
             <img
-              src="/logo.png"
+              src="/logoo.png"
               alt="Four Corner Properties Logo"
               className="w-full h-10 sm:h-12 object-contain"
             />

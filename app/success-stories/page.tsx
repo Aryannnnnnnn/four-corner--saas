@@ -69,7 +69,7 @@ export default function SuccessStoriesPage() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900">
-              Recently Sold Properties
+              Sold Properties
             </h1>
             <p className="mt-2 text-gray-600">
               Explore our success stories - {soldProperties.length} properties sold

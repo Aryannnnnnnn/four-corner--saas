@@ -3,7 +3,8 @@
 import { DollarSign, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
 import Header from "../layout/Header";
 
@@ -13,7 +14,6 @@ interface HeroSectionProps {
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({
-  logoPath = "/hero-image-logotype.png",
   backgroundImage = "/luxury.jpg",
 }) => {
   const router = useRouter();
@@ -22,11 +22,38 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   const [maxPrice, setMaxPrice] = useState("");
   const [bedrooms, setBedrooms] = useState("");
   const [bathrooms, setBathrooms] = useState("");
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
+  // Framer Motion variants - matching exact CSS animations
+  const wordVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.8,
+      y: 20
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const fadeInUpVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0
+    }
+  };
 
   const handleSearch = () => {
     if (!searchQuery.trim()) {
@@ -87,92 +114,76 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
               {/* Left Side - Logo, Title and Links */}
               <div className="lg:col-span-6 xl:col-span-7 space-y-3">
-                {/* Logo - Just above title - BIGGER SIZE */}
-                <div className="mb-3">
-                  <img
-                    src={logoPath}
-                    alt="Four Corner Logo"
-                    className="w-32 h-32 sm:w-36 sm:h-36 md:w-44 md:h-44 lg:w-52 lg:h-52 xl:w-60 xl:h-60 object-contain drop-shadow-lg"
-                  />
-                </div>
-
                 {/* Title with Custom Settings */}
-                <h1
+                <motion.h1
                   className="text-white mb-4 pl-0 pr-0 text-[min(2.8rem,8vw)] sm:text-[min(3.5rem,7vw)] md:text-[min(4.5rem,6vw)] lg:text-[min(96px,5.2vw)] leading-[1.1] tracking-[-0.96px] whitespace-normal break-normal overflow-wrap-normal cursor-default"
                   style={{ fontFamily: "Coconat" }}
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
                 >
                   {titleWords.map((word, index) => (
-                    <span
+                    <motion.span
                       key={index}
-                      className="inline-block"
+                      className="inline-block word-blur-animate"
+                      variants={wordVariants}
                       style={{
-                        opacity: isLoaded ? 1 : 0,
-                        animation: isLoaded
-                          ? `popFadeIn 0.6s ease-out ${index * 0.1}s both`
-                          : "none",
-                        marginRight: index === 3 || index === 7 ? "0" : "0.3em", // More word spacing
+                        marginRight: index === 3 || index === 7 ? "0" : "0.3em",
+                        animationDelay: `${index * 0.1}s`
                       }}
                     >
                       {word}
                       {index === 3 || index === 7 ? <br /> : ""}
-                    </span>
+                    </motion.span>
                   ))}
-                </h1>
+                </motion.h1>
 
                 {/* Links */}
                 <div
                   className="flex flex-wrap gap-5 sm:gap-6 md:gap-8 lg:gap-10 pt-2"
                   style={{ fontFamily: "Coconat" }}
                 >
-                  <a
+                  <motion.a
                     href="#"
                     className="text-white/90 hover:text-white backdrop-blur-3xl drop-shadow-lg rounded-full p-3 transition-colors text-sm sm:text-base md:text-lg font-normal tracking-normal"
-                    style={{
-                      opacity: isLoaded ? 1 : 0,
-                      animation: isLoaded
-                        ? "fadeInUp 0.6s ease-out 0.8s both"
-                        : "none",
-                    }}
+                    variants={fadeInUpVariants}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ delay: 0.8 }}
                   >
                     Vermont ANR Program
-                  </a>
-                  <a
-                    href="#"
+                  </motion.a>
+                  <motion.a
+                    href="/home-financing"
                     className="text-white/90 hover:text-white backdrop-blur-3xl drop-shadow-lg rounded-full p-3 transition-colors text-sm sm:text-base md:text-lg font-normal tracking-normal"
-                    style={{
-                      opacity: isLoaded ? 1 : 0,
-                      animation: isLoaded
-                        ? "fadeInUp 0.6s ease-out 0.9s both"
-                        : "none",
-                    }}
+                    variants={fadeInUpVariants}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ delay: 0.9 }}
                   >
                     Home Financing
-                  </a>
-                  <a
+                  </motion.a>
+                  <motion.a
                     href="https://fourcornerpropertiesvt.com/wp-content/uploads/2022/06/How%20to%20use%20VT%20ANR%20Atlas%202020.pdf"
                     target="_blank"
                     className="text-white/90 hover:text-white backdrop-blur-3xl drop-shadow-lg rounded-full p-3 transition-colors text-sm sm:text-base md:text-lg font-normal tracking-normal"
-                    style={{
-                      opacity: isLoaded ? 1 : 0,
-                      animation: isLoaded
-                        ? "fadeInUp 0.6s ease-out 1s both"
-                        : "none",
-                    }}
+                    variants={fadeInUpVariants}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ delay: 1.0 }}
                   >
                     ANR Manual
-                  </a>
+                  </motion.a>
                 </div>
               </div>
 
               {/* Right Side - Search Form */}
-              <div
+              <motion.div
                 className="lg:col-span-6 xl:col-span-5 lg:justify-self-end w-full lg:max-w-xl"
-                style={{
-                  opacity: isLoaded ? 1 : 0,
-                  animation: isLoaded
-                    ? "fadeInUp 0.6s ease-out 0.7s both"
-                    : "none",
-                }}
+                variants={fadeInUpVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.7 }}
               >
                 <div className="bg-black/40 backdrop-blur-2xl rounded-2xl p-6 border border-white/20 shadow-2xl">
                   <div className="space-y-4">
@@ -284,51 +295,25 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Add Keyframes for Animations */}
+      {/* CSS Keyframes for blur animation */}
       <style jsx>{`
-        @keyframes popFadeIn {
+        @keyframes blurFadeIn {
           0% {
-            opacity: 0;
-            transform: scale(0.8) translateY(20px);
             filter: blur(22px);
           }
           100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            filter: blur(0);  
+            filter: blur(0);
           }
         }
 
-        @keyframes fadeInUp {
-          0% {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          0% {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
+        .word-blur-animate {
+          animation: blurFadeIn 0.6s ease-out both;
         }
       `}</style>
     </div>

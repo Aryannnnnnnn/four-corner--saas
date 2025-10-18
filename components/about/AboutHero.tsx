@@ -1,103 +1,83 @@
 "use client";
 
-import { ArrowRight, Award, Users, Home } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function AboutHero() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -100px 0px",
-      },
-    );
-
-    const currentRef = sectionRef.current;
-
-    if (currentRef) {
-      observer.observe(currentRef);
+  // Framer Motion variants
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0
     }
+  };
 
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, []);
+  const fadeInRight = {
+    hidden: { opacity: 0, x: 30 },
+    visible: {
+      opacity: 1,
+      x: 0
+    }
+  };
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative bg-white pt-32 pb-16 sm:pt-40 sm:pb-20 lg:pt-48 lg:pb-24 overflow-hidden"
-    >
+    <section className="relative bg-white pt-32 pb-16 sm:pt-40 sm:pb-20 lg:pt-48 lg:pb-24 overflow-hidden">
       {/* Content Container */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Side - Text Content */}
           <div className="space-y-8">
             {/* Eyebrow */}
-            <div
-              className={`inline-block ${
-                isVisible ? "animate-fadeInUp" : ""
-              }`}
-              style={{
-                animationDelay: "0.2s",
-                animationFillMode: "forwards",
-              }}
+            <motion.div
+              className="inline-block"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px", amount: 0.3 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
             >
               <div className="w-12 h-1 bg-[#21266c] mb-4"></div>
               <span className="text-sm font-semibold text-gray-600 uppercase tracking-[0.2em]">
                 About Four Corner Properties
               </span>
-            </div>
+            </motion.div>
 
             {/* Main Heading */}
-            <h1
-              className={`text-[#21266c] text-5xl sm:text-6xl lg:text-7xl leading-[1.1] tracking-tight ${
-                isVisible ? "animate-fadeInUp" : ""
-              }`}
-              style={{
-                fontFamily: "Coconat",
-                animationDelay: "0.4s",
-                animationFillMode: "forwards",
-              }}
+            <motion.h1
+              className="text-[#21266c] text-5xl sm:text-6xl lg:text-7xl leading-[1.1] tracking-tight"
+              style={{ fontFamily: "Coconat" }}
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px", amount: 0.3 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
             >
               Your Vermont{" "}
               <span className="block">Dream Home</span>
               <span className="block">Starts Here</span>
-            </h1>
+            </motion.h1>
 
             {/* Description */}
-            <p
-              className={`text-lg sm:text-xl text-gray-600 leading-relaxed ${
-                isVisible ? "animate-fadeInUp" : ""
-              }`}
-              style={{
-                animationDelay: "0.6s",
-                animationFillMode: "forwards",
-              }}
+            <motion.p
+              className="text-lg sm:text-xl text-gray-600 leading-relaxed"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px", amount: 0.3 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
             >
               Established in 2021, Four Corner Properties was built on a commitment to simplify real estate for buyers, sellers, and investors alike. From first-time homeowners to seasoned clients relocating to Southern Vermont, we focus on making every transaction seamless and transparent. Our mission is to combine local expertise with genuine care, ensuring every client feels confident and informed at every step.
-            </p>
+            </motion.p>
 
             {/* CTA Buttons */}
-            <div
-              className={`flex flex-col sm:flex-row gap-4 ${
-                isVisible ? "animate-fadeInUp" : ""
-              }`}
-              style={{
-                animationDelay: "0.8s",
-                animationFillMode: "forwards",
-              }}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px", amount: 0.3 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
             >
               <button
                 onClick={() => (window.location.href = "/contact")}
@@ -113,10 +93,10 @@ export default function AboutHero() {
                 VIEW LISTINGS
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
-            </div>
+            </motion.div>
 
             {/* Stats */}
-            <div
+            {/* <div
               className={`grid grid-cols-3 gap-6 pt-8 ${
                 isVisible ? "animate-fadeInUp" : ""
               }`}
@@ -152,18 +132,17 @@ export default function AboutHero() {
                   Satisfied
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Right Side - Images */}
-          <div
-            className={`relative ${
-              isVisible ? "animate-fadeInRight" : ""
-            }`}
-            style={{
-              animationDelay: "0.6s",
-              animationFillMode: "forwards",
-            }}
+          <motion.div
+            className="relative"
+            variants={fadeInRight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px", amount: 0.2 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
           >
             <div className="grid grid-cols-2 gap-4">
               {/* Large Image - Top Left */}
@@ -198,50 +177,17 @@ export default function AboutHero() {
             </div>
 
             {/* Floating Badge */}
-            <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-2xl border border-gray-100">
+            {/* <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-2xl border border-gray-100">
               <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
                 Trusted Since
               </p>
               <p className="text-3xl font-light text-[#21266c]" style={{ fontFamily: "Coconat" }}>
                 2021
               </p>
-            </div>
-          </div>
+            </div> */}
+          </motion.div>
         </div>
       </div>
-
-      {/* CSS Animations */}
-      <style jsx>{`
-        @keyframes fadeInUp {
-          0% {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeInRight {
-          0% {
-            opacity: 0;
-            transform: translateX(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 0.8s ease-out both;
-        }
-
-        .animate-fadeInRight {
-          animation: fadeInRight 0.8s ease-out both;
-        }
-      `}</style>
     </section>
   );
 }

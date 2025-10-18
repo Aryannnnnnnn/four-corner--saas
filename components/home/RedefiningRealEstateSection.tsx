@@ -2,56 +2,32 @@
 
 import { ArrowRight } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 const RedefiningRealEstateSection: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
+  // Framer Motion variants - matching exact CSS animations
+  const fadeInLeft = {
+    hidden: { opacity: 0, x: -30 },
+    visible: { opacity: 1, x: 0 }
+  };
 
-  // Intersection Observer to trigger animation when section comes into view
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -100px 0px",
-      },
-    );
-
-    const currentRef = sectionRef.current;
-
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, []);
+  const fadeInRight = {
+    hidden: { opacity: 0, x: 30 },
+    visible: { opacity: 1, x: 0 }
+  };
 
   return (
-    <section
-      ref={sectionRef}
-      className="bg-white py-16 md:py-20 lg:py-24 overflow-hidden"
-    >
+    <section className="bg-white py-16 md:py-20 lg:py-24 overflow-hidden">
       <div className="w-full max-w-[1800px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Side - Image */}
-          <div
-            className={`relative ${
-              isVisible ? "animate-fadeInLeft" : ""
-            }`}
-            style={{
-              animationDelay: isVisible ? "0.2s" : "0s",
-              animationFillMode: "forwards",
-            }}
+          <motion.div
+            className="relative"
+            variants={fadeInLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: 0.2 }}
           >
             <div className="relative w-full rounded-2xl overflow-hidden shadow-xl">
               <img
@@ -76,17 +52,16 @@ const RedefiningRealEstateSection: React.FC = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Side - Content */}
-          <div
-            className={`space-y-6 ${
-              isVisible ? "animate-fadeInRight" : ""
-            }`}
-            style={{
-              animationDelay: isVisible ? "0.4s" : "0s",
-              animationFillMode: "forwards",
-            }}
+          <motion.div
+            className="space-y-6"
+            variants={fadeInRight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: 0.4 }}
           >
             <h2
               className="text-[#21266c] text-4xl sm:text-5xl lg:text-6xl leading-tight tracking-tight"
@@ -109,20 +84,19 @@ const RedefiningRealEstateSection: React.FC = () => {
                 <ArrowRight className="w-6 h-6 text-white transition-transform duration-300 group-hover:translate-x-1" />
               </div>
             </button>
-          </div>
+          </motion.div>
         </div>
 
         {/* Bottom Section - About Us */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mt-24">
           {/* Left Side - Content */}
-          <div
-            className={`space-y-6 ${
-              isVisible ? "animate-fadeInLeft" : ""
-            }`}
-            style={{
-              animationDelay: isVisible ? "0.6s" : "0s",
-              animationFillMode: "forwards",
-            }}
+          <motion.div
+            className="space-y-6"
+            variants={fadeInLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: 0.6 }}
           >
             <p className="text-sm text-gray-600 uppercase tracking-widest">
               ABOUT US
@@ -148,17 +122,16 @@ const RedefiningRealEstateSection: React.FC = () => {
                 <ArrowRight className="w-6 h-6 text-white transition-transform duration-300 group-hover:translate-x-1" />
               </div>
             </button>
-          </div>
+          </motion.div>
 
           {/* Right Side - Image */}
-          <div
-            className={`relative ${
-              isVisible ? "animate-fadeInRight" : ""
-            }`}
-            style={{
-              animationDelay: isVisible ? "0.8s" : "0s",
-              animationFillMode: "forwards",
-            }}
+          <motion.div
+            className="relative"
+            variants={fadeInRight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: 0.8 }}
           >
             <div className="relative w-full rounded-2xl overflow-hidden shadow-xl">
               <img
@@ -168,42 +141,9 @@ const RedefiningRealEstateSection: React.FC = () => {
                 style={{ aspectRatio: "4/3" }}
               />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
-
-      {/* CSS Animations */}
-      <style jsx>{`
-        @keyframes fadeInLeft {
-          0% {
-            opacity: 0;
-            transform: translateX(-30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes fadeInRight {
-          0% {
-            opacity: 0;
-            transform: translateX(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        .animate-fadeInLeft {
-          animation: fadeInLeft 0.6s ease-out both;
-        }
-
-        .animate-fadeInRight {
-          animation: fadeInRight 0.6s ease-out both;
-        }
-      `}</style>
     </section>
   );
 };

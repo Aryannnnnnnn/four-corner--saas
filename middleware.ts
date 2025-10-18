@@ -14,6 +14,8 @@ export default auth((req) => {
     "/forgot-password",
     "/contact",
     "/listings",
+    "/home-financing",
+    "success-stories",
   ];
 
   // Check if current path is a public route
@@ -44,6 +46,6 @@ export default auth((req) => {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|logo.png|luxury.jpg|hero-image-logotype.png).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|logo.png|luxury.jpg|hero-image-logotype.png|logoo.png).*)",
   ],
 };

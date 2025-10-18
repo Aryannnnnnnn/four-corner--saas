@@ -6,6 +6,7 @@ import VermontStorySection from "@/components/home/VermontStorySection";
 import Footer from "@/components/layout/Footer";
 import ExpertiseSection from "@/components/home/ExpertiseSection";
 import CaseStudiesSection from "@/components/home/CaseStudiesSection";
+import HomeBuyingGuideSection from "@/components/home/HomeBuyingGuideSection";
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
       <CaseStudiesSection />
       <RedefiningRealEstateSection />
       <VermontStorySection />
+      <HomeBuyingGuideSection />
       <FAQSection />
       <Footer />
     </>

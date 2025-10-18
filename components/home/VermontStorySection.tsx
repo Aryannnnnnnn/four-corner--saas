@@ -2,79 +2,79 @@
 
 import { ArrowRight } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 const VermontStorySection: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  // Intersection Observer to trigger animation when section comes into view
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -100px 0px",
-      },
-    );
-
-    const currentRef = sectionRef.current;
-
-    if (currentRef) {
-      observer.observe(currentRef);
+  // Framer Motion variants - matching exact CSS animations
+  const wordAppear = {
+    hidden: {
+      opacity: 0,
+      scale: 0.8,
+      y: 20
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0
     }
+  };
 
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15
       }
-    };
-  }, []);
+    }
+  };
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative py-20 md:py-28 lg:py-32 overflow-hidden"
-    >
+    <section className="relative py-20 md:py-28 lg:py-32 overflow-hidden">
       {/* Container with 90vw */}
       <div className="w-[90vw] mx-auto">
         {/* Content Container */}
         <div className="relative z-10 w-full px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
           <div className="max-w-6xl">
             {/* Main Title */}
-            <h2
+            <motion.h2
               className="text-white text-left text-[min(3rem,8vw)] sm:text-[min(3.5rem,7vw)] md:text-[min(4rem,6vw)] lg:text-[min(72px,5vw)] leading-[1.1] tracking-[-1px] mb-8"
               style={{ fontFamily: "Coconat" }}
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px", amount: 0.3 }}
             >
               {["Your", "Vermont", "Story", "Begins", "Here"].map(
                 (word, index) => (
-                  <span
+                  <motion.span
                     key={index}
-                    className={`inline-block mr-4 ${isVisible ? "animate-word-appear" : ""}`}
+                    className="inline-block mr-4 word-blur-animate"
+                    variants={wordAppear}
                     style={{
-                      animationDelay: isVisible ? `${index * 0.15}s` : "0s",
-                      animationFillMode: isVisible ? "forwards" : undefined,
+                      animationDelay: `${index * 0.15}s`
                     }}
                   >
                     {word}
                     {index === 2 ? <br /> : ""}
-                  </span>
+                  </motion.span>
                 ),
               )}
-            </h2>
+            </motion.h2>
 
             {/* Description */}
-            <div
-              className={`${isVisible ? "animate-fadeInUp" : ""} mb-10`}
-              style={{
-                animationDelay: isVisible ? "0.8s" : "0s",
-                animationFillMode: isVisible ? "forwards" : undefined,
-              }}
+            <motion.div
+              className="mb-10"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: 0.8 }}
             >
               <p className="text-white/80 text-lg md:text-xl lg:text-2xl leading-relaxed max-w-5xl">
                 Every home is a fresh start. Whether you're seeking the perfect
@@ -83,15 +83,16 @@ const VermontStorySection: React.FC = () => {
                 excellence. Your next chapter starts now let's make it
                 unforgettable.
               </p>
-            </div>
+            </motion.div>
 
             {/* Action Buttons */}
-            <div
-              className={`flex flex-col sm:flex-row gap-4 sm:gap-6 ${isVisible ? "animate-fadeInUp" : ""}`}
-              style={{
-                animationDelay: isVisible ? "1s" : "0s",
-                animationFillMode: isVisible ? "forwards" : undefined,
-              }}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: 1.0 }}
             >
               {/* Contact Us Button - Dark */}
               <button
@@ -136,43 +137,24 @@ const VermontStorySection: React.FC = () => {
                   <ArrowRight className="w-5 h-5 text-white group-hover:text-[#21266c] transition-all duration-300 group-hover:translate-x-1" />
                 </div>
               </button>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
 
-      {/* CSS Animations */}
+      {/* CSS Keyframes for blur animation */}
       <style jsx>{`
-        @keyframes fadeInUp {
+        @keyframes blurFadeIn {
           0% {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes wordAppear {
-          0% {
-            opacity: 0;
-            transform: scale(0.8) translateY(20px);
             filter: blur(22px);
           }
           100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
             filter: blur(0);
           }
         }
 
-        .animate-word-appear {
-          animation: wordAppear 0.6s ease-out both;
-        }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 0.6s ease-out both;
+        .word-blur-animate {
+          animation: blurFadeIn 0.6s ease-out both;
         }
       `}</style>
     </section>

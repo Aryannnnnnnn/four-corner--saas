@@ -2,7 +2,8 @@
 
 import { ArrowRight, Plus } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 interface FAQItem {
   id: number;
@@ -12,36 +13,35 @@ interface FAQItem {
 
 const FAQSection: React.FC = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
 
-  // Intersection Observer to trigger animation when section comes into view
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -100px 0px",
-      },
-    );
-
-    const currentRef = sectionRef.current;
-
-    if (currentRef) {
-      observer.observe(currentRef);
+  // Framer Motion variants - matching exact CSS animations
+  const wordAppear = {
+    hidden: {
+      opacity: 0,
+      scale: 0.8,
+      y: 20
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0
     }
+  };
 
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15
       }
-    };
-  }, []);
+    }
+  };
 
   const faqItems: FAQItem[] = [
     {
@@ -81,41 +81,42 @@ const FAQSection: React.FC = () => {
   };
 
   return (
-    <section
-      ref={sectionRef}
-      className="bg-white py-16 md:py-20 lg:py-24 p-4 md:p-8 lg:p-12 overflow-hidden"
-    >
+    <section className="bg-white py-16 md:py-20 lg:py-24 p-4 md:p-8 lg:p-12 overflow-hidden">
       {/* Main Content Grid */}
       <div className="w-full max-w-[1800px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Left Side - Title and Description */}
           <div className="lg:sticky lg:top-24 space-y-8">
             {/* FAQ Title */}
-            <h2
+            <motion.h2
               className="text-center lg:text-left text-[min(2.5rem,7vw)] sm:text-[min(3rem,6vw)] md:text-[min(3.5rem,5vw)] lg:text-[min(52px,4.5vw)] text-[#21266c] leading-[1.1] tracking-[-0.72px]"
               style={{ fontFamily: "Coconat" }}
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px", amount: 0.3 }}
             >
               {["Frequently", "Asked", "Questions"].map((word, index) => (
-                <span
+                <motion.span
                   key={index}
-                  className={`inline-block mr-4 ${isVisible ? "animate-word-appear" : ""}`}
+                  className="inline-block mr-4 word-blur-animate"
+                  variants={wordAppear}
                   style={{
-                    animationDelay: isVisible ? `${index * 0.15}s` : "0s",
-                    animationFillMode: isVisible ? "forwards" : undefined,
+                    animationDelay: `${index * 0.15}s`
                   }}
                 >
                   {word}
-                </span>
+                </motion.span>
               ))}
-            </h2>
+            </motion.h2>
 
             {/* Description */}
-            <div
-              className={` ${isVisible ? "animate-fadeInUp" : ""}`}
-              style={{
-                animationDelay: isVisible ? "0.5s" : "0s",
-                animationFillMode: isVisible ? "forwards" : undefined,
-              }}
+            <motion.div
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: 0.5 }}
             >
               <p className="text-black/80 text-lg md:text-xl leading-relaxed mb-6">
                 Whether buying, selling, or building, questions arise. We’ve
@@ -137,25 +138,24 @@ const FAQSection: React.FC = () => {
                   <ArrowRight className="w-6 h-6 text-white transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </button>
-            </div>
+            </motion.div>
           </div>
 
           {/* Right Side - FAQ Boxes */}
           <div className="space-y-4">
             {faqItems.map((item, index) => (
-              <div
+              <motion.div
                 key={item.id}
                 className={`group bg-black/5 border rounded-xl overflow-hidden cursor-pointer transition-all duration-700 ease-in-out ${
                   expandedIndex === index
                     ? "border-[#21266c]"
                     : "border-black/10"
-                } ${
-                  isVisible ? "animate-fadeInUp" : ""
                 }`}
-                style={{
-                  animationDelay: isVisible ? `${index * 0.1 + 0.8}s` : "0s",
-                  animationFillMode: isVisible ? "forwards" : undefined,
-                }}
+                variants={fadeInUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ delay: index * 0.1 + 0.8 }}
                 onClick={() => handleBoxClick(index)}
               >
                 {/* Question Header */}
@@ -215,44 +215,25 @@ const FAQSection: React.FC = () => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* CSS Animations */}
+      {/* CSS Keyframes for blur animation */}
       <style jsx>{`
-        @keyframes fadeInUp {
+        @keyframes blurFadeIn {
           0% {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes wordAppear {
-          0% {
-            opacity: 0;
-            transform: scale(0.8) translateY(20px);
             filter: blur(22px);
           }
           100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
             filter: blur(0);
           }
         }
 
-        .animate-word-appear {
-          animation: wordAppear 0.6s ease-out both;
-        }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 0.6s ease-out both;
+        .word-blur-animate {
+          animation: blurFadeIn 0.6s ease-out both;
         }
       `}</style>
     </section>

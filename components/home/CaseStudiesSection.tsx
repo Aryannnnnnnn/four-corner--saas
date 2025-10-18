@@ -2,7 +2,8 @@
 
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 interface LocalArea {
   id: number;
@@ -13,36 +14,22 @@ interface LocalArea {
 
 const CaseStudiesSection: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
 
-  // Intersection Observer to trigger animation when section comes into view
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -100px 0px",
-      },
-    );
+  // Framer Motion variants - matching exact CSS animations
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 }
+  };
 
-    const currentRef = sectionRef.current;
+  const scaleIn = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1 }
+  };
 
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, []);
+  const slideDown = {
+    hidden: { opacity: 0, height: 0 },
+    visible: { opacity: 1, height: "4rem" }
+  };
 
   const localAreas: LocalArea[] = [
     {
@@ -100,42 +87,42 @@ const CaseStudiesSection: React.FC = () => {
   };
 
   return (
-    <section
-      ref={sectionRef}
-      className="bg-white py-16 sm:py-20 lg:py-24 overflow-hidden"
-    >
+    <section className="bg-white py-16 sm:py-20 lg:py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
           {/* Decorative Line */}
-          <div
-            className={`w-px h-16 bg-[#21266c] mx-auto mb-8 ${isVisible ? "animate-slideDown" : ""}`}
-            style={{
-              animationDelay: "0.2s",
-              animationFillMode: "forwards",
-            }}
-          ></div>
+          <motion.div
+            className="w-px h-16 bg-[#21266c] mx-auto mb-8"
+            variants={slideDown}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: 0.2 }}
+          ></motion.div>
 
-          <h2
-            className={`text-[#21266c] text-4xl sm:text-5xl lg:text-6xl font-light mb-6 ${isVisible ? "animate-fadeInUp" : ""}`}
-            style={{
-              fontFamily: "Coconat",
-              animationDelay: "0.4s",
-              animationFillMode: "forwards",
-            }}
+          <motion.h2
+            className="text-[#21266c] text-4xl sm:text-5xl lg:text-6xl font-light mb-6"
+            style={{ fontFamily: "Coconat" }}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: 0.4 }}
           >
             Our Local Expertise
-          </h2>
+          </motion.h2>
         </div>
 
         {/* Main Image Showcase */}
         <div className="relative mb-16">
-          <div
-            className={`relative rounded-3xl overflow-hidden shadow-2xl ${isVisible ? "animate-scaleIn" : ""}`}
-            style={{
-              animationDelay: "0.6s",
-              animationFillMode: "forwards",
-            }}
+          <motion.div
+            className="relative rounded-3xl overflow-hidden shadow-2xl"
+            variants={scaleIn}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: 0.6 }}
           >
             <div className="relative h-[500px] lg:h-[600px]">
               {displayData[activeIndex] && (
@@ -198,19 +185,20 @@ const CaseStudiesSection: React.FC = () => {
                 <div className="w-8 sm:w-12 h-px bg-white/50"></div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Bottom CTA Section */}
         <div className="rounded-3xl overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-black/10">
             {/* Card 1 */}
-            <div
-              className={`p-8 lg:p-10 text-center group hover:bg-black/5 transition-all duration-300 ${isVisible ? "animate-fadeInUp" : ""}`}
-              style={{
-                animationDelay: "0.8s",
-                animationFillMode: "forwards",
-              }}
+            <motion.div
+              className="p-8 lg:p-10 text-center group hover:bg-black/5 transition-all duration-300"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: 0.8 }}
             >
               <h3
                 className="text-black text-2xl lg:text-3xl font-light mb-4"
@@ -227,15 +215,16 @@ const CaseStudiesSection: React.FC = () => {
                 <span>LEARN MORE</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
+            </motion.div>
 
             {/* Card 2 */}
-            <div
-              className={`p-8 lg:p-10 text-center group hover:bg-black/5 transition-all duration-300 ${isVisible ? "animate-fadeInUp" : ""}`}
-              style={{
-                animationDelay: "1s",
-                animationFillMode: "forwards",
-              }}
+            <motion.div
+              className="p-8 lg:p-10 text-center group hover:bg-black/5 transition-all duration-300"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: 1.0 }}
             >
               <h3
                 className="text-black text-2xl lg:text-3xl font-light mb-4"
@@ -253,15 +242,16 @@ const CaseStudiesSection: React.FC = () => {
                 <span>MEET THE TEAM</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
+            </motion.div>
 
             {/* Card 3 */}
-            <div
-              className={`p-8 lg:p-10 text-center group hover:bg-black/5 transition-all duration-300 ${isVisible ? "animate-fadeInUp" : ""}`}
-              style={{
-                animationDelay: "1.2s",
-                animationFillMode: "forwards",
-              }}
+            <motion.div
+              className="p-8 lg:p-10 text-center group hover:bg-black/5 transition-all duration-300"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: 1.2 }}
             >
               <h3
                 className="text-black text-2xl lg:text-3xl font-light mb-4"
@@ -279,58 +269,10 @@ const CaseStudiesSection: React.FC = () => {
                 <span>EXPLORE PROPERTIES</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
-
-      {/* CSS Animations */}
-      <style jsx>{`
-        @keyframes fadeInUp {
-          0% {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes scaleIn {
-          0% {
-            opacity: 0;
-            transform: scale(0.95);
-          }
-          100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes slideDown {
-          0% {
-            opacity: 0;
-            height: 0;
-          }
-          100% {
-            opacity: 1;
-            height: 4rem;
-          }
-        }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 0.8s ease-out both;
-        }
-
-        .animate-scaleIn {
-          animation: scaleIn 0.8s ease-out both;
-        }
-
-        .animate-slideDown {
-          animation: slideDown 0.8s ease-out both;
-        }
-      `}</style>
     </section>
   );
 };

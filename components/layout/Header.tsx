@@ -107,7 +107,7 @@ export default function Header() {
               height={56}
               priority
               quality={100}
-              className="h-12 sm:h-14 w-auto object-contain"
+              className="h-48 sm:h-26 w-auto object-contain"
               unoptimized
             />
           </Link>

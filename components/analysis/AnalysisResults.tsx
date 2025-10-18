@@ -444,7 +444,7 @@ export default function AnalysisResults({
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 md:gap-4 mb-6 border-b border-white/10 overflow-x-auto">
+      <div className="flex items-center gap-2 md:gap-4 mb-6 overflow-x-auto bg-gradient-to-br from-[#21266c]/20 to-luxury-blue/20 border-2 border-luxury-blue/40 rounded-xl p-3 shadow-lg">
         {[
           { id: "overview", label: "Overview" },
           { id: "features", label: "Facts & Features" },
@@ -454,10 +454,10 @@ export default function AnalysisResults({
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`px-4 md:px-6 py-3 font-semibold transition-all whitespace-nowrap ${
+            className={`px-4 md:px-6 py-3 font-semibold transition-all whitespace-nowrap rounded-lg ${
               activeTab === tab.id
                 ? "text-luxury-gold border-b-2 border-luxury-gold"
-                : "text-white/70 hover:text-white"
+                : "text-white/90 hover:text-white hover:bg-white/10"
             }`}
           >
             {tab.label}

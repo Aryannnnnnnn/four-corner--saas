@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Mail, Phone, MapPin, Calendar, X, Linkedin, Badge } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface TeamMember {
   id: number;
@@ -20,15 +21,35 @@ interface TeamMember {
 }
 
 const TeamSection: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+
+  // Framer Motion variants - optimized
+  const wordAppear = {
+    hidden: { opacity: 0, scale: 0.8, y: 20 },
+    visible: { opacity: 1, scale: 1, y: 0 }
+  };
+
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        duration: 0.6
+      }
+    }
+  };
 
   const teamMembers: TeamMember[] = [
     {
       id: 1,
       name: "Lori Hurley",
-      title: "Broker & Owner",
+      title: "Owner / Principal Broker",
       description:
         "Lori Hurley is the driving force behind Four Corner Properties, combining deep market knowledge with a personal touch. Her commitment to client success and community values makes her a trusted leader in Vermont real estate.",
       imageUrl: "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760102913/team-1_l8m6i1.png",
@@ -44,13 +65,13 @@ const TeamSection: React.FC = () => {
     {
       id: 2,
       name: "James Hurley",
-      title: "Real Estate Agent",
+      title: "Sales Associate & Realtor",
       description:
         "James Hurley brings energy and dedication to every transaction. Known for his attentive service and local expertise, James helps buyers and sellers achieve their goals with confidence and care.",
       imageUrl: "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760399597/0396402759f451185fe2b690f85164ea-h_l_dj53xg.jpg",
-      email: "j.hurley.fcpvt@gmail.com",
-      phone: "(508) 734-0501",
-      license: "081.0135090",
+      email: "J.Hurley.FCPVT@gmail.com",
+      phone: "508-734-0501",
+      license: "082.0135090",
       yearsExperience: 3,
       specialties: ["Luxury Estates", "Investment Properties", "Historic Homes"],
       location: "Bennington, Vermont",
@@ -60,7 +81,7 @@ const TeamSection: React.FC = () => {
     {
       id: 3,
       name: "Alex Shaffer",
-      title: "Sales Agent & Lead Realtor",
+      title: "Sales Associate & Realtor",
       description:
         "Alex Shaffer is passionate about matching clients with their dream Vermont properties. His friendly approach and deep knowledge of ski and vacation homes make him a go-to expert for buyers seeking the perfect retreat.",
       imageUrl: "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760102914/team-2_lex1bl.png",
@@ -75,7 +96,7 @@ const TeamSection: React.FC = () => {
     {
       id: 4,
       name: "Courtney Harvey",
-      title: "Senior Real Estate Agent",
+      title: "Sales Associate & Realtor",
       description:
         "Courtney Harvey is known for her professionalism and attention to detail. She guides clients through every step of the buying and selling process, ensuring smooth transactions and outstanding results.",
       imageUrl: "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760102913/team-3_my7hes.jpg",
@@ -90,7 +111,7 @@ const TeamSection: React.FC = () => {
     {
       id: 5,
       name: "Pat Sady",
-      title: "Real Estate Agent",
+      title: "Sales Associate & Realtor",
       description:
         "Pat Sady is dedicated to helping clients find their ideal Vermont property, whether it’s a rural retreat or a commercial investment. His integrity and local insight make every transaction rewarding.",
       imageUrl: "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760102915/team-5_jafvh1.png",
@@ -104,84 +125,49 @@ const TeamSection: React.FC = () => {
     },
   ];
 
-  // Intersection Observer to trigger animation when section comes into view
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        threshold: 0.1, // Trigger when 10% of the section is visible
-        rootMargin: "0px 0px -100px 0px",
-      },
-    );
-
-    const currentRef = sectionRef.current;
-
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, []);
-
-  // Split title into words for animation
-  const titleWords = [
-    "A",
-    "Team",
-    "of",
-    "Visionary",
-    "Experts",
-    "and",
-    "Passionate",
-    "Professionals",
-  ];
+  const titleWords = ["A", "Team", "of", "Visionary", "Experts", "and", "Passionate", "Professionals"];
 
   return (
     <>
-      <section
-        ref={sectionRef}
-        className="min-h-screen bg-white py-32 px-4 overflow-hidden"
-      >
-        {/* Section Heading with ExpertiseSection-style Animation */}
+      <section className="min-h-screen bg-white py-32 px-4 overflow-hidden">
+        {/* Section Heading with word-by-word blur animation */}
         <div className="mb-16 w-full max-w-[1800px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-          <h2
+          <motion.h2
             className="text-black text-center lg:max-w-[50%] md:text-left text-[#21266c] text-[min(2.5rem,7vw)] sm:text-[min(3rem,6vw)] md:text-[min(3.5rem,5vw)] lg:text-[min(52px,4.5vw)] leading-[1.1] tracking-[-0.72px]"
             style={{ fontFamily: "Coconat" }}
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px", amount: 0.3 }}
           >
             {titleWords.map((word, index) => (
-              <span
+              <motion.span
                 key={index}
-                className={`inline-block mr-4 ${isVisible ? "animate-word-appear" : ""}`}
+                className="inline-block mr-4 word-blur-animate"
+                variants={wordAppear}
                 style={{
-                  animationDelay: isVisible ? `${index * 0.15}s` : "0s",
-                  animationFillMode: isVisible ? "forwards" : undefined,
+                  animationDelay: `${index * 0.15}s`
                 }}
               >
                 {word}
-              </span>
+              </motion.span>
             ))}
-          </h2>
+          </motion.h2>
         </div>
 
         {/* Team Grid */}
         <div className="w-full max-w-[1800px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamMembers.map((member, index) => (
-              <div
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px", amount: 0.1 }}
+          >
+            {teamMembers.map((member) => (
+              <motion.div
                 key={member.id}
-                className={`${isVisible ? "animate-fadeInUp" : ""}`}
-                style={{
-                  animationDelay: isVisible ? `${index * 0.1 + 0.5}s` : "0s",
-                  animationFillMode: isVisible ? "forwards" : undefined,
-                }}
+                variants={fadeInUp}
               >
                 <div
                   onClick={() => setSelectedMember(member)}
@@ -218,9 +204,9 @@ const TeamSection: React.FC = () => {
                     {member.description}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -374,38 +360,19 @@ const TeamSection: React.FC = () => {
         </div>
       )}
 
-      {/* CSS Animations */}
+      {/* CSS Keyframes for blur animation */}
       <style jsx>{`
-        @keyframes fadeInUp {
+        @keyframes blurFadeIn {
           0% {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes wordAppear {
-          0% {
-            opacity: 0;
-            transform: scale(0.8) translateY(20px);
             filter: blur(22px);
           }
           100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
             filter: blur(0);
           }
         }
 
-        .animate-word-appear {
-          animation: wordAppear 0.6s ease-out both;
-        }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 0.6s ease-out both;
+        .word-blur-animate {
+          animation: blurFadeIn 0.6s ease-out both;
         }
       `}</style>
     </>
