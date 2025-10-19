@@ -50,6 +50,6 @@ export default auth((req) => {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|logo.png|luxury.jpg|hero-image-logotype.png|logoo.png).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|logo.png|luxury.jpg|hero-image-logotype.png|logoo.png|logooo.png).*)",
   ],
 };
