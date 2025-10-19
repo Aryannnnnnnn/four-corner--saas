@@ -276,7 +276,7 @@ const Footer: React.FC = () => {
       <div className="w-[90vw] mx-auto py-8 md:py-10">
         <div className="text-center">
           <Image
-            src="/logoo.png"
+            src="/logo.png"
             alt="Four Corner Properties"
             width={400}
             height={100}
