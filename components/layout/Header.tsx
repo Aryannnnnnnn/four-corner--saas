@@ -4,6 +4,7 @@ import {
   BookMarked,
   BookOpen,
   ChevronDown,
+  DollarSign,
   FolderOpen,
   Home,
   LogOut,
@@ -49,6 +50,14 @@ export default function Header() {
       name: "Sell Property",
       href: "/list-property",
       icon: PlusCircle,
+    },
+  ];
+
+  const homeFinancingNavigation = [
+    {
+      name: "Home Financing",
+      href: "/home-financing",
+      icon: DollarSign,
     },
   ];
 
@@ -203,7 +212,21 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* 5. Other Navigation (if any items exist) */}
+            {/* 5. Home Financing Navigation */}
+            {homeFinancingNavigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
+                  pathname === item.href && "text-gray-900 border-blue-600",
+                )}
+              >
+                <span>{item.name}</span>
+              </Link>
+            ))}
+
+            {/* 6. Other Navigation (if any items exist) */}
             {otherNavigation.map((item) => (
               <Link
                 key={item.name}
@@ -407,7 +430,23 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* 6. Other Navigation (if any items exist) */}
+            {/* 6. Home Financing Navigation */}
+            {homeFinancingNavigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
+                  pathname === item.href && "text-blue-600 bg-blue-50",
+                )}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <item.icon className="w-4 h-4" />
+                <span className="font-medium">{item.name}</span>
+              </Link>
+            ))}
+
+            {/* 7. Other Navigation (if any items exist) */}
             {otherNavigation.map((item) => (
               <Link
                 key={item.name}

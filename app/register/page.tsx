@@ -72,9 +72,16 @@ export default function RegisterPage() {
 
       if (!response.ok) {
         if (response.status === 409) {
-          toast.error(
-            "An account with this email already exists. Please sign in.",
-          );
+          // Check if it's email or phone duplicate
+          if (data.error?.toLowerCase().includes("phone")) {
+            toast.error(
+              "This phone number is already registered. Please use a different number.",
+            );
+          } else {
+            toast.error(
+              "An account with this email already exists. Please sign in.",
+            );
+          }
         } else {
           toast.error(
             data.error || "Unable to create account. Please try again.",

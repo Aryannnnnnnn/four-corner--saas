@@ -2,19 +2,59 @@
 
 import { Library, Search, Shield, TrendingUp, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 
+interface TrialStatus {
+  isAuthenticated: boolean;
+  hasUnlimitedAnalyses: boolean;
+  trial?: {
+    used: number;
+    remaining: number;
+    total: number;
+    limitReached: boolean;
+  };
+}
+
 export default function HomePage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [address, setAddress] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [trialStatus, setTrialStatus] = useState<TrialStatus | null>(null);
+
+  // Fetch trial status on mount and when session changes
+  useEffect(() => {
+    const fetchTrialStatus = async () => {
+      try {
+        const response = await fetch("/api/trial-status");
+        if (response.ok) {
+          const data = await response.json();
+          setTrialStatus(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch trial status:", error);
+      }
+    };
+
+    fetchTrialStatus();
+  }, [session]);
 
   const handleAnalyze = async () => {
     if (!address.trim()) {
       toast.error("Please enter a property address");
+      return;
+    }
+
+    // Check trial limit for non-authenticated users
+    if (!session && trialStatus?.trial?.limitReached) {
+      toast.error("Free trial limit reached. Please sign in to continue.");
+      setTimeout(() => {
+        router.push("/login");
+      }, 1500);
       return;
     }
 
@@ -23,6 +63,20 @@ export default function HomePage() {
     try {
       // Store address in session storage for analysis page
       sessionStorage.setItem("propertyAddress", address);
+
+      // Update trial status immediately for better UX (actual increment happens in API)
+      if (!session && trialStatus?.trial) {
+        setTrialStatus({
+          ...trialStatus,
+          trial: {
+            ...trialStatus.trial,
+            used: trialStatus.trial.used + 1,
+            remaining: Math.max(0, trialStatus.trial.remaining - 1),
+            limitReached: trialStatus.trial.remaining - 1 <= 0,
+          },
+        });
+      }
+
       router.push("/analysis");
     } catch (_error) {
       toast.error("Failed to start analysis");
@@ -52,6 +106,31 @@ export default function HomePage() {
             valuations, market insights, and investment projections for real
             estate professionals.
           </p>
+
+          {/* Trial Counter Banner for Non-Authenticated Users */}
+          {!session && trialStatus?.trial && (
+            <div className={`mx-auto max-w-md px-4 py-3 rounded-xl border ${
+              trialStatus.trial.remaining > 1
+                ? "bg-luxury-blue/10 border-luxury-blue/30"
+                : trialStatus.trial.remaining === 1
+                ? "bg-yellow-500/10 border-yellow-500/30"
+                : "bg-red-500/10 border-red-500/30"
+            }`}>
+              <p className={`text-sm font-semibold ${
+                trialStatus.trial.remaining > 1
+                  ? "text-luxury-blue"
+                  : trialStatus.trial.remaining === 1
+                  ? "text-yellow-400"
+                  : "text-red-400"
+              }`}>
+                {trialStatus.trial.limitReached ? (
+                  <>Free Trial Expired - Please <span className="underline cursor-pointer" onClick={() => router.push("/login")}>Sign In</span> to Continue</>
+                ) : (
+                  <>Free Trial: {trialStatus.trial.remaining} of {trialStatus.trial.total} analyses remaining</>
+                )}
+              </p>
+            </div>
+          )}
 
           {/* Search Bar with Library Button */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-5xl mx-auto px-4">

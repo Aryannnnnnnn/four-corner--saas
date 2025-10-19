@@ -6,9 +6,35 @@ import {
   getIpFromRequest,
   getUserAgentFromRequest,
 } from "@/app/lib/utils/activityLogger";
+import {
+  checkTrialLimit,
+  incrementTrialUsage,
+} from "@/app/lib/utils/trialLimit";
 
 export async function POST(request: NextRequest) {
   try {
+    // Check authentication
+    const session = await auth();
+    const ipAddress = getIpFromRequest(request);
+
+    // Trial limit check for non-authenticated users
+    if (!session?.user && ipAddress) {
+      const { canUse } = await checkTrialLimit(ipAddress);
+
+      if (!canUse) {
+        return NextResponse.json(
+          {
+            success: false,
+            error:
+              "Free trial limit reached (3 searches). Please sign in to continue searching properties.",
+            code: "TRIAL_LIMIT_REACHED",
+            remaining: 0,
+          },
+          { status: 403 },
+        );
+      }
+    }
+
     const body = await request.json();
 
     // CHANGED: Use /webhook/ instead of /webhook-test/
@@ -38,8 +64,17 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
 
+    // Increment trial usage for non-authenticated users after successful search
+    if (!session?.user && ipAddress) {
+      try {
+        await incrementTrialUsage(ipAddress);
+      } catch (error) {
+        console.error("Failed to increment trial usage:", error);
+        // Don't fail the search if incrementing fails
+      }
+    }
+
     // Log property search activity (only if user is authenticated)
-    const session = await auth();
     console.log("Search - Session check:", {
       hasSession: !!session,
       hasUser: !!session?.user,

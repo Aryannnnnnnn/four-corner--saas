@@ -16,16 +16,12 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   },
 });
 
-// Profile update validation schema
+// Profile update validation schema - only fields that exist in the database
 const profileUpdateSchema = z
   .object({
     name: z.string().min(1).max(100).optional(),
-    bio: z.string().max(500).optional(),
     phone: z.string().max(20).optional(),
-    location: z.string().max(200).optional(),
-    website: z.string().url().optional().or(z.literal("")),
-    avatar_url: z.string().url().optional().or(z.literal("")),
-    preferences: z.object({}).passthrough().optional(),
+    image: z.string().url().optional().or(z.literal("")),
   })
   .strict(); // Reject any fields not in the schema
 
@@ -37,11 +33,10 @@ export async function GET(_req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // First, get only the basic fields that we know exist
     const { data, error } = await supabase
       .from("users")
-      .select(
-        "id, email, name, image, bio, phone, location, website, avatar_url, preferences, created_at, updated_at, email_verified",
-      )
+      .select("id, email, name, image, phone, created_at, updated_at, email_verified")
       .eq("id", session.user.id)
       .maybeSingle();
 
@@ -61,12 +56,7 @@ export async function GET(_req: NextRequest) {
           email: session.user.email,
           name: session.user.name,
           image: session.user.image,
-          bio: "",
-          phone: "",
-          location: "",
-          website: "",
-          avatar_url: "",
-          preferences: {},
+          phone: null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           email_verified: null,
@@ -75,7 +65,13 @@ export async function GET(_req: NextRequest) {
     }
 
     return NextResponse.json(
-      { profile: data },
+      {
+        profile: {
+          ...data,
+          // Ensure phone is included even if null
+          phone: data.phone || null
+        }
+      },
       {
         headers: {
           "Cache-Control": "private, max-age=300, stale-while-revalidate=60",
@@ -136,9 +132,7 @@ export async function PATCH(req: NextRequest) {
       .from("users")
       .update(updatePayload)
       .eq("id", session.user.id)
-      .select(
-        "id, email, name, image, bio, phone, location, website, avatar_url, preferences, created_at, updated_at, email_verified",
-      )
+      .select("id, email, name, image, phone, created_at, updated_at, email_verified")
       .single();
 
     if (error) {

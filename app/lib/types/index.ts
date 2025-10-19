@@ -203,6 +203,38 @@ export interface PropertyData {
     cashFlow?: ChartData;
   };
 
+  // Environmental Risk
+  environmental?: {
+    flood?: {
+      floodFactorScore: number; // 1-10 scale
+      floodFactorSeverity: string; // "Minimal" | "Minor" | "Moderate" | "Major" | "Severe" | "Extreme"
+      riskTrend: string; // "not changing" | "increasing" | "decreasing"
+      femaZone: string; // e.g., "X (unshaded)", "AE", "VE", etc.
+      insuranceRequired: boolean;
+      estimatedInsuranceMin: number; // yearly cost
+      estimatedInsuranceMax: number; // yearly cost
+      description: string;
+    };
+    fire?: {
+      riskLevel: string; // "Low" | "Moderate" | "High" | "Very High"
+      description: string;
+    };
+    airQuality?: {
+      aqi: number; // Air Quality Index
+      category: string; // "Good" | "Moderate" | "Unhealthy for Sensitive Groups" | etc.
+      description: string;
+    };
+    earthquake?: {
+      riskLevel: string; // "Very Low" | "Low" | "Moderate" | "High" | "Very High"
+      description: string;
+    };
+    noise?: {
+      level: string; // "Low" | "Moderate" | "High"
+      sources: string[]; // ["Highway", "Airport", "Train", etc.]
+      description: string;
+    };
+  };
+
   // Legacy fields for backward compatibility
   zillow?: {
     zpid: string;

@@ -355,46 +355,6 @@ const HomeBuyingGuideSection: React.FC = () => {
           </div>
         </div>
 
-        {/* CTA Section */}
-        <motion.div
-          className="text-center space-y-8 pt-12"
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-        >
-          <h3
-            className="text-[#21266c] text-[min(2rem,6vw)] sm:text-[min(2.5rem,5vw)] md:text-[min(3rem,4.5vw)] lg:text-[min(42px,4vw)] leading-[1.1] tracking-[-0.72px]"
-            style={{ fontFamily: "Coconat" }}
-          >
-            Your Financing Journey Simplified
-          </h3>
-          <p className="text-black/80 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-            From pre-qualification to final approval, we make mortgage financing straightforward and stress-free. Connect with trusted lenders and explore financing options tailored to your Vermont home purchase.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => (window.location.href = "/contact")}
-              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#21266c] border-2 border-[#21266c] text-white font-medium text-base rounded-full transition-all duration-300 hover:bg-[#1a1d52]"
-            >
-              GET IN TOUCH
-              <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
-            <button
-              onClick={() => (window.location.href = "/home-financing")}
-              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-transparent border-2 border-[#21266c] text-[#21266c] font-medium text-base rounded-full transition-all duration-300 hover:bg-[#21266c] hover:text-white"
-            >
-              EXPLORE FINANCING
-              <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
-          </div>
-        </motion.div>
-
       </div>
 
       {/* CSS Keyframes for blur animation */}

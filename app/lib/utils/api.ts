@@ -40,10 +40,20 @@ class ApiClient {
     const response = await fetch(`${this.baseUrl}${endpoint}`, config);
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      throw new Error(
-        error.message || `HTTP ${response.status}: ${response.statusText}`,
-      );
+      let error;
+      try {
+        error = await response.json();
+      } catch {
+        error = {};
+      }
+
+      // Preserve the error code for trial limit detection
+      const errorMessage = error.error || error.message || `HTTP ${response.status}: ${response.statusText}`;
+      const err = new Error(errorMessage) as Error & { code?: string };
+      if (error.code) {
+        err.code = error.code;
+      }
+      throw err;
     }
 
     return response.json();

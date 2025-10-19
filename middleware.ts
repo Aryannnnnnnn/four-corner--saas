@@ -15,7 +15,11 @@ export default auth((req) => {
     "/contact",
     "/listings",
     "/home-financing",
-    "success-stories",
+    "/success-stories",
+    "/analyze-your-property",
+    "/analysis",
+    "/analyze",
+    "/search",
   ];
 
   // Check if current path is a public route

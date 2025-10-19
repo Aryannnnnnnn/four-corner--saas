@@ -4,6 +4,7 @@ import { ArrowLeft, Filter, Grid3X3, Map, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
@@ -12,6 +13,17 @@ import PropertyGrid from "@/components/search/PropertyGrid";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import type { PropertyFilters, PropertySearchResult } from "@/lib/types";
+
+interface TrialStatus {
+  isAuthenticated: boolean;
+  hasUnlimitedAnalyses: boolean;
+  trial?: {
+    used: number;
+    remaining: number;
+    total: number;
+    limitReached: boolean;
+  };
+}
 
 // Dynamic import to avoid SSR issues with Leaflet
 const PropertyMap = dynamic(
@@ -34,6 +46,7 @@ const PropertyMap = dynamic(
 function SearchPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { data: session } = useSession();
   const [showFilters, setShowFilters] = useState(true);
   const [showMap, setShowMap] = useState(true);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
@@ -43,6 +56,7 @@ function SearchPageContent() {
   );
   const [properties, setProperties] = useState<PropertySearchResult[]>([]);
   const [totalResults, setTotalResults] = useState(0);
+  const [trialStatus, setTrialStatus] = useState<TrialStatus | null>(null);
   const [currentFilters, setCurrentFilters] = useState<PropertyFilters>({
     location: "",
     minPrice: undefined,
@@ -70,10 +84,36 @@ function SearchPageContent() {
   // Ref to track if a search is already in progress to prevent duplicate calls
   const searchInProgress = useRef(false);
 
+  // Fetch trial status on mount and when session changes
+  useEffect(() => {
+    const fetchTrialStatus = async () => {
+      try {
+        const response = await fetch("/api/trial-status");
+        if (response.ok) {
+          const data = await response.json();
+          setTrialStatus(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch trial status:", error);
+      }
+    };
+
+    fetchTrialStatus();
+  }, [session]);
+
   const handleSearch = useCallback(async (filters: PropertyFilters) => {
     // Prevent duplicate searches
     if (searchInProgress.current) {
       console.log("Search already in progress, skipping duplicate call");
+      return;
+    }
+
+    // Check trial limit for non-authenticated users
+    if (!session && trialStatus?.trial?.limitReached) {
+      toast.error("Free trial limit reached. Please sign in to continue.");
+      setTimeout(() => {
+        router.push("/login");
+      }, 1500);
       return;
     }
 
@@ -113,7 +153,34 @@ function SearchPageContent() {
       });
 
       if (!response.ok) {
-        throw new Error("Search failed");
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          throw new Error("Search failed");
+        }
+
+        // Check for trial limit error
+        if (errorData.code === "TRIAL_LIMIT_REACHED") {
+          toast.error("Free trial limit reached. Please sign in to continue.");
+          // Update trial status immediately
+          setTrialStatus({
+            isAuthenticated: false,
+            hasUnlimitedAnalyses: false,
+            trial: {
+              used: 3,
+              remaining: 0,
+              total: 3,
+              limitReached: true,
+            },
+          });
+          setTimeout(() => {
+            router.push("/login");
+          }, 2000);
+          return;
+        }
+
+        throw new Error(errorData.error || "Search failed");
       }
 
       const data = await response.json();
@@ -124,6 +191,15 @@ function SearchPageContent() {
         setTotalResults(data.totalResults);
         setCurrentFilters(filters);
         toast.success(`Found ${data.totalResults} properties`);
+
+        // Refresh trial status after successful search
+        if (!session) {
+          const statusResponse = await fetch("/api/trial-status");
+          if (statusResponse.ok) {
+            const statusData = await statusResponse.json();
+            setTrialStatus(statusData);
+          }
+        }
       } else {
         throw new Error("No results found");
       }
@@ -134,7 +210,7 @@ function SearchPageContent() {
       setIsLoading(false);
       searchInProgress.current = false;
     }
-  }, []);
+  }, [session, trialStatus, router]);
 
   useEffect(() => {
     const location = searchParams.get("location");
@@ -162,7 +238,7 @@ function SearchPageContent() {
       handleSearch(filters);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, handleSearch]);
+  }, [searchParams]);
 
   // Client-side filtering logic
   const filterProperties = (filters: PropertyFilters) => {
@@ -294,6 +370,31 @@ function SearchPageContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-blue via-dark-blue to-luxury-blue/20">
       <div className="max-w-[1920px] mx-auto px-6 pt-32 pb-20">
+        {/* Trial Counter Banner for Non-Authenticated Users */}
+        {!session && trialStatus?.trial && (
+          <div className={`mb-6 mx-auto max-w-4xl px-4 py-3 rounded-xl border ${
+            trialStatus.trial.remaining > 1
+              ? "bg-luxury-blue/10 border-luxury-blue/30"
+              : trialStatus.trial.remaining === 1
+              ? "bg-yellow-500/10 border-yellow-500/30"
+              : "bg-red-500/10 border-red-500/30"
+          }`}>
+            <p className={`text-sm font-semibold text-center ${
+              trialStatus.trial.remaining > 1
+                ? "text-luxury-blue"
+                : trialStatus.trial.remaining === 1
+                ? "text-yellow-400"
+                : "text-red-400"
+            }`}>
+              {trialStatus.trial.limitReached ? (
+                <>Free Trial Expired - Please <span className="underline cursor-pointer" onClick={() => router.push("/login")}>Sign In</span> to Continue</>
+              ) : (
+                <>Free Trial: {trialStatus.trial.remaining} of {trialStatus.trial.total} searches remaining</>
+              )}
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">

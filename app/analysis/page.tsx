@@ -65,6 +65,17 @@ export default function AnalysisPage() {
         err instanceof Error ? err.message : "Failed to analyze property";
       setError(errorMessage);
       toast.error(errorMessage);
+
+      // Check if it's a trial limit error and redirect to login
+      if (
+        err instanceof Error &&
+        ((err as Error & { code?: string }).code === "TRIAL_LIMIT_REACHED" ||
+          err.message.includes("trial limit"))
+      ) {
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      }
     } finally {
       // Ensure interval is always cleaned up
       if (progressInterval) {
@@ -73,16 +84,15 @@ export default function AnalysisPage() {
       }
       setIsAnalyzing(false);
     }
-  }, []);
+  }, [router]);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      toast.error("Please sign in to analyze properties");
-      router.push("/login");
-      return;
+    // Allow both authenticated and unauthenticated users (trial mode)
+    if (status === "loading") {
+      return; // Wait for session to load
     }
 
-    if (status === "authenticated" && !hasStartedRef.current) {
+    if (!hasStartedRef.current) {
       // Get address from session storage
       const storedAddress = sessionStorage.getItem("propertyAddress");
       if (!storedAddress) {
@@ -95,7 +105,8 @@ export default function AnalysisPage() {
       setAddress(storedAddress);
       startAnalysis(storedAddress);
     }
-  }, [status, router, startAnalysis]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   const handleViewLibrary = () => {
     router.push("/library");

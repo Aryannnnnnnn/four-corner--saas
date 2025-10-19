@@ -71,7 +71,7 @@ export default function AnalysisResults({
   propertyId,
 }: AnalysisResultsProps) {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "details" | "comparables" | "features"
+    "overview" | "details" | "comparables" | "features" | "environmental"
   >("overview");
   const [isExporting, setIsExporting] = useState(false);
 
@@ -168,6 +168,11 @@ export default function AnalysisResults({
     console.log("Full data.propertyOverview:", data.propertyOverview);
     console.log("Extracted listPrice:", listPrice);
     console.log("Raw listPrice from data:", data.propertyOverview?.listPrice);
+    console.log("=== Environmental Data Debug ===");
+    console.log("Has environmental:", !!data.environmental);
+    console.log("Has environmental.flood:", !!data.environmental?.flood);
+    console.log("Full environmental data:", data.environmental);
+    console.log("rawApiData.propertyDetails.climate:", data.rawApiData?.propertyDetails?.climate);
   }
   const bedrooms = Number(data.propertyOverview?.bedrooms) || 0;
   const bathrooms = Number(data.propertyOverview?.bathrooms) || 0;
@@ -450,6 +455,7 @@ export default function AnalysisResults({
           { id: "features", label: "Facts & Features" },
           { id: "details", label: "Investment Details" },
           { id: "comparables", label: "Comparables" },
+          { id: "environmental", label: "Environmental Risk" },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -468,6 +474,59 @@ export default function AnalysisResults({
       {/* Tab Content */}
       {activeTab === "overview" && (
         <div className="space-y-8">
+          {/* Lead-Based Paint Warning for Pre-1978 Properties */}
+          {data.propertyOverview?.yearBuilt && data.propertyOverview.yearBuilt < 1978 && (
+            <Card className="bg-gradient-to-br from-yellow-500/20 to-orange-500/10 border-yellow-500/40">
+              <div className="flex items-start gap-4">
+                <div className="w-14 h-14 bg-yellow-500/40 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle className="w-7 h-7 text-yellow-300" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-display text-xl font-bold text-yellow-300 mb-3">
+                    Lead-Based Paint Disclosure
+                  </h3>
+                  <div className="bg-yellow-500/20 border border-yellow-400/30 rounded-lg px-4 py-3 mb-4">
+                    <p className="text-sm font-semibold text-yellow-200">
+                      Built in {data.propertyOverview.yearBuilt} - Before 1978
+                    </p>
+                  </div>
+                  <p className="text-white leading-relaxed mb-4 text-base">
+                    This property was built before 1978, when lead-based paint was banned in the United States.
+                    Homes built before this date may contain lead-based paint, which can pose health risks,
+                    especially to young children and pregnant women.
+                  </p>
+                  <div className="bg-white/10 rounded-lg p-4 space-y-3">
+                    <h4 className="font-semibold text-white mb-2">Important Information:</h4>
+                    <ul className="space-y-2 text-sm text-white/90">
+                      <li className="flex items-start gap-2">
+                        <span className="text-yellow-300 mt-1">•</span>
+                        <span>Federal law requires sellers to disclose known lead-based paint hazards</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-yellow-300 mt-1">•</span>
+                        <span>Buyers have the right to a 10-day period to conduct a lead inspection</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-yellow-300 mt-1">•</span>
+                        <span>Lead inspection costs typically range from $300-$500</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-yellow-300 mt-1">•</span>
+                        <span>Lead paint remediation costs can range from $8,000-$15,000+ depending on extent</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-yellow-500/30">
+                    <p className="text-sm text-white/80">
+                      <strong className="text-yellow-300">Recommendation:</strong> Request a professional lead-based paint inspection before purchase.
+                      Contact a certified lead inspector or risk assessor for testing.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )}
+
           {/* What's Special */}
           {data.propertyOverview?.description &&
             data.propertyOverview.description !== "" && (
@@ -1016,6 +1075,188 @@ export default function AnalysisResults({
             </div>
           </div>
         </Card>
+      )}
+
+      {activeTab === "environmental" && (
+        <div className="space-y-6">
+          {data.environmental?.flood ? (
+            <>
+              {/* Hero Section - Flood Risk Score */}
+              <Card className="relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-luxury-blue/20 to-luxury-gold/10 rounded-full blur-3xl"></div>
+                <div className="relative">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-8 pb-8 border-b border-white/10">
+                    <div className="flex items-center gap-6">
+                      <div className={`w-24 h-24 rounded-xl flex items-center justify-center ${
+                        data.environmental.flood.floodFactorScore <= 2
+                          ? "bg-green-500"
+                          : data.environmental.flood.floodFactorScore <= 4
+                          ? "bg-blue-500"
+                          : data.environmental.flood.floodFactorScore <= 6
+                          ? "bg-yellow-500"
+                          : data.environmental.flood.floodFactorScore <= 8
+                          ? "bg-orange-500"
+                          : "bg-red-500"
+                      }`}>
+                        <span className="text-4xl font-bold text-white">
+                          {data.environmental.flood.floodFactorScore}/10
+                        </span>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-2xl font-bold text-white">
+                            {data.environmental.flood.floodFactorSeverity}
+                          </h3>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="bg-luxury-blue/20 border border-luxury-blue/40 text-luxury-blue text-xs font-bold px-4 py-2 rounded-lg">
+                            FLOOD FACTOR®
+                          </div>
+                          <div className={`px-4 py-2 rounded-lg text-xs font-bold ${
+                            data.environmental.flood.riskTrend === "increasing"
+                              ? "bg-red-500/20 border border-red-500/40 text-red-400"
+                              : "bg-green-500/20 border border-green-500/40 text-green-400"
+                          }`}>
+                            {data.environmental.flood.riskTrend === "increasing" ? "↗ INCREASING" : "→ STABLE"}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-center md:text-right">
+                      <p className="text-white/60 text-sm mb-1">Property Address</p>
+                      <p className="text-white font-semibold text-lg">
+                        {safeString(data.propertyOverview?.streetAddress)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <div className="bg-white/5 rounded-xl p-6 mb-6">
+                    <p className="text-white/90 leading-relaxed text-base">
+                      {data.environmental.flood.description} This property's flood risk is{" "}
+                      <span className={`font-bold ${
+                        data.environmental.flood.riskTrend === "increasing"
+                          ? "text-red-400"
+                          : "text-green-400"
+                      }`}>
+                        {data.environmental.flood.riskTrend}
+                      </span>{" "}
+                      over time.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              {/* FEMA Zone & Insurance Grid */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* FEMA Zone Card */}
+                <Card className="bg-gradient-to-br from-luxury-blue/10 to-luxury-blue/5 border-luxury-blue/30">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-14 h-14 bg-luxury-blue/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <span className="text-xl font-bold text-luxury-blue">FEMA</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-display text-xl font-bold mb-2 text-luxury-blue">
+                        FEMA Flood Zone
+                      </h3>
+                      <div className="bg-luxury-blue/20 border border-luxury-blue/40 rounded-lg px-4 py-3 inline-block">
+                        <p className="text-2xl font-bold text-white">
+                          {data.environmental.flood.femaZone}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-white/70 text-sm mt-4">
+                    FEMA flood zones indicate the level of flood risk in different areas. This classification helps determine insurance requirements and rates.
+                  </p>
+                </Card>
+
+                {/* Insurance Card */}
+                <Card className={`bg-gradient-to-br ${
+                  data.environmental.flood.insuranceRequired
+                    ? "from-red-500/10 to-orange-500/5 border-red-500/30"
+                    : "from-luxury-gold/10 to-luxury-gold/5 border-luxury-gold/30"
+                }`}>
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                      data.environmental.flood.insuranceRequired
+                        ? "bg-red-500/30"
+                        : "bg-luxury-gold/30"
+                    }`}>
+                      <DollarSign className={`w-7 h-7 ${
+                        data.environmental.flood.insuranceRequired
+                          ? "text-red-400"
+                          : "text-luxury-gold"
+                      }`} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className={`font-display text-xl font-bold mb-2 ${
+                        data.environmental.flood.insuranceRequired
+                          ? "text-red-400"
+                          : "text-luxury-gold"
+                      }`}>
+                        Flood Insurance
+                      </h3>
+                      <div className={`rounded-lg px-3 py-1 inline-block text-sm font-bold ${
+                        data.environmental.flood.insuranceRequired
+                          ? "bg-red-500/20 border border-red-500/40 text-red-400"
+                          : "bg-green-500/20 border border-green-500/40 text-green-400"
+                      }`}>
+                        {data.environmental.flood.insuranceRequired ? "REQUIRED" : "OPTIONAL"}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <p className="text-white/70 text-sm mb-3">
+                      Estimated Annual Cost:
+                    </p>
+                    <p className="text-3xl font-bold text-white">
+                      ${formatNumber(data.environmental.flood.estimatedInsuranceMin)} - ${formatNumber(data.environmental.flood.estimatedInsuranceMax)}
+                    </p>
+                    <p className="text-white/50 text-xs mt-2">per year</p>
+                  </div>
+                </Card>
+              </div>
+
+              {/* Insurance Details */}
+              <Card className="bg-gradient-to-br from-white/5 to-white/10">
+                <h3 className="font-display text-xl font-bold mb-4 flex items-center gap-2">
+                  <AlertTriangle className="w-6 h-6 text-luxury-gold" />
+                  Insurance Requirements
+                </h3>
+                <p className="text-white/80 leading-relaxed text-base">
+                  {data.environmental.flood.insuranceRequired
+                    ? `This property is located in FEMA Zone ${data.environmental.flood.femaZone}. Flood insurance is federally required to obtain a mortgage for properties in this zone.`
+                    : `This property is located in FEMA Zone ${data.environmental.flood.femaZone}. While flood insurance is not federally required to obtain a mortgage, you may want to purchase it to protect your investment.`}
+                </p>
+              </Card>
+
+              {/* Disclaimer */}
+              <Card className="bg-white/5 border-white/10">
+                <p className="text-xs text-white/50 leading-relaxed">
+                  <strong className="text-white/70">Data Sources & Disclaimers:</strong> Flood risk data including FEMA ratings is provided by First Street Foundation®.
+                  The Flood Factor score is designed to approximate flood risk and not intended to be used to place a value on a property
+                  or determine flood insurance requirements. Insurance quotes are based on $250K in building and $100K in contents coverage.
+                  Always consult with insurance professionals for accurate quotes.
+                </p>
+              </Card>
+            </>
+          ) : (
+            <Card>
+              <div className="text-center py-16">
+                <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <AlertTriangle className="w-10 h-10 text-white/30" />
+                </div>
+                <h3 className="text-2xl font-bold text-white/70 mb-3">
+                  Flood Risk Data Unavailable
+                </h3>
+                <p className="text-white/50 text-base max-w-md mx-auto">
+                  Environmental risk data is not currently available for this property. This may be due to limited data coverage in this area.
+                </p>
+              </div>
+            </Card>
+          )}
+        </div>
       )}
     </div>
   );

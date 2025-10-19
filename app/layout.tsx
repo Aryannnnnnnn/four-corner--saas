@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import SessionProvider from "../components/providers/SessionProvider";
+import PhoneNumberProvider from "../components/providers/PhoneNumberProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({
@@ -27,7 +28,9 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body>
         <SessionProvider>
-          {children}
+          <PhoneNumberProvider>
+            {children}
+          </PhoneNumberProvider>
           <Toaster
             position="top-right"
             toastOptions={{

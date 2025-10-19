@@ -3,7 +3,7 @@
 
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import AnalysisResults from "@/components/analysis/AnalysisResults";
 import Footer from "@/components/layout/Footer";
@@ -17,9 +17,17 @@ function AnalyzeContent() {
   const [propertyData, setPropertyData] = useState<PropertyData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState("");
+  const hasAnalyzedRef = useRef(false);
 
   const analyzeProperty = useCallback(
     async (address: string, zpid?: string) => {
+      // Prevent duplicate calls
+      if (hasAnalyzedRef.current) {
+        console.log("Analysis already started, skipping duplicate call");
+        return;
+      }
+
+      hasAnalyzedRef.current = true;
       setIsAnalyzing(true);
       setError(null);
       setProgress("Initializing analysis...");
@@ -34,8 +42,23 @@ function AnalyzeContent() {
         });
 
         if (!response.ok) {
-          const errorData = await response.json();
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch {
+            throw new Error("Analysis failed");
+          }
           console.error("API Error:", errorData);
+
+          // Check for trial limit error
+          if (errorData.code === "TRIAL_LIMIT_REACHED") {
+            toast.error("Free trial limit reached. Please sign in to continue.");
+            setTimeout(() => {
+              router.push("/login");
+            }, 2000);
+            return;
+          }
+
           throw new Error(
             errorData.error || errorData.hint || "Analysis failed",
           );
@@ -133,6 +156,7 @@ function AnalyzeContent() {
               : [],
           },
           marketResearch: data.marketResearch || "",
+          environmental: data.environmental,
         };
 
         setPropertyData(validatedData);
@@ -143,11 +167,22 @@ function AnalyzeContent() {
           error instanceof Error ? error.message : "Failed to analyze property";
         setError(message);
         toast.error(message);
+
+        // Check if it's a trial limit error and redirect to login
+        if (
+          error instanceof Error &&
+          (message.includes("trial limit") ||
+            message.includes("TRIAL_LIMIT_REACHED"))
+        ) {
+          setTimeout(() => {
+            router.push("/login");
+          }, 2000);
+        }
       } finally {
         setIsAnalyzing(false);
       }
     },
-    [],
+    [router],
   );
 
   useEffect(() => {
@@ -159,7 +194,8 @@ function AnalyzeContent() {
     } else {
       setError("No address provided");
     }
-  }, [searchParams, analyzeProperty]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   if (isAnalyzing) {
     return (

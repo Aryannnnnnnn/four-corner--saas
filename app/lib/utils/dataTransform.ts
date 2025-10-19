@@ -6,6 +6,17 @@ export function transformApiResponseToPropertyData(
 ): PropertyData {
   const propertyDetails = apiResponse.rawApiData?.propertyDetails || {};
 
+  // Debug logging for environmental data
+  if (process.env.NODE_ENV === "development") {
+    console.log("=== Environmental Data Debug (dataTransform.ts) ===");
+    console.log("Has climate:", !!propertyDetails.climate);
+    console.log("Has climate.floodSources:", !!propertyDetails.climate?.floodSources);
+    console.log("Has climate.floodSources.primary:", !!propertyDetails.climate?.floodSources?.primary);
+    console.log("climate.floodSources structure:", propertyDetails.climate?.floodSources);
+    console.log("Has climate.fireSources:", !!propertyDetails.climate?.fireSources);
+    console.log("Has climate.airSources:", !!propertyDetails.climate?.airSources);
+  }
+
   // Helper function to parse price values
   const parsePrice = (priceValue: any): number | null => {
     if (!priceValue) return null;
@@ -295,6 +306,85 @@ export function transformApiResponseToPropertyData(
 
     // Charts (preserve existing charts if available)
     charts: apiResponse.charts,
+
+    // Environmental Risk Data - extract from climate object
+    environmental: (() => {
+      const envData = apiResponse.environmental ||
+        apiResponse.environmentalRisks ||
+        (propertyDetails.climate
+          ? {
+              flood: propertyDetails.climate.floodSources?.primary
+                ? {
+                  floodFactorScore:
+                    propertyDetails.climate.floodSources.primary.riskScore?.value || 1,
+                  floodFactorSeverity:
+                    propertyDetails.climate.floodSources.primary.riskScore?.label ||
+                    "Unknown",
+                  riskTrend:
+                    propertyDetails.climate.floodSources.primary.probability?.[
+                      propertyDetails.climate.floodSources.primary.probability.length - 1
+                    ]?.probability >
+                    propertyDetails.climate.floodSources.primary.probability?.[0]
+                      ?.probability
+                      ? "increasing"
+                      : "not changing",
+                  femaZone:
+                    propertyDetails.climate.floodSources.primary.femaZone
+                      ?.replace(/_/g, " ")
+                      .replace(/X UNSHADED/i, "X (unshaded)")
+                      .replace(/X SHADED/i, "X (shaded)") || "Unknown",
+                  insuranceRequired:
+                    propertyDetails.climate.floodSources.primary
+                      .insuranceSeparatePolicy === "REQUIRED",
+                  estimatedInsuranceMin: 435,
+                  estimatedInsuranceMax: 1294,
+                  description: `This property has ${propertyDetails.climate.floodSources.primary.riskScore?.label?.toLowerCase() || "unknown"} flood risk in the Flood Factor™ model.`,
+                }
+              : undefined,
+            fire: propertyDetails.climate.fireSources?.primary
+              ? {
+                  riskLevel:
+                    propertyDetails.climate.fireSources.primary.riskScore?.label ||
+                    "Unknown",
+                  description: `This property has ${propertyDetails.climate.fireSources.primary.riskScore?.label?.toLowerCase() || "unknown"} wildfire risk.${propertyDetails.climate.fireSources.primary.historicCountAll ? ` There have been ${propertyDetails.climate.fireSources.primary.historicCountAll} historic fire incidents in the area.` : ""}`,
+                }
+              : undefined,
+            airQuality: propertyDetails.climate.airSources?.primary
+              ? {
+                  aqi:
+                    propertyDetails.climate.airSources.primary.riskScore?.value === 1
+                      ? 45
+                      : propertyDetails.climate.airSources.primary.riskScore?.value === 2
+                        ? 75
+                        : propertyDetails.climate.airSources.primary.riskScore?.value <=
+                            4
+                          ? 110
+                          : 155,
+                  category:
+                    propertyDetails.climate.airSources.primary.riskScore?.value === 1
+                      ? "Good"
+                      : propertyDetails.climate.airSources.primary.riskScore?.value === 2
+                        ? "Moderate"
+                        : propertyDetails.climate.airSources.primary.riskScore?.value <=
+                            4
+                          ? "Unhealthy for Sensitive Groups"
+                          : "Unhealthy",
+                  description: `Air quality risk is ${propertyDetails.climate.airSources.primary.riskScore?.label?.toLowerCase() || "unknown"} for this area.${propertyDetails.climate.airSources.primary.badAirDays?.[0]?.dayCount === 0 ? " No bad air days are expected currently." : ""}`,
+                }
+              : undefined,
+            earthquake: undefined, // Not provided in Zillow data
+            noise: undefined, // Not provided in Zillow data
+          }
+        : undefined);
+
+      if (process.env.NODE_ENV === "development") {
+        console.log("=== Final environmental data ===");
+        console.log("envData:", envData);
+        console.log("Has flood:", !!envData?.flood);
+      }
+
+      return envData;
+    })(),
   };
 
   return transformedData;

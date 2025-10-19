@@ -48,7 +48,7 @@ export default function HomeFinancingHero() {
             <motion.div className="inline-block" variants={itemVariants}>
               <div className="w-12 h-1 bg-[#21266c] mb-4"></div>
               <span className="text-sm font-semibold text-gray-600 uppercase tracking-[0.2em]">
-                Your Guide to Home Financing
+                Your Guide to Financing
               </span>
             </motion.div>
 
@@ -58,7 +58,7 @@ export default function HomeFinancingHero() {
               style={{ fontFamily: "Coconat" }}
               variants={itemVariants}
             >
-              Home Financing{" "}
+              Financing{" "}
               <span className="block">Basics</span>
             </motion.h1>
 

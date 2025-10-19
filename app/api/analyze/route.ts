@@ -7,6 +7,7 @@ import {
   getIpFromRequest,
   getUserAgentFromRequest,
 } from "@/app/lib/utils/activityLogger";
+import { incrementTrialUsage } from "@/app/lib/utils/trialLimit";
 
 // Timeout duration for webhook (2 minutes)
 const WEBHOOK_TIMEOUT = 120000;
@@ -15,26 +16,22 @@ export async function POST(req: NextRequest) {
   try {
     // Check authentication
     const session = await auth();
+    const ipAddress = getIpFromRequest(req);
 
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: "Unauthorized. Please sign in to analyze properties." },
-        { status: 401 },
-      );
-    }
+    // Rate limiting for authenticated users only (10 per hour)
+    if (session?.user) {
+      const identifier = session.user.email || session.user.id;
+      const { success, reset } = await analysisRateLimit.limit(identifier);
 
-    // Rate limiting - 10 analyses per hour per user
-    const identifier = session.user.email || session.user.id;
-    const { success, reset } = await analysisRateLimit.limit(identifier);
-
-    if (!success) {
-      const minutesLeft = Math.ceil((reset - Date.now()) / 60000);
-      return NextResponse.json(
-        {
-          error: `Analysis limit reached (10 per hour). Try again in ${minutesLeft} minute${minutesLeft !== 1 ? "s" : ""}.`,
-        },
-        { status: 429 },
-      );
+      if (!success) {
+        const minutesLeft = Math.ceil((reset - Date.now()) / 60000);
+        return NextResponse.json(
+          {
+            error: `Analysis limit reached (10 per hour). Try again in ${minutesLeft} minute${minutesLeft !== 1 ? "s" : ""}.`,
+          },
+          { status: 429 },
+        );
+      }
     }
 
     // Parse and validate request body
@@ -89,7 +86,7 @@ export async function POST(req: NextRequest) {
         },
         body: JSON.stringify({
           address: address.trim(),
-          userId: session.user.id,
+          userId: session?.user?.id || "anonymous",
           requestedAt: new Date().toISOString(),
         }),
         signal: controller.signal,
@@ -186,6 +183,15 @@ export async function POST(req: NextRequest) {
     let rawData;
     try {
       rawData = await webhookResponse.json();
+
+      // Debug logging for climate data
+      if (process.env.NODE_ENV === "development") {
+        console.log("=== /api/analyze Climate Data Debug ===");
+        console.log("Has rawApiData:", !!rawData.rawApiData);
+        console.log("Has propertyDetails:", !!rawData.rawApiData?.propertyDetails);
+        console.log("Has climate:", !!rawData.rawApiData?.propertyDetails?.climate);
+        console.log("Climate floodSources:", rawData.rawApiData?.propertyDetails?.climate?.floodSources);
+      }
     } catch (error) {
       console.error("Failed to parse webhook response:", error);
       return NextResponse.json(
@@ -303,66 +309,82 @@ export async function POST(req: NextRequest) {
       data.charts = { ...data.charts, ...mockCharts };
     }
 
-    // Automatically save the analysis to the library
-    try {
-      // Check if property already exists for this user
-      const { createClient } = await import("@supabase/supabase-js");
-
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-      if (!supabaseUrl || !supabaseServiceKey) {
-        throw new Error("Missing required Supabase environment variables");
+    // Increment trial usage for non-authenticated users after successful analysis
+    if (!session?.user && ipAddress) {
+      try {
+        await incrementTrialUsage(ipAddress);
+      } catch (error) {
+        console.error("Failed to increment trial usage:", error);
+        // Don't fail the analysis if incrementing fails
       }
-
-      const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-        auth: {
-          persistSession: false,
-        },
-      });
-
-      const { data: existingProperty } = await supabase
-        .from("properties")
-        .select("id")
-        .eq("user_id", session.user.id)
-        .eq("address", address.trim())
-        .maybeSingle();
-
-      if (!existingProperty) {
-        // Save the analysis to the library
-        const { error: saveError } = await supabase.from("properties").insert({
-          user_id: session.user.id,
-          address: address.trim(),
-          analysis_data: data,
-          created_at: new Date().toISOString(),
-        });
-
-        if (saveError) {
-          console.error("Failed to auto-save analysis to library:", saveError);
-          // Don't fail the analysis if saving fails, just log it
-        }
-      }
-    } catch (saveError) {
-      console.error("Error during auto-save:", saveError);
-      // Don't fail the analysis if saving fails
     }
 
-    // Log the property analysis activity
-    try {
-      await logActivity({
-        userId: session.user.id,
-        activityType: "property_analyzed",
-        metadata: {
-          address: address.trim(),
-          property_type: data.propertyOverview?.propertyType,
-          list_price: data.propertyOverview?.listPrice,
-        },
-        ipAddress: getIpFromRequest(req),
-        userAgent: getUserAgentFromRequest(req),
-      });
-    } catch (logError) {
-      console.error("Failed to log activity:", logError);
-      // Don't fail the analysis if logging fails
+    // Automatically save the analysis to the library (authenticated users only)
+    if (session?.user) {
+      try {
+        // Check if property already exists for this user
+        const { createClient } = await import("@supabase/supabase-js");
+
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+        if (!supabaseUrl || !supabaseServiceKey) {
+          throw new Error("Missing required Supabase environment variables");
+        }
+
+        const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+          auth: {
+            persistSession: false,
+          },
+        });
+
+        const { data: existingProperty } = await supabase
+          .from("properties")
+          .select("id")
+          .eq("user_id", session.user.id)
+          .eq("address", address.trim())
+          .maybeSingle();
+
+        if (!existingProperty) {
+          // Save the analysis to the library
+          const { error: saveError } = await supabase
+            .from("properties")
+            .insert({
+              user_id: session.user.id,
+              address: address.trim(),
+              analysis_data: data,
+              created_at: new Date().toISOString(),
+            });
+
+          if (saveError) {
+            console.error("Failed to auto-save analysis to library:", saveError);
+            // Don't fail the analysis if saving fails, just log it
+          }
+        }
+      } catch (saveError) {
+        console.error("Error during auto-save:", saveError);
+        // Don't fail the analysis if saving fails
+      }
+    }
+
+    // Log the property analysis activity (authenticated users only)
+    if (session?.user) {
+      try {
+        await logActivity({
+          userId: session.user.id,
+          activityType: "property_analyzed",
+          metadata: {
+            address: address.trim(),
+            property_type: data.propertyOverview?.propertyType,
+            list_price: data.propertyOverview?.listPrice,
+          },
+          ipAddress: getIpFromRequest(req),
+          userAgent: getUserAgentFromRequest(req),
+        });
+      } catch (logError) {
+        console.error("Failed to log activity:", logError);
+        // Don't fail the analysis if logging fails
+      }
     }
 
     // Return successful response

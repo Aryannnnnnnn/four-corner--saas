@@ -2,6 +2,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import HomeFinancingHero from "@/components/home-financing/HomeFinancingHero";
 import FinancingStepsSection from "@/components/home-financing/FinancingStepsSection";
+import HomeBuyingGuideSection from "@/components/home/HomeBuyingGuideSection";
+import FinancingCTA from "@/components/home-financing/FinancingCTA";
 
 const HomeFinancing = () => {
   return (
@@ -9,6 +11,8 @@ const HomeFinancing = () => {
       <Header />
       <HomeFinancingHero />
       <FinancingStepsSection />
+      <HomeBuyingGuideSection />
+      <FinancingCTA />
       <Footer />
     </>
   );
