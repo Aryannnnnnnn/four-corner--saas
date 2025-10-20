@@ -136,13 +136,13 @@ const Footer: React.FC = () => {
                   Library
                 </a>
                 <a
-                  href="/library"
+                  href="/profile"
                   className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Profile
                 </a>
                 <a
-                  href="/library"
+                  href="/settings"
                   className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
                 >
                   Settings
