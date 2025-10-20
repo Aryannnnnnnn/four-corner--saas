@@ -60,6 +60,13 @@ export default function Header() {
       icon: DollarSign,
     },
   ];
+  const financingNavigation = [
+    {
+      name: "Financing",
+      href: "/financing",
+      icon: DollarSign,
+    },
+  ];
 
   // Other navigation items (after the main ones)
   const otherNavigation: Array<{ name: string; href: string; icon: any }> = [
@@ -214,6 +221,19 @@ export default function Header() {
 
             {/* 5. Home Financing Navigation */}
             {homeFinancingNavigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
+                  pathname === item.href && "text-gray-900 border-blue-600",
+                )}
+              >
+                <span>{item.name}</span>
+              </Link>
+            ))}
+            {/* 5. Home Financing Navigation */}
+            {financingNavigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}

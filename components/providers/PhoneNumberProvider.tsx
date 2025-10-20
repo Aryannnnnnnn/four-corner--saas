@@ -30,6 +30,13 @@ export default function PhoneNumberProvider({
       if (hasCheckedRef.current) return;
       hasCheckedRef.current = true;
 
+      // Check if user has skipped the modal before
+      const hasSkipped = localStorage.getItem("phoneNumberModalSkipped") === "true";
+      if (hasSkipped) {
+        setShowModal(false);
+        return;
+      }
+
       // Fetch user profile to check phone number
       fetch("/api/user/profile", {
         cache: "no-store",
@@ -54,11 +61,15 @@ export default function PhoneNumberProvider({
     }
   }, [session?.user?.email, status]);
 
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <>
       {children}
-      {/* Don't pass onClose - user must complete phone entry */}
-      <PhoneNumberModal isOpen={showModal} />
+      {/* Pass onClose to allow users to skip the modal */}
+      <PhoneNumberModal isOpen={showModal} onClose={handleClose} />
     </>
   );
 }

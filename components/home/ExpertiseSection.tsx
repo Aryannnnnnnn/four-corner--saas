@@ -11,15 +11,7 @@ const ExpertiseSection: React.FC = () => {
     visible: { opacity: 1, x: 0 }
   };
 
-  const fadeInRight = {
-    hidden: { opacity: 0, x: 30 },
-    visible: { opacity: 1, x: 0 }
-  };
-
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
+  // Removed unused animation variants: fadeInRight, fadeInUp
 
   const scaleIn = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -85,22 +77,6 @@ const ExpertiseSection: React.FC = () => {
               />
             </motion.div>
 
-            {/* Floating Stats Card - Bottom Left */}
-            <motion.div
-              className="absolute -bottom-6 left-8 bg-white p-6 rounded-2xl shadow-2xl border border-gray-100"
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ delay: 0.8 }}
-            >
-              <div className="text-[#21266c] text-5xl font-light mb-1" style={{ fontFamily: "Coconat" }}>
-                4+
-              </div>
-              <div className="text-gray-500 text-xs uppercase tracking-wider">
-                Years of Excellence
-              </div>
-            </motion.div>
           </div>
 
           {/* Right Side - Content with Asymmetric Layout */}
@@ -136,10 +112,10 @@ const ExpertiseSection: React.FC = () => {
                 ))}
               </motion.h3>
               <p className="text-gray-600 text-base leading-relaxed mb-4">
-                Since 2017, our founder has been dedicated to serving Vermont's real estate community, specializing in the Bennington area. In 2021, Four Corner Properties was established with a vision to deliver personalized, expert guidance to every client. Within our first year, we successfully closed over 30 properties, establishing ourselves as trusted advisors in Southern Vermont.
+                Our founder has been dedicated to serving Vermont's real estate community, specializing in the Bennington area. Four Corner Properties was established with a vision to deliver personalized, expert guidance to every client. Establishing ourselves as trusted advisors in Southern Vermont.
               </p>
               <p className="text-gray-600 text-base leading-relaxed mb-6">
-                Renowned for exceptional service to first-time buyers and sellers, as well as out-of-state clients relocating to Southern Vermont, our team is celebrated for educational support and dedicated guidance throughout every transaction. Deeply rooted in the Bennington community since 2013, we combine local expertise with genuine care to navigate each client toward their real estate goals with confidence and clarity.
+                Renowned for exceptional service to first-time buyers and sellers, as well as out-of-state clients relocating to Southern Vermont, our team is celebrated for educational support and dedicated guidance throughout every transaction. Deeply rooted in the Bennington community we combine local expertise with genuine care to navigate each client toward their real estate goals with confidence and clarity.
               </p>
 
               <button className="inline-flex items-center gap-2 text-[#21266c] font-semibold text-sm border-b-2 border-[#21266c] pb-1 hover:gap-4 transition-all duration-300"
@@ -148,58 +124,6 @@ const ExpertiseSection: React.FC = () => {
                 <span>SEE DETAILS</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
-
-            {/* Floating Stats - Staggered */}
-            <div className="space-y-6 pt-8">
-              <motion.div
-                className="flex items-end gap-12"
-                variants={fadeInRight}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ delay: 0.6 }}
-              >
-                <div>
-                  <div className="text-[#21266c] text-5xl font-light mb-2" style={{ fontFamily: "Coconat" }}>
-                    200+
-                  </div>
-                  <div className="text-gray-500 text-xs uppercase tracking-wider">
-                    Properties<br />Sold
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[#21266c] text-5xl font-light mb-2" style={{ fontFamily: "Coconat" }}>
-                    100%
-                  </div>
-                  <div className="text-gray-500 text-xs uppercase tracking-wider">
-                    Client<br />Satisfaction
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="bg-gray-50 p-6 rounded-2xl"
-                variants={fadeInRight}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ delay: 0.8 }}
-              >
-                <div className="text-[#21266c] text-4xl font-light mb-3" style={{ fontFamily: "Coconat" }}>
-                  $27 Million +
-                </div>
-                <div className="text-gray-500 text-xs uppercase tracking-wider mb-4">
-                  Total Sales Volume
-                </div>
-                <button
-                  onClick={() => window.location.href = "/about"}
-                  className="inline-flex items-center gap-2 text-[#21266c] font-semibold text-sm hover:gap-4 transition-all duration-300"
-                >
-                  <span>EXPLORE MORE</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </motion.div>
             </div>
           </div>
         </div>

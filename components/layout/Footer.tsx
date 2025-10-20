@@ -155,51 +155,6 @@ const Footer: React.FC = () => {
                 </a>
               </nav>
             </div>
-
-            {/* Socials */}
-            <div className="space-y-4">
-              <h4
-                className="text-[#21266c] text-lg md:text-xl font-medium"
-                style={{ fontFamily: "Coconat" }}
-              >
-                Socials
-              </h4>
-
-              <div className="space-y-3" style={{ fontFamily: "Inter" }}>
-                <a
-                  href="https://instagram.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
-                >
-                  Instagram
-                </a>
-               <a
-                  href="https://instagram.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
-                >
-                  Facebook
-                </a>
-                <a
-                  href="https://instagram.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
-                >
-                  LinkedIn Network
-                </a>
-                <a
-                  href="https://instagram.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-gray-700 text-base hover:text-[#21266c] transition-colors duration-300"
-                >
-                  X.com
-                </a>
-              </div>
-            </div>
           </div>
 
           {/* Newsletter Signup */}

@@ -45,20 +45,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if phone number already exists for another user
-    const { data: existingPhone } = await supabase
-      .from("users")
-      .select("id")
-      .eq("phone", phoneDigits)
-      .neq("id", session.user.id)
-      .maybeSingle();
-
-    if (existingPhone) {
-      return NextResponse.json(
-        { error: "This phone number is already registered to another account" },
-        { status: 409 }
-      );
-    }
+    // REMOVED: Phone number uniqueness check - same number can be used across multiple accounts
 
     // Update user phone number in database
     const { data, error } = await supabase

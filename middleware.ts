@@ -20,6 +20,7 @@ export default auth((req) => {
     "/analysis",
     "/analyze",
     "/search",
+    "/financing",
   ];
 
   // Check if current path is a public route

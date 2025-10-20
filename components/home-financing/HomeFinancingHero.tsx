@@ -41,8 +41,7 @@ export default function HomeFinancingHero() {
             className="space-y-8"
             variants={containerVariants}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            animate="visible"
           >
             {/* Eyebrow */}
             <motion.div className="inline-block" variants={itemVariants}>
@@ -97,8 +96,7 @@ export default function HomeFinancingHero() {
             className="relative"
             variants={imageVariants}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            animate="visible"
           >
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <img

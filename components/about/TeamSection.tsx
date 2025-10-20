@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Phone, MapPin, Calendar, X, Linkedin, Badge } from "lucide-react";
+import { Mail, Phone, MapPin, Calendar, X, Badge } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface TeamMember {
@@ -17,7 +17,6 @@ interface TeamMember {
   specialties: string[];
   location: string;
   languages: string[];
-  linkedin?: string;
 }
 
 const TeamSection: React.FC = () => {
@@ -60,7 +59,6 @@ const TeamSection: React.FC = () => {
       specialties: ["Luxury Estates", "Investment Properties", "Historic Homes"],
       location: "Bennington, Vermont",
       languages: ["English"],
-      linkedin: "https://linkedin.com/in/lorihurley",
     },
     {
       id: 2,
@@ -76,7 +74,6 @@ const TeamSection: React.FC = () => {
       specialties: ["Luxury Estates", "Investment Properties", "Historic Homes"],
       location: "Bennington, Vermont",
       languages: ["English"],
-      linkedin: "https://linkedin.com/in/jameshurley",
     },
     {
       id: 3,
@@ -300,18 +297,6 @@ const TeamSection: React.FC = () => {
                       <p className="text-sm font-medium text-gray-900">{selectedMember.location}</p>
                     </div>
                   </div>
-
-                  {selectedMember.linkedin && (
-                    <a href={selectedMember.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-600 transition-colors">
-                        <Linkedin className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-xs text-gray-500 uppercase">LinkedIn</p>
-                        <p className="text-sm font-medium text-blue-600 group-hover:underline">View Profile</p>
-                      </div>
-                    </a>
-                  )}
                 </div>
               </div>
 

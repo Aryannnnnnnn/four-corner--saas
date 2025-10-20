@@ -15,6 +15,14 @@ export default function PhoneNumberModal({ isOpen, onClose }: PhoneNumberModalPr
 
   if (!isOpen) return null;
 
+  const handleSkip = () => {
+    // Store skip preference in localStorage to not show modal again
+    localStorage.setItem("phoneNumberModalSkipped", "true");
+    if (onClose) {
+      onClose();
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -77,8 +85,9 @@ export default function PhoneNumberModal({ isOpen, onClose }: PhoneNumberModalPr
         {/* Close button - only if onClose is provided */}
         {onClose && (
           <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            onClick={handleSkip}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors hover:bg-gray-100 rounded-full p-1"
+            title="Skip for now"
           >
             <X className="w-6 h-6" />
           </button>
