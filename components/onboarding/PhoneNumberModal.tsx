@@ -80,8 +80,8 @@ export default function PhoneNumberModal({ isOpen, onClose }: PhoneNumberModalPr
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8 sm:p-10">
+    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto">
+      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl p-6 sm:p-8 md:p-10 my-8 sm:my-0">
         {/* Close button - only if onClose is provided */}
         {onClose && (
           <button
@@ -94,20 +94,20 @@ export default function PhoneNumberModal({ isOpen, onClose }: PhoneNumberModalPr
         )}
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-5">
-            <Phone className="w-10 h-10 text-blue-600" />
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5">
+            <Phone className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" />
           </div>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
             Complete Your Profile
           </h2>
-          <p className="text-gray-600 text-base sm:text-lg leading-relaxed max-w-md mx-auto">
+          <p className="text-gray-600 text-sm sm:text-base md:text-lg leading-relaxed max-w-md mx-auto">
             We need your phone number to provide you with the best service and property updates
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           {/* Phone Number */}
           <div className="space-y-2">
             <label htmlFor="phone" className="block text-sm font-semibold text-gray-700">
@@ -133,9 +133,9 @@ export default function PhoneNumberModal({ isOpen, onClose }: PhoneNumberModalPr
           </div>
 
           {/* Why we need this */}
-          <div className="bg-blue-50 border border-blue-100 rounded-lg p-5">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Why we need this:</h3>
-            <ul className="text-sm text-gray-700 space-y-2">
+          <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 sm:p-5">
+            <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-2 sm:mb-3">Why we need this:</h3>
+            <ul className="text-xs sm:text-sm text-gray-700 space-y-1.5 sm:space-y-2">
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>
                 <span>Property alerts and updates</span>
@@ -159,7 +159,7 @@ export default function PhoneNumberModal({ isOpen, onClose }: PhoneNumberModalPr
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 sm:py-3.5 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
           >
             {isLoading ? (
               <>
@@ -175,7 +175,7 @@ export default function PhoneNumberModal({ isOpen, onClose }: PhoneNumberModalPr
         </form>
 
         {/* Note */}
-        <p className="text-xs text-gray-500 text-center mt-6">
+        <p className="text-xs text-gray-500 text-center mt-4 sm:mt-6">
           Your phone number will be kept private and secure
         </p>
       </div>
