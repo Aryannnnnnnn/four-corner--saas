@@ -179,23 +179,24 @@ export default function AnalysisResults({
   const squareFeet = Number(data.propertyOverview?.squareFeet) || 0;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 pt-32 pb-20">
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-20">
       {/* Header Actions */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-        <Button className="text-white hover:text-black" variant="ghost" onClick={onNewAnalysis}>
-          <ArrowLeft className="w-5 h-5 mr-2" />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <Button className="text-white hover:text-black text-sm sm:text-base" variant="ghost" onClick={onNewAnalysis}>
+          <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
           New Analysis
         </Button>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <Button variant="secondary" onClick={onViewLibrary}>
-            <Save className="w-5 h-5 mr-2" />
-            {showAutoSaved ? "View in Library" : "Back to Library"}
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          <Button variant="secondary" onClick={onViewLibrary} className="flex-1 sm:flex-none text-xs sm:text-sm">
+            <Save className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">{showAutoSaved ? "View in Library" : "Back to Library"}</span>
+            <span className="sm:hidden">Library</span>
           </Button>
 
-          <div className="relative group">
-            <Button variant="secondary" disabled={isExporting}>
-              <Download className="w-5 h-5 mr-2" />
+          <div className="relative group flex-1 sm:flex-none">
+            <Button variant="secondary" disabled={isExporting} className="w-full text-xs sm:text-sm">
+              <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
               {isExporting ? "Exporting..." : "Export"}
             </Button>
             {!isExporting && (
@@ -234,18 +235,18 @@ export default function AnalysisResults({
             )}
           </div>
 
-          <Button variant="secondary" onClick={handleShare}>
-            <Share2 className="w-5 h-5 mr-2" />
+          <Button variant="secondary" onClick={handleShare} className="flex-1 sm:flex-none text-xs sm:text-sm">
+            <Share2 className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
             Share
           </Button>
         </div>
       </div>
 
       {/* Property Header */}
-      <Card className="mb-8 p-6 bg-gradient-to-br from-white/5 to-white/10 border border-white/20">
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-6 mb-6">
-          <div className="flex-1">
-            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2 text-gradient">
+      <Card className="mb-6 sm:mb-8 p-4 sm:p-6 bg-gradient-to-br from-white/5 to-white/10 border border-white/20">
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
+          <div className="flex-1 w-full">
+            <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-gradient break-words">
               {safeString(data.propertyOverview?.streetAddress) || "Property Address"}
             </h1>
             <div className="flex items-center gap-2 text-white/70 mb-4">
@@ -316,39 +317,39 @@ export default function AnalysisResults({
 
         {/* One Line Summary */}
         {data.aiAnalysis?.oneLineSummary && (
-          <div className="bg-luxury-blue/10 border border-luxury-blue/20 rounded-xl p-6 mb-6">
-            <div className="flex items-center gap-3 mb-3">
-              <Star className="w-6 h-6 text-luxury-blue" />
-              <h3 className="font-display text-xl font-bold text-luxury-blue">
+          <div className="bg-luxury-blue/10 border border-luxury-blue/20 rounded-xl p-4 sm:p-6 mb-4 sm:mb-6">
+            <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <Star className="w-5 h-5 sm:w-6 sm:h-6 text-luxury-blue flex-shrink-0" />
+              <h3 className="font-display text-lg sm:text-xl font-bold text-luxury-blue">
                 AI Summary
               </h3>
             </div>
-            <p className="text-white/90 text-lg font-semibold">
+            <p className="text-white/90 text-sm sm:text-base lg:text-lg font-semibold break-words">
               {safeString(data.aiAnalysis?.oneLineSummary)}
             </p>
           </div>
         )}
 
         {/* AI Recommendation */}
-        <div className="bg-gradient-to-r from-luxury-gold/10 to-blue-500/10 border border-luxury-gold/20 rounded-xl p-6">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-luxury-gold/20 rounded-xl flex items-center justify-center flex-shrink-0">
-              <TrendingUp className="w-6 h-6 text-luxury-gold" />
+        <div className="bg-gradient-to-r from-luxury-gold/10 to-blue-500/10 border border-luxury-gold/20 rounded-xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-luxury-gold/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-luxury-gold" />
             </div>
-            <div className="flex-1">
-              <h3 className="font-display text-xl font-bold mb-2 text-luxury-gold">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-display text-lg sm:text-xl font-bold mb-2 text-luxury-gold">
                 Investment Recommendation
               </h3>
-              <p className="text-white/90 text-base md:text-lg mb-3 font-semibold">
+              <p className="text-white/90 text-sm sm:text-base lg:text-lg mb-3 font-semibold break-words">
                 {safeString(data.aiAnalysis?.recommendation) ||
                   "Analyzing property..."}
               </p>
-              <p className="text-white/80 mb-2">
+              <p className="text-white/80 mb-2 text-sm sm:text-base break-words">
                 <strong className="text-luxury-blue">Value Assessment:</strong>{" "}
                 {safeString(data.aiAnalysis?.valueAssessment) ||
                   "Assessment in progress"}
               </p>
-              <p className="text-white/80">
+              <p className="text-white/80 text-sm sm:text-base break-words">
                 <strong className="text-green-500">Best For:</strong>{" "}
                 {safeString(data.analysisDetails?.bestFor) ||
                   "Investment analysis"}
@@ -397,15 +398,15 @@ export default function AnalysisResults({
       )}
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <Card className="p-6 bg-gradient-to-br from-white/5 to-white/10 border border-white/20 hover:border-green-500/30 transition-all">
           <div className="flex items-start justify-between mb-4">
-            <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
               <DollarSign className="w-6 h-6 text-green-500" />
             </div>
           </div>
           <p className="text-white/70 text-sm mb-1">List Price</p>
-          <p className="font-display text-2xl md:text-3xl font-bold">
+          <p className="font-display text-xl md:text-2xl lg:text-3xl font-bold break-words">
             {listPrice ? formatExactPrice(listPrice) : "Not Available"}
           </p>
           <p className="text-sm text-white/50 mt-2">
@@ -417,12 +418,12 @@ export default function AnalysisResults({
 
         <Card className="p-6 bg-gradient-to-br from-white/5 to-white/10 border border-white/20 hover:border-blue-500/30 transition-all">
           <div className="flex items-start justify-between mb-4">
-            <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
               <Home className="w-6 h-6 text-blue-500" />
             </div>
           </div>
           <p className="text-white/70 text-sm mb-1">Zestimate By Zillow</p>
-          <p className="font-display text-2xl md:text-3xl font-bold">
+          <p className="font-display text-xl md:text-2xl lg:text-3xl font-bold break-words">
             {zestimate > 0 ? formatExactPrice(zestimate) : "Not Available"}
           </p>
           <p
@@ -436,12 +437,12 @@ export default function AnalysisResults({
 
         <Card className="p-6 bg-gradient-to-br from-white/5 to-white/10 border border-white/20 hover:border-purple-500/30 transition-all">
           <div className="flex items-start justify-between mb-4">
-            <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
               <TrendingUp className="w-6 h-6 text-purple-500" />
             </div>
           </div>
           <p className="text-white/70 text-sm mb-1">5-Year ROI</p>
-          <p className="font-display text-1xl md:text-xl font-bold">
+          <p className="font-display text-xl md:text-2xl lg:text-3xl font-bold">
             {data.analysisDetails?.estimatedROI5Year || "15-25%"}
           </p>
           <p className="text-sm text-green-500 mt-2">Projected: N/A</p>
@@ -449,7 +450,7 @@ export default function AnalysisResults({
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 md:gap-4 mb-6 overflow-x-auto bg-gradient-to-br from-[#21266c]/20 to-luxury-blue/20 border-2 border-luxury-blue/40 rounded-xl p-3 shadow-lg">
+      <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6 overflow-x-auto bg-gradient-to-br from-[#21266c]/20 to-luxury-blue/20 border-2 border-luxury-blue/40 rounded-xl p-2 sm:p-3 shadow-lg scrollbar-hide">
         {[
           { id: "overview", label: "Overview" },
           { id: "features", label: "Facts & Features" },
@@ -477,47 +478,47 @@ export default function AnalysisResults({
           {/* Lead-Based Paint Warning for Pre-1978 Properties */}
           {data.propertyOverview?.yearBuilt && data.propertyOverview.yearBuilt < 1978 && (
             <Card className="bg-gradient-to-br from-yellow-500/20 to-orange-500/10 border-yellow-500/40">
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 bg-yellow-500/40 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle className="w-7 h-7 text-yellow-300" />
+              <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-yellow-500/40 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle className="w-6 h-6 sm:w-7 sm:h-7 text-yellow-300" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-display text-xl font-bold text-yellow-300 mb-3">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-display text-lg sm:text-xl font-bold text-yellow-300 mb-2 sm:mb-3">
                     Lead-Based Paint Disclosure
                   </h3>
-                  <div className="bg-yellow-500/20 border border-yellow-400/30 rounded-lg px-4 py-3 mb-4">
-                    <p className="text-sm font-semibold text-yellow-200">
+                  <div className="bg-yellow-500/20 border border-yellow-400/30 rounded-lg px-3 sm:px-4 py-2 sm:py-3 mb-3 sm:mb-4">
+                    <p className="text-xs sm:text-sm font-semibold text-yellow-200">
                       Built in {data.propertyOverview.yearBuilt} - Before 1978
                     </p>
                   </div>
-                  <p className="text-white leading-relaxed mb-4 text-base">
+                  <p className="text-white leading-relaxed mb-3 sm:mb-4 text-sm sm:text-base break-words">
                     This property was built before 1978, when lead-based paint was banned in the United States.
                     Homes built before this date may contain lead-based paint, which can pose health risks,
                     especially to young children and pregnant women.
                   </p>
-                  <div className="bg-white/10 rounded-lg p-4 space-y-3">
-                    <h4 className="font-semibold text-white mb-2">Important Information:</h4>
-                    <ul className="space-y-2 text-sm text-white/90">
+                  <div className="bg-white/10 rounded-lg p-3 sm:p-4 space-y-2 sm:space-y-3">
+                    <h4 className="font-semibold text-white text-sm sm:text-base mb-2">Important Information:</h4>
+                    <ul className="space-y-2 text-xs sm:text-sm text-white/90">
                       <li className="flex items-start gap-2">
-                        <span className="text-yellow-300 mt-1">•</span>
-                        <span>Federal law requires sellers to disclose known lead-based paint hazards</span>
+                        <span className="text-yellow-300 mt-1 flex-shrink-0">•</span>
+                        <span className="break-words">Federal law requires sellers to disclose known lead-based paint hazards</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-yellow-300 mt-1">•</span>
-                        <span>Buyers have the right to a 10-day period to conduct a lead inspection</span>
+                        <span className="text-yellow-300 mt-1 flex-shrink-0">•</span>
+                        <span className="break-words">Buyers have the right to a 10-day period to conduct a lead inspection</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-yellow-300 mt-1">•</span>
-                        <span>Lead inspection costs typically range from $300-$500</span>
+                        <span className="text-yellow-300 mt-1 flex-shrink-0">•</span>
+                        <span className="break-words">Lead inspection costs typically range from $300-$500</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-yellow-300 mt-1">•</span>
-                        <span>Lead paint remediation costs can range from $8,000-$15,000+ depending on extent</span>
+                        <span className="text-yellow-300 mt-1 flex-shrink-0">•</span>
+                        <span className="break-words">Lead paint remediation costs can range from $8,000-$15,000+ depending on extent</span>
                       </li>
                     </ul>
                   </div>
-                  <div className="mt-4 pt-4 border-t border-yellow-500/30">
-                    <p className="text-sm text-white/80">
+                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-yellow-500/30">
+                    <p className="text-xs sm:text-sm text-white/80 break-words">
                       <strong className="text-yellow-300">Recommendation:</strong> Request a professional lead-based paint inspection before purchase.
                       Contact a certified lead inspector or risk assessor for testing.
                     </p>
@@ -867,34 +868,34 @@ export default function AnalysisResults({
       )}
 
       {activeTab === "details" && (
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {/* Investment Breakdown */}
           <Card>
             <h2 className="section-title">Investment Breakdown</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between py-3 border-b border-white/10">
-                <span className="text-white/70">Purchase Price</span>
-                <span className="font-bold text-xl">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-center justify-between py-2 sm:py-3 border-b border-white/10 gap-2">
+                <span className="text-white/70 text-sm sm:text-base">Purchase Price</span>
+                <span className="font-bold text-base sm:text-lg md:text-xl break-words text-right">
                   {listPrice > 0 ? formatExactPrice(listPrice) : "N/A"}
                 </span>
               </div>
-              <div className="flex items-center justify-between py-3 border-b border-white/10">
-                <span className="text-white/70">
+              <div className="flex items-center justify-between py-2 sm:py-3 border-b border-white/10 gap-2">
+                <span className="text-white/70 text-sm sm:text-base">
                   Estimated Closing Costs (3%)
                 </span>
-                <span className="font-bold text-xl">
+                <span className="font-bold text-base sm:text-lg md:text-xl break-words text-right">
                   {listPrice > 0 ? formatExactPrice(listPrice * 0.03) : "N/A"}
                 </span>
               </div>
-              <div className="flex items-center justify-between py-3 border-b border-white/10">
-                <span className="text-white/70">Estimated Rehab/Repairs</span>
-                <span className="font-bold text-xl">
+              <div className="flex items-center justify-between py-2 sm:py-3 border-b border-white/10 gap-2">
+                <span className="text-white/70 text-sm sm:text-base">Estimated Rehab/Repairs</span>
+                <span className="font-bold text-base sm:text-lg md:text-xl break-words text-right">
                   {listPrice > 0 ? formatExactPrice(listPrice * 0.02) : "N/A"}
                 </span>
               </div>
-              <div className="flex items-center justify-between py-4 bg-luxury-gold/10 border border-luxury-gold/20 rounded-xl px-4">
-                <span className="font-bold text-lg">Total Investment</span>
-                <span className="font-display text-2xl font-bold text-luxury-gold">
+              <div className="flex items-center justify-between py-3 sm:py-4 bg-luxury-gold/10 border border-luxury-gold/20 rounded-xl px-3 sm:px-4 gap-2">
+                <span className="font-bold text-base sm:text-lg">Total Investment</span>
+                <span className="font-display text-lg sm:text-xl md:text-2xl font-bold text-luxury-gold break-words text-right">
                   {listPrice > 0 ? formatExactPrice(listPrice * 1.05) : "N/A"}
                 </span>
               </div>
@@ -905,17 +906,17 @@ export default function AnalysisResults({
           {data.costs && (
             <Card>
               <h2 className="section-title">Property Taxes</h2>
-              <div className="flex items-center justify-between py-4 bg-white/5 rounded-xl px-6">
+              <div className="flex items-center justify-between py-3 sm:py-4 bg-white/5 rounded-xl px-4 sm:px-6">
                 <div>
-                  <p className="text-white/70 text-sm mb-1">
+                  <p className="text-white/70 text-xs sm:text-sm mb-1">
                     Annual Property Tax
                   </p>
-                  <p className="font-display text-2xl font-bold">
+                  <p className="font-display text-xl sm:text-2xl font-bold break-words">
                     {data.costs.annualPropertyTax
                       ? formatExactPrice(data.costs.annualPropertyTax)
                       : "N/A"}
                   </p>
-                  <p className="text-white/60 text-sm mt-1">
+                  <p className="text-white/60 text-xs sm:text-sm mt-1">
                     Tax Year: {safeString(data.costs.taxYear)}
                   </p>
                 </div>
@@ -929,19 +930,19 @@ export default function AnalysisResults({
               <h2 className="section-title">Nearby Schools</h2>
               <div className="space-y-3">
                 {data.schools.map((school, index) => (
-                  <div key={index} className="p-4 bg-white/5 rounded-xl">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="font-bold text-lg">{safeString(school.name)}</p>
-                        <p className="text-white/60 text-sm">
+                  <div key={index} className="p-3 sm:p-4 bg-white/5 rounded-xl">
+                    <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-base sm:text-lg break-words">{safeString(school.name)}</p>
+                        <p className="text-white/60 text-xs sm:text-sm">
                           {safeString(school.grades)} | {safeString(school.type)}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-luxury-gold font-bold text-lg">
+                      <div className="text-left sm:text-right flex-shrink-0">
+                        <p className="text-luxury-gold font-bold text-base sm:text-lg">
                           Rating: {safeString(school.rating)}/10
                         </p>
-                        <p className="text-white/60 text-sm">
+                        <p className="text-white/60 text-xs sm:text-sm">
                           {safeString(school.distance)} miles
                         </p>
                       </div>
@@ -1078,16 +1079,16 @@ export default function AnalysisResults({
       )}
 
       {activeTab === "environmental" && (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {data.environmental?.flood ? (
             <>
               {/* Hero Section - Flood Risk Score */}
               <Card className="relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-luxury-blue/20 to-luxury-gold/10 rounded-full blur-3xl"></div>
                 <div className="relative">
-                  <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-8 pb-8 border-b border-white/10">
-                    <div className="flex items-center gap-6">
-                      <div className={`w-24 h-24 rounded-xl flex items-center justify-center ${
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-white/10">
+                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full md:w-auto">
+                      <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-xl flex items-center justify-center flex-shrink-0 ${
                         data.environmental.flood.floodFactorScore <= 2
                           ? "bg-green-500"
                           : data.environmental.flood.floodFactorScore <= 4
@@ -1098,21 +1099,21 @@ export default function AnalysisResults({
                           ? "bg-orange-500"
                           : "bg-red-500"
                       }`}>
-                        <span className="text-4xl font-bold text-white">
+                        <span className="text-3xl sm:text-4xl font-bold text-white">
                           {data.environmental.flood.floodFactorScore}/10
                         </span>
                       </div>
-                      <div>
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-2xl font-bold text-white">
+                      <div className="text-center sm:text-left">
+                        <div className="flex items-center justify-center sm:justify-start gap-3 mb-2">
+                          <h3 className="text-xl sm:text-2xl font-bold text-white break-words">
                             {data.environmental.flood.floodFactorSeverity}
                           </h3>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <div className="bg-luxury-blue/20 border border-luxury-blue/40 text-luxury-blue text-xs font-bold px-4 py-2 rounded-lg">
+                        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                          <div className="bg-luxury-blue/20 border border-luxury-blue/40 text-luxury-blue text-xs font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg">
                             FLOOD FACTOR®
                           </div>
-                          <div className={`px-4 py-2 rounded-lg text-xs font-bold ${
+                          <div className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-bold ${
                             data.environmental.flood.riskTrend === "increasing"
                               ? "bg-red-500/20 border border-red-500/40 text-red-400"
                               : "bg-green-500/20 border border-green-500/40 text-green-400"
@@ -1122,17 +1123,17 @@ export default function AnalysisResults({
                         </div>
                       </div>
                     </div>
-                    <div className="text-center md:text-right">
-                      <p className="text-white/60 text-sm mb-1">Property Address</p>
-                      <p className="text-white font-semibold text-lg">
+                    <div className="text-center md:text-right w-full md:w-auto">
+                      <p className="text-white/60 text-xs sm:text-sm mb-1">Property Address</p>
+                      <p className="text-white font-semibold text-base sm:text-lg break-words">
                         {safeString(data.propertyOverview?.streetAddress)}
                       </p>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <div className="bg-white/5 rounded-xl p-6 mb-6">
-                    <p className="text-white/90 leading-relaxed text-base">
+                  <div className="bg-white/5 rounded-xl p-4 sm:p-6 mb-4 sm:mb-6">
+                    <p className="text-white/90 leading-relaxed text-sm sm:text-base break-words">
                       {data.environmental.flood.description} This property's flood risk is{" "}
                       <span className={`font-bold ${
                         data.environmental.flood.riskTrend === "increasing"
@@ -1148,25 +1149,25 @@ export default function AnalysisResults({
               </Card>
 
               {/* FEMA Zone & Insurance Grid */}
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {/* FEMA Zone Card */}
                 <Card className="bg-gradient-to-br from-luxury-blue/10 to-luxury-blue/5 border-luxury-blue/30">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="w-14 h-14 bg-luxury-blue/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <span className="text-xl font-bold text-luxury-blue">FEMA</span>
+                  <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-luxury-blue/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <span className="text-base sm:text-xl font-bold text-luxury-blue">FEMA</span>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-display text-xl font-bold mb-2 text-luxury-blue">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-display text-lg sm:text-xl font-bold mb-2 text-luxury-blue">
                         FEMA Flood Zone
                       </h3>
-                      <div className="bg-luxury-blue/20 border border-luxury-blue/40 rounded-lg px-4 py-3 inline-block">
-                        <p className="text-2xl font-bold text-white">
+                      <div className="bg-luxury-blue/20 border border-luxury-blue/40 rounded-lg px-3 sm:px-4 py-2 sm:py-3 inline-block">
+                        <p className="text-xl sm:text-2xl font-bold text-white">
                           {data.environmental.flood.femaZone}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <p className="text-white/70 text-sm mt-4">
+                  <p className="text-white/70 text-xs sm:text-sm mt-3 sm:mt-4 break-words">
                     FEMA flood zones indicate the level of flood risk in different areas. This classification helps determine insurance requirements and rates.
                   </p>
                 </Card>
@@ -1177,27 +1178,27 @@ export default function AnalysisResults({
                     ? "from-red-500/10 to-orange-500/5 border-red-500/30"
                     : "from-luxury-gold/10 to-luxury-gold/5 border-luxury-gold/30"
                 }`}>
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                  <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center flex-shrink-0 ${
                       data.environmental.flood.insuranceRequired
                         ? "bg-red-500/30"
                         : "bg-luxury-gold/30"
                     }`}>
-                      <DollarSign className={`w-7 h-7 ${
+                      <DollarSign className={`w-6 h-6 sm:w-7 sm:h-7 ${
                         data.environmental.flood.insuranceRequired
                           ? "text-red-400"
                           : "text-luxury-gold"
                       }`} />
                     </div>
-                    <div className="flex-1">
-                      <h3 className={`font-display text-xl font-bold mb-2 ${
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`font-display text-lg sm:text-xl font-bold mb-2 ${
                         data.environmental.flood.insuranceRequired
                           ? "text-red-400"
                           : "text-luxury-gold"
                       }`}>
                         Flood Insurance
                       </h3>
-                      <div className={`rounded-lg px-3 py-1 inline-block text-sm font-bold ${
+                      <div className={`rounded-lg px-2.5 sm:px-3 py-1 inline-block text-xs sm:text-sm font-bold ${
                         data.environmental.flood.insuranceRequired
                           ? "bg-red-500/20 border border-red-500/40 text-red-400"
                           : "bg-green-500/20 border border-green-500/40 text-green-400"
@@ -1206,11 +1207,11 @@ export default function AnalysisResults({
                       </div>
                     </div>
                   </div>
-                  <div className="mt-4 pt-4 border-t border-white/10">
-                    <p className="text-white/70 text-sm mb-3">
+                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/10">
+                    <p className="text-white/70 text-xs sm:text-sm mb-2 sm:mb-3">
                       Estimated Annual Cost:
                     </p>
-                    <p className="text-3xl font-bold text-white">
+                    <p className="text-2xl sm:text-3xl font-bold text-white break-words">
                       ${formatNumber(data.environmental.flood.estimatedInsuranceMin)} - ${formatNumber(data.environmental.flood.estimatedInsuranceMax)}
                     </p>
                     <p className="text-white/50 text-xs mt-2">per year</p>
@@ -1220,11 +1221,11 @@ export default function AnalysisResults({
 
               {/* Insurance Details */}
               <Card className="bg-gradient-to-br from-white/5 to-white/10">
-                <h3 className="font-display text-xl font-bold mb-4 flex items-center gap-2">
-                  <AlertTriangle className="w-6 h-6 text-luxury-gold" />
-                  Insurance Requirements
+                <h3 className="font-display text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-luxury-gold flex-shrink-0" />
+                  <span className="break-words">Insurance Requirements</span>
                 </h3>
-                <p className="text-white/80 leading-relaxed text-base">
+                <p className="text-white/80 leading-relaxed text-sm sm:text-base break-words">
                   {data.environmental.flood.insuranceRequired
                     ? `This property is located in FEMA Zone ${data.environmental.flood.femaZone}. Flood insurance is federally required to obtain a mortgage for properties in this zone.`
                     : `This property is located in FEMA Zone ${data.environmental.flood.femaZone}. While flood insurance is not federally required to obtain a mortgage, you may want to purchase it to protect your investment.`}
@@ -1233,7 +1234,7 @@ export default function AnalysisResults({
 
               {/* Disclaimer */}
               <Card className="bg-white/5 border-white/10">
-                <p className="text-xs text-white/50 leading-relaxed">
+                <p className="text-xs text-white/50 leading-relaxed break-words">
                   <strong className="text-white/70">Data Sources & Disclaimers:</strong> Flood risk data including FEMA ratings is provided by First Street Foundation®.
                   The Flood Factor score is designed to approximate flood risk and not intended to be used to place a value on a property
                   or determine flood insurance requirements. Insurance quotes are based on $250K in building and $100K in contents coverage.
