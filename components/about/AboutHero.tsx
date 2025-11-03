@@ -148,7 +148,7 @@ export default function AboutHero() {
               {/* Large Image - Top Left */}
               <div className="col-span-2 relative rounded-3xl overflow-hidden shadow-xl">
                 <img
-                  src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103377/68ada709a6656f55ea938436-Service-Img_rw4nrv.jpg"
+                  src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1762205616/Contemporary-Mountain-Home-Vermont-Cushman-Design-Group-01-1-Kindesign_d074nn.jpg"
                   alt="Vermont Property"
                   className="w-full h-full object-cover"
                   style={{ aspectRatio: "16/9" }}
@@ -158,7 +158,7 @@ export default function AboutHero() {
               {/* Small Image - Bottom Left */}
               <div className="relative rounded-3xl overflow-hidden shadow-xl">
                 <img
-                  src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760631280/pexels-rdne-8293720_jxkgie.jpg "
+                  src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1762206396/Gemini_Generated_Image_g8u6n8g8u6n8g8u6_1_sy7ujy.png"
                   alt="Interior"
                   className="w-full h-full object-cover"
                   style={{ aspectRatio: "1/1" }}
@@ -168,7 +168,7 @@ export default function AboutHero() {
               {/* Small Image - Bottom Right */}
               <div className="relative rounded-3xl overflow-hidden shadow-xl">
                 <img
-                  src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760103343/68afe5de92b348d581323a93-Untitled-design-4_hopcuy.png"
+                  src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1762205517/2b0c9d1f_fgj3p8.avif"
                   alt="Property Detail"
                   className="w-full h-full object-cover"
                   style={{ aspectRatio: "1/1" }}

@@ -66,7 +66,7 @@ const TeamSection: React.FC = () => {
       title: "Sales Associate & Realtor",
       description:
         "James Hurley brings energy and dedication to every transaction. Known for his attentive service and local expertise, James helps buyers and sellers achieve their goals with confidence and care.",
-      imageUrl: "https://res.cloudinary.com/dklhvv6mc/image/upload/v1760399597/0396402759f451185fe2b690f85164ea-h_l_dj53xg.jpg",
+      imageUrl: "https://res.cloudinary.com/dklhvv6mc/image/upload/v1762206976/James_Hurley_1_vyfkgi.jpg",
       email: "J.Hurley.FCPVT@gmail.com",
       phone: "508-734-0501",
       license: "082.0135090",
@@ -126,7 +126,7 @@ const TeamSection: React.FC = () => {
 
   return (
     <>
-      <section className="min-h-screen bg-white py-32 px-4 overflow-hidden">
+      <section className="min-h-screen bg-white px-4 overflow-hidden">
         {/* Section Heading with word-by-word blur animation */}
         <div className="mb-16 w-full max-w-[1800px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
           <motion.h2
