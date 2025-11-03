@@ -154,7 +154,7 @@ export default function RegisterPage() {
             Create Account
           </h1>
           <p className="text-white/70 text-sm sm:text-base">
-            Start analyzing luxury real estate properties
+            Start analyzing real estate properties
           </p>
         </div>
 

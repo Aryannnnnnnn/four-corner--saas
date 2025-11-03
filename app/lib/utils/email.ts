@@ -167,7 +167,7 @@ export async function sendOTPEmail(
             <div class="footer">
               <p>
                 This email was sent by Four Corner Properties<br>
-                Luxury Real Estate Analysis Platform<br>
+                 Real Estate Analysis Platform<br>
                 <strong>Do not reply to this email</strong>
               </p>
               <p style="margin-top: 15px; font-size: 12px;">
@@ -275,14 +275,14 @@ export async function sendWelcomeEmail(
 
             <p>
               Welcome to Four Corner Properties! We're excited to have you join our platform for 
-              luxury real estate analysis and investment insights.
+               real estate analysis and investment insights.
             </p>
 
             <p>
               With your new account, you can:
             </p>
             <ul>
-              <li>🏠 Analyze luxury properties with AI-powered insights</li>
+              <li>🏠 Analyze properties with AI-powered insights</li>
               <li>📊 Access detailed market comparables and projections</li>
               <li>💰 Get ROI calculations and investment recommendations</li>
               <li>📱 Save and manage your property analysis library</li>
@@ -297,7 +297,7 @@ export async function sendWelcomeEmail(
             <div class="footer">
               <p>
                 Thank you for choosing Four Corner Properties<br>
-                Luxury Real Estate Analysis Platform
+                 Real Estate Analysis Platform
               </p>
               <p style="margin-top: 15px; font-size: 12px;">
                 © ${new Date().getFullYear()} Four Corner Properties. All rights reserved.

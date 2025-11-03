@@ -75,14 +75,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
   // Split title into words for animation
   const titleWords = [
-    "Where",
-    "Your",
-    "Dreams",
+    "The",
+    "Cornerstone",
     "Of",
-    "Luxury",
-    "Come",
-    "To",
-    "Life",
+    "Vermont",
+    "Real",
+    "Estate",
   ];
 
   return (
@@ -128,12 +126,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                       className="inline-block word-blur-animate"
                       variants={wordVariants}
                       style={{
-                        marginRight: index === 3 || index === 7 ? "0" : "0.3em",
+                        marginRight: "0.3em",
                         animationDelay: `${index * 0.1}s`
                       }}
                     >
                       {word}
-                      {index === 3 || index === 7 ? <br /> : ""}
+                      {index === 3 ? <br /> : ""}
                     </motion.span>
                   ))}
                 </motion.h1>
@@ -165,8 +163,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                     Home Financing
                   </motion.a>
                   <motion.a
-                    href="https://fourcornerpropertiesvt.com/wp-content/uploads/2022/06/How%20to%20use%20VT%20ANR%20Atlas%202020.pdf"
+                    href="/How to use VT ANR Atlas 2020.pdf"
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="text-white/90 hover:text-white backdrop-blur-3xl drop-shadow-lg rounded-full p-3 transition-colors text-sm sm:text-base md:text-lg font-normal tracking-normal"
                     variants={fadeInUpVariants}
                     initial="hidden"

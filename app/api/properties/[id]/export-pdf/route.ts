@@ -914,7 +914,7 @@ function generatePropertyAnalysisPDF(property: any) {
     <!-- Footer -->
     <div class="footer">
       <div class="footer-logo">Four Corner Properties</div>
-      <div class="footer-text">Luxury Real Estate Analysis Platform</div>
+      <div class="footer-text"> Real Estate Analysis Platform</div>
       <div class="footer-text">
         Report generated on ${exportDate}
       </div>

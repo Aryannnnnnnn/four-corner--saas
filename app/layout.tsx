@@ -12,8 +12,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Four Corner Properties - Luxury Real Estate Analysis",
-  description: "AI-powered luxury real estate property analysis platform",
+  title: "Four Corner Properties - Real Estate Analysis",
+  description: "AI-powered real estate property analysis platform",
   icons: {
     icon: "/logo.png",
   },

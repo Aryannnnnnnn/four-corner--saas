@@ -650,7 +650,7 @@ function generatePDFHTML(user: any, properties: any[]) {
     <!-- Footer -->
     <div class="footer">
       <div class="footer-logo">Four Corner Properties</div>
-      <div class="footer-text">Luxury Real Estate Analysis Platform</div>
+      <div class="footer-text"> Real Estate Analysis Platform</div>
       <div class="footer-text">
         This report was generated on ${exportDate}
       </div>
