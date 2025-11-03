@@ -144,7 +144,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   style={{ fontFamily: "Coconat" }}
                 >
                   <motion.a
-                    href="#"
+                    href="https://anrmaps.vermont.gov/websites/anra5/"
+                    target="_blank"
                     className="text-white/90 hover:text-white backdrop-blur-3xl drop-shadow-lg rounded-full p-3 transition-colors text-sm sm:text-base md:text-lg font-normal tracking-normal"
                     variants={fadeInUpVariants}
                     initial="hidden"
