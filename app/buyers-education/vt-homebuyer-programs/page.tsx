@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, CheckCircle2, Home, DollarSign, GraduationCap, TrendingDown, Users, FileText, Building2, ExternalLink, Percent, Clock, MapPin, AlertCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Home, DollarSign, TrendingDown, Users, FileText, ExternalLink, Percent, Clock, MapPin, AlertCircle } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
@@ -226,30 +226,6 @@ export default function VTHomebuyerPrograms() {
         "Receive keys and begin your homeownership journey"
       ],
       timeframe: "1-2 hours"
-    }
-  ];
-
-  const educationCourses = [
-    {
-      provider: "VHFA Homebuyer Education",
-      format: "Online & In-Person",
-      duration: "8 hours",
-      cost: "$75",
-      description: "Comprehensive course covering all aspects of homebuying, required for VHFA programs."
-    },
-    {
-      provider: "Framework HomeOwnership",
-      format: "Online, In-Person, or Phone",
-      duration: "6-8 hours",
-      cost: "$50-$100",
-      description: "HUD-approved counseling covering budgeting, credit, mortgages, and home maintenance."
-    },
-    {
-      provider: "NeighborWorks of Western Vermont",
-      format: "In-Person & Virtual",
-      duration: "8 hours",
-      cost: "$75",
-      description: "Interactive classes with local housing experts covering Vermont-specific topics."
     }
   ];
 
@@ -568,92 +544,7 @@ export default function VTHomebuyerPrograms() {
         </section>
 
         {/* Homebuyer Education */}
-        <section className="py-16 sm:py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <div className="inline-block mb-4">
-                <div className="w-12 h-1 bg-[#21266c] mx-auto mb-4"></div>
-                <span className="text-sm font-semibold text-gray-600 uppercase tracking-[0.2em]">
-                  Required Education
-                </span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#21266c] mb-4" style={{ fontFamily: "Coconat" }}>
-                Homebuyer Education Courses
-              </h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                All VHFA programs require completion of a homebuyer education course. These comprehensive 8-hour courses prepare you for successful homeownership.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              {educationCourses.map((course, index) => (
-                <div key={index} className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-[#3b82f6] transition-all">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-4">
-                    <GraduationCap className="w-6 h-6 text-white" />
-                  </div>
-
-                  <h3 className="text-xl font-bold text-[#21266c] mb-2">
-                    {course.provider}
-                  </h3>
-
-                  <div className="flex items-center gap-4 mb-4 text-sm">
-                    <div className="bg-blue-100 text-[#21266c] px-3 py-1 rounded-full font-semibold">
-                      {course.format}
-                    </div>
-                    <div className="text-gray-600">
-                      {course.duration}
-                    </div>
-                  </div>
-
-                  <div className="text-2xl font-bold text-[#3b82f6] mb-3">
-                    {course.cost}
-                  </div>
-
-                  <p className="text-gray-600 text-sm">
-                    {course.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* What You'll Learn */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
-              <h3 className="text-2xl font-bold text-[#21266c] mb-6 text-center">
-                What You'll Learn
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3">
-                    <DollarSign className="w-6 h-6 text-[#3b82f6]" />
-                  </div>
-                  <h4 className="font-semibold text-[#21266c] mb-2">Budgeting</h4>
-                  <p className="text-sm text-gray-600">Creating a realistic budget and understanding affordability</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3">
-                    <FileText className="w-6 h-6 text-[#3b82f6]" />
-                  </div>
-                  <h4 className="font-semibold text-[#21266c] mb-2">Mortgages</h4>
-                  <p className="text-sm text-gray-600">Understanding loan types, rates, and the application process</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3">
-                    <Home className="w-6 h-6 text-[#3b82f6]" />
-                  </div>
-                  <h4 className="font-semibold text-[#21266c] mb-2">Home Shopping</h4>
-                  <p className="text-sm text-gray-600">Finding the right home and navigating the buying process</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3">
-                    <Building2 className="w-6 h-6 text-[#3b82f6]" />
-                  </div>
-                  <h4 className="font-semibold text-[#21266c] mb-2">Maintenance</h4>
-                  <p className="text-sm text-gray-600">Home maintenance, repairs, and long-term ownership costs</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+  
 
         {/* CTA Section */}
         <section className="py-16 bg-white">

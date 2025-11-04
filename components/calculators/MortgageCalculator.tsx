@@ -27,13 +27,13 @@ interface MonthlyPayment {
 
 export default function MortgageCalculator() {
   const defaultInputs: MortgageInputs = {
-    homePrice: 350000,
-    downPayment: 20,
+    homePrice: 0,
+    downPayment: 0,
     downPaymentType: "percent",
-    interestRate: 7.0,
+    interestRate: 0,
     loanTerm: 30,
-    propertyTax: 4200,
-    homeInsurance: 1200,
+    propertyTax: 0,
+    homeInsurance: 0,
     hoaFees: 0,
     pmi: 0,
   };
@@ -182,11 +182,12 @@ export default function MortgageCalculator() {
           <div className="relative">
             <input
               type="number"
-              value={localValue}
+              value={localValue || ''}
               onChange={handleChange}
               step={inputs.downPaymentType === "percent" ? "1" : "1000"}
               min="0"
-              className="w-full pl-4 pr-12 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#3b82f6] hover:border-gray-300 transition-all"
+              placeholder={inputs.downPaymentType === "percent" ? "20" : "70000"}
+              className="w-full pl-4 pr-12 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3b82f6] hover:border-gray-300 transition-all"
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600">
               {inputs.downPaymentType === "percent" ? "%" : "$"}
@@ -215,7 +216,8 @@ export default function MortgageCalculator() {
     suffix = "",
     step = "1",
     min = "0",
-    tooltipId
+    tooltipId,
+    placeholder = ""
   }: any) => {
     const [localValue, setLocalValue] = useState(value);
     const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -255,11 +257,12 @@ export default function MortgageCalculator() {
           )}
           <input
             type={type}
-            value={localValue}
+            value={localValue || ''}
             onChange={handleChange}
             step={step}
             min={min}
-            className={`w-full ${prefix ? 'pl-14' : 'pl-11'} ${suffix ? 'pr-12' : 'pr-4'} py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent transition-all hover:border-gray-300`}
+            placeholder={placeholder}
+            className={`w-full ${prefix ? 'pl-14' : 'pl-11'} ${suffix ? 'pr-12' : 'pr-4'} py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent transition-all hover:border-gray-300`}
           />
           {suffix && (
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 font-medium">
@@ -309,6 +312,7 @@ export default function MortgageCalculator() {
             prefix="$"
             step="1000"
             tooltipId="homePrice"
+            placeholder="350000"
           />
 
           <DownPaymentField />
@@ -321,6 +325,7 @@ export default function MortgageCalculator() {
             suffix="%"
             step="0.1"
             tooltipId="interestRate"
+            placeholder="7.0"
           />
 
           <InputField
@@ -330,6 +335,7 @@ export default function MortgageCalculator() {
             icon={Calendar}
             suffix="years"
             tooltipId="loanTerm"
+            placeholder="30"
           />
 
           <InputField
@@ -340,6 +346,7 @@ export default function MortgageCalculator() {
             prefix="$"
             step="100"
             tooltipId="propertyTax"
+            placeholder="4200"
           />
 
           <InputField
@@ -350,6 +357,7 @@ export default function MortgageCalculator() {
             prefix="$"
             step="100"
             tooltipId="homeInsurance"
+            placeholder="1200"
           />
 
           <InputField
@@ -360,6 +368,7 @@ export default function MortgageCalculator() {
             prefix="$"
             step="10"
             tooltipId="hoaFees"
+            placeholder="0"
           />
 
           <InputField
@@ -370,6 +379,7 @@ export default function MortgageCalculator() {
             prefix="$"
             step="10"
             tooltipId="pmi"
+            placeholder="0"
           />
         </div>
 

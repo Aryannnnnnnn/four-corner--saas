@@ -22,8 +22,8 @@ interface PaymentDetail {
 
 export default function AmortizationCalculator() {
   const defaultInputs: AmortizationInputs = {
-    loanAmount: 280000,
-    interestRate: 7.0,
+    loanAmount: 0,
+    interestRate: 0,
     loanTerm: 30,
     startDate: new Date().toISOString().split('T')[0] ?? '',
   };
@@ -185,7 +185,7 @@ export default function AmortizationCalculator() {
 
   const yearlyData = groupByYear();
 
-  const InputField = ({ label, value, onChange, type = "number", suffix = "", step = "1", min = "0", tooltipId }: any) => {
+  const InputField = ({ label, value, onChange, type = "number", suffix = "", step = "1", min = "0", tooltipId, placeholder = "" }: any) => {
     const [localValue, setLocalValue] = useState(value);
     const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
@@ -220,11 +220,12 @@ export default function AmortizationCalculator() {
         <div className="relative">
           <input
             type={type}
-            value={localValue}
+            value={type === "number" ? (localValue || '') : localValue}
             onChange={handleChange}
             step={step}
             min={min}
-            className={`w-full px-4 ${suffix ? 'pr-12' : 'pr-4'} py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent transition-all hover:border-gray-300`}
+            placeholder={placeholder}
+            className={`w-full px-4 ${suffix ? 'pr-12' : 'pr-4'} py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent transition-all hover:border-gray-300`}
           />
           {suffix && (
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 font-medium">
@@ -270,6 +271,7 @@ export default function AmortizationCalculator() {
           onChange={(val: number) => setInputs({ ...inputs, loanAmount: val })}
           step="1000"
           tooltipId="loanAmount"
+          placeholder="280000"
         />
         <InputField
           label="Interest Rate"
@@ -278,6 +280,7 @@ export default function AmortizationCalculator() {
           suffix="%"
           step="0.1"
           tooltipId="interestRate"
+          placeholder="7.0"
         />
         <InputField
           label="Loan Term"
@@ -285,6 +288,7 @@ export default function AmortizationCalculator() {
           onChange={(val: number) => setInputs({ ...inputs, loanTerm: val })}
           suffix="years"
           tooltipId="loanTerm"
+          placeholder="30"
         />
         <InputField
           label="Start Date"

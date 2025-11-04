@@ -24,12 +24,12 @@ interface AffordabilityResults {
 
 export default function AffordabilityCalculator() {
   const defaultInputs: AffordabilityInputs = {
-    annualIncome: 75000,
-    monthlyDebts: 500,
-    downPayment: 70000,
-    interestRate: 7.0,
+    annualIncome: 0,
+    monthlyDebts: 0,
+    downPayment: 0,
+    interestRate: 0,
     loanTerm: 30,
-    propertyTaxRate: 1.2,
+    propertyTaxRate: 0,
     creditScore: "740-799",
   };
 
@@ -171,7 +171,8 @@ export default function AffordabilityCalculator() {
     suffix = "",
     step = "1",
     min = "0",
-    tooltipId
+    tooltipId,
+    placeholder = ""
   }: any) => {
     const [localValue, setLocalValue] = useState(value);
     const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -211,11 +212,12 @@ export default function AffordabilityCalculator() {
           )}
           <input
             type={type}
-            value={localValue}
+            value={localValue || ''}
             onChange={handleChange}
             step={step}
             min={min}
-            className={`w-full ${prefix ? 'pl-14' : 'pl-11'} ${suffix ? 'pr-12' : 'pr-4'} py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent transition-all hover:border-gray-300`}
+            placeholder={placeholder}
+            className={`w-full ${prefix ? 'pl-14' : 'pl-11'} ${suffix ? 'pr-12' : 'pr-4'} py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent transition-all hover:border-gray-300`}
           />
           {suffix && (
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 font-medium">
@@ -254,6 +256,7 @@ export default function AffordabilityCalculator() {
             prefix="$"
             step="1000"
             tooltipId="annualIncome"
+            placeholder="75000"
           />
 
           <InputField
@@ -264,6 +267,7 @@ export default function AffordabilityCalculator() {
             prefix="$"
             step="50"
             tooltipId="monthlyDebts"
+            placeholder="500"
           />
 
           <InputField
@@ -274,6 +278,7 @@ export default function AffordabilityCalculator() {
             prefix="$"
             step="1000"
             tooltipId="downPayment"
+            placeholder="70000"
           />
 
           <InputField
@@ -284,6 +289,7 @@ export default function AffordabilityCalculator() {
             suffix="%"
             step="0.1"
             tooltipId="interestRate"
+            placeholder="7.0"
           />
 
           <InputField
@@ -293,6 +299,7 @@ export default function AffordabilityCalculator() {
             icon={TrendingUp}
             suffix="years"
             tooltipId="loanTerm"
+            placeholder="30"
           />
 
           <InputField
@@ -303,6 +310,7 @@ export default function AffordabilityCalculator() {
             suffix="%"
             step="0.1"
             tooltipId="propertyTaxRate"
+            placeholder="1.2"
           />
 
           <div className="space-y-2">
