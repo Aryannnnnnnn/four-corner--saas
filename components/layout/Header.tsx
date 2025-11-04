@@ -26,66 +26,70 @@ export default function Header() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
+  const [propertiesDropdownOpen, setPropertiesDropdownOpen] = useState(false);
+  const [buyersDropdownOpen, setBuyersDropdownOpen] = useState(false);
+  const [sellersDropdownOpen, setSellersDropdownOpen] = useState(false);
+  const [localResourcesDropdownOpen, setLocalResourcesDropdownOpen] = useState(false);
+  const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
-  // Navigation items in specific order
-  const homeNavigation = [{ name: "Home", href: "/", icon: Home }];
+  // Mobile accordion state
+  const [mobilePropertiesOpen, setMobilePropertiesOpen] = useState(false);
+  const [mobileBuyersOpen, setMobileBuyersOpen] = useState(false);
+  const [mobileSellersOpen, setMobileSellersOpen] = useState(false);
+  const [mobileLocalResourcesOpen, setMobileLocalResourcesOpen] = useState(false);
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
 
-  const ourListingsNavigation = [
-    { name: "Our Listings", href: "/listings", icon: FolderOpen },
+  // Navigation structure
+  const propertiesItems = [
+    { name: "View All Listings", href: "/listings", icon: FolderOpen },
+    { name: "Analyze Property", href: "/analyze-your-property", icon: Search },
+    { name: "List Your Property", href: "/list-property", icon: PlusCircle },
   ];
 
-
-  const analyzeNavigation = [
-    {
-      name: "Analyze Property",
-      href: "/analyze-your-property",
-      icon: Search,
-    },
+  const buyersItems = [
+    { name: "Buyer's Education Hub", href: "/buyers-education", icon: BookOpen },
+    { name: "First Time Buyer", href: "/buyers-education/first-time-buyer", icon: BookMarked },
+    { name: "Understanding Mortgages", href: "/buyers-education/understanding-mortgages", icon: DollarSign },
+    { name: "VT Homebuyer Programs", href: "/buyers-education/vt-homebuyer-programs", icon: Home },
+    { name: "Vermont Attorney Requirement", href: "/buyers-education/vermont-attorney-requirement", icon: BookMarked },
+    { name: "Sample Forms & Documents", href: "/buyers-education/sample-forms", icon: FolderOpen },
+    { name: "Home Inspection", href: "/buyers-education/home-inspection", icon: Search },
+    { name: "Appraisal Process", href: "/buyers-education/appraisal-process", icon: Search },
+    { name: "Closing Costs Explained", href: "/buyers-education/closing-costs", icon: DollarSign },
+    { name: "Final Walkthrough", href: "/buyers-education/final-walkthrough", icon: FolderOpen },
+    { name: "Closing Process", href: "/buyers-education/closing-process", icon: FolderOpen },
+    { name: "Calculators", href: "/calculators", icon: DollarSign },
   ];
 
-  const sellPropertyNavigation = [
-    {
-      name: "Sell Property",
-      href: "/list-property",
-      icon: PlusCircle,
-    },
+  const sellersItems = [
+    { name: "Seller's Education Hub", href: "/sellers-education", icon: BookOpen },
+    { name: "Preparing to Sell", href: "/sellers-education/preparing-to-sell", icon: BookMarked },
+    { name: "SPIR & Seller Disclosures", href: "/sellers-education/spir-disclosures", icon: FolderOpen },
+    { name: "Pricing Strategy", href: "/sellers-education/pricing-strategy", icon: DollarSign },
+    { name: "Staging Tips", href: "/sellers-education/staging-tips", icon: Home },
+    { name: "Marketing Your Home", href: "/sellers-education/marketing-your-home", icon: BookOpen },
+    { name: "Negotiating Offers", href: "/sellers-education/negotiating-offers", icon: DollarSign },
+    { name: "Seller Closing Costs", href: "/sellers-education/closing-costs", icon: DollarSign },
   ];
 
-  const homeFinancingNavigation = [
-    {
-      name: "Home Financing",
-      href: "/home-financing",
-      icon: DollarSign,
-    },
-  ];
-  const financingNavigation = [
-    {
-      name: "Financing",
-      href: "/financing",
-      icon: DollarSign,
-    },
-  ];
-
-  // Other navigation items (after the main ones)
-  const otherNavigation: Array<{ name: string; href: string; icon: any }> = [
-        {
-      name: "Contact Us",
-      href: "/contact",
-      icon: PlusCircle,
-    },
+  const localResourcesItems = [
+    { name: "Local Resources Hub", href: "/local-resources", icon: Home },
+    { name: "Schools & Education", href: "/local-resources/schools-education", icon: BookOpen },
+    { name: "Utilities & Services", href: "/local-resources/utilities-services", icon: Settings },
+    { name: "Community & Amenities", href: "/local-resources/community-amenities", icon: Home },
+    { name: "Transportation", href: "/local-resources/transportation", icon: Home },
+    { name: "Local Government", href: "/local-resources/local-government", icon: BookOpen },
+    { name: "ANR Maps & Resources", href: "/local-resources/anr-maps", icon: BookMarked },
+    { name: "Wastewater Permits", href: "/local-resources/wastewater-permits", icon: Settings },
+    { name: "County Land Records", href: "/local-resources/land-records", icon: FolderOpen },
+    { name: "Act 250 Guide", href: "/act-250-guide", icon: BookMarked },
+    { name: "Contract Glossary", href: "/contract-glossary", icon: BookOpen },
   ];
 
-
-  // Company dropdown items (non-clickable parent)
-  const companyItems = [
-    { name: "About", href: "/about", icon: BookOpen },
-    {
-      name: "Stories",
-      href: "/success-stories",
-      icon: BookMarked,
-    },
+  const aboutItems = [
+    { name: "About Us", href: "/about", icon: BookOpen },
+    { name: "Success Stories", href: "/success-stories", icon: BookMarked },
   ];
 
   // Close dropdowns when clicking outside or on route change
@@ -96,7 +100,11 @@ export default function Header() {
       if (target.closest('.dropdown-container')) {
         return;
       }
-      setCompanyDropdownOpen(false);
+      setPropertiesDropdownOpen(false);
+      setBuyersDropdownOpen(false);
+      setSellersDropdownOpen(false);
+      setLocalResourcesDropdownOpen(false);
+      setAboutDropdownOpen(false);
       setProfileDropdownOpen(false);
     };
 
@@ -106,163 +114,255 @@ export default function Header() {
 
   useEffect(() => {
     // Close dropdowns when route changes
-    setCompanyDropdownOpen(false);
+    setPropertiesDropdownOpen(false);
+    setBuyersDropdownOpen(false);
+    setSellersDropdownOpen(false);
+    setLocalResourcesDropdownOpen(false);
+    setAboutDropdownOpen(false);
     setProfileDropdownOpen(false);
   }, [pathname]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-900 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-[90vw] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-            <Image
-              src="/logo.png"
-              alt="Four Corner Properties"
-              width={150}
-              height={56}
-              priority
-              quality={100}
-              className="h-48 sm:h-26 w-auto object-contain"
-              unoptimized
-            />
-          </Link>
+        {/* Three-column grid layout for proper centering */}
+        <div className="grid grid-cols-3 items-center h-16">
+          {/* Logo - Left Column */}
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+              <Image
+                src="/logooo.jpg"
+                alt="Four Corner Properties"
+                width={120}
+                height={45}
+                priority
+                quality={100}
+                className="h-8 sm:h-10 w-auto object-contain"
+                unoptimized
+              />
+            </Link>
+          </div>
 
-          {/* Desktop Navigation - Centered */}
-          <nav className="hidden xl:flex items-center justify-center ml-8 flex-1 space-x-[22px]">
-            {/* 1. Home Navigation */}
-            {homeNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
-                  pathname === item.href && "text-gray-900 border-blue-600",
-                )}
-              >
-                <span>{item.name}</span>
-              </Link>
-            ))}
+          {/* Desktop Navigation - Center Column */}
+          <nav className="hidden xl:flex items-center justify-center space-x-6 2xl:space-x-8">
+            {/* 1. Home */}
+            <Link
+              href="/"
+              className={cn(
+                "group flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 whitespace-nowrap relative",
+                pathname === "/" && "text-[#21266c]",
+              )}
+            >
+              <span className="relative z-10">Home</span>
+              <span className={cn(
+                "absolute bottom-0 left-0 right-0 h-0.5 bg-[#3b82f6] transition-all duration-300",
+                pathname === "/" ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+              )}></span>
+            </Link>
 
-            {/* 2. Our Listings Navigation */}
-            {ourListingsNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
-                  pathname === item.href && "text-gray-900 border-blue-600",
-                )}
-              >
-                <span>{item.name}</span>
-              </Link>
-            ))}
-
-            {/* Company with Dropdown (non-clickable) */}
+            {/* 2. Properties Dropdown */}
             <div
               className="relative group"
-              onMouseEnter={() => setCompanyDropdownOpen(true)}
-              onMouseLeave={() => setCompanyDropdownOpen(false)}
+              onMouseEnter={() => setPropertiesDropdownOpen(true)}
+              onMouseLeave={() => setPropertiesDropdownOpen(false)}
             >
-              <div className="flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 cursor-default pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap">
-                <span>Company</span>
-                <ChevronDown className="w-3 h-3 opacity-60" />
+              <div className="flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 cursor-default whitespace-nowrap relative">
+                <span className="relative z-10">Properties</span>
+                <ChevronDown className={cn(
+                  "w-3.5 h-3.5 opacity-70 transition-transform duration-300 relative z-10",
+                  propertiesDropdownOpen && "rotate-180"
+                )} />
+                <span className={cn(
+                  "absolute bottom-0 left-0 right-0 h-0.5 bg-[#3b82f6] transition-all duration-300",
+                  "opacity-0 group-hover:opacity-100"
+                )}></span>
               </div>
 
-              {/* Company Dropdown */}
               <div
                 className={cn(
-                  "absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50",
-                  companyDropdownOpen
+                  "absolute top-full left-0 w-60 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
+                  propertiesDropdownOpen
                     ? "opacity-100 visible translate-y-0"
-                    : "opacity-0 invisible -translate-y-2",
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none",
                 )}
               >
-                {companyItems.map((item) => (
+                {propertiesItems.map((item, index) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    rel="noopener noreferrer"
-                    className="block px-6 py-4 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors border-b border-gray-100 last:border-b-0 hover:border-blue-600"
+                    className={cn(
+                      "block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100 last:border-b-0",
+                      index === 0 && "rounded-t-lg"
+                    )}
                   >
-                    <span>{item.name}</span>
+                    <span className="block">{item.name}</span>
                   </Link>
                 ))}
               </div>
             </div>
 
-            {/* 3. Analyze Navigation */}
-            {analyzeNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
-                  pathname === item.href && "text-gray-900 border-blue-600",
-                )}
-              >
-                <span>{item.name}</span>
-              </Link>
-            ))}
+            {/* 3. For Buyers Dropdown */}
+            <div
+              className="relative group"
+              onMouseEnter={() => setBuyersDropdownOpen(true)}
+              onMouseLeave={() => setBuyersDropdownOpen(false)}
+            >
+              <div className="flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 cursor-default whitespace-nowrap relative">
+                <span className="relative z-10">For Buyers</span>
+                <ChevronDown className={cn(
+                  "w-3.5 h-3.5 opacity-70 transition-transform duration-300",
+                  buyersDropdownOpen && "rotate-180"
+                )} />
+              </div>
 
-            {/* 4. Sell Property Navigation */}
-            {sellPropertyNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
+              <div
                 className={cn(
-                  "group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
-                  pathname === item.href && "text-gray-900 border-blue-600",
+                  "absolute top-full left-0 w-72 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
+                  buyersDropdownOpen
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none",
                 )}
               >
-                <span>{item.name}</span>
-              </Link>
-            ))}
+                {buyersItems.map((item, index) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      "block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100 last:border-b-0",
+                      index === 0 && "rounded-t-lg bg-gradient-to-r from-blue-50/30 to-transparent font-semibold"
+                    )}
+                  >
+                    <span className="block">{item.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-            {/* 5. Home Financing Navigation */}
-            {homeFinancingNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
-                  pathname === item.href && "text-gray-900 border-blue-600",
-                )}
-              >
-                <span>{item.name}</span>
-              </Link>
-            ))}
-            {/* 5. Home Financing Navigation */}
-            {financingNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
-                  pathname === item.href && "text-gray-900 border-blue-600",
-                )}
-              >
-                <span>{item.name}</span>
-              </Link>
-            ))}
+            {/* 4. For Sellers Dropdown */}
+            <div
+              className="relative group"
+              onMouseEnter={() => setSellersDropdownOpen(true)}
+              onMouseLeave={() => setSellersDropdownOpen(false)}
+            >
+              <div className="flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 cursor-default whitespace-nowrap relative">
+                <span className="relative z-10">For Sellers</span>
+                <ChevronDown className={cn(
+                  "w-3.5 h-3.5 opacity-70 transition-transform duration-300",
+                  sellersDropdownOpen && "rotate-180"
+                )} />
+              </div>
 
-            {/* 6. Other Navigation (if any items exist) */}
-            {otherNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
+              <div
                 className={cn(
-                  "group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap",
-                  pathname === item.href && "text-gray-900 border-blue-600",
+                  "absolute top-full left-0 w-72 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
+                  sellersDropdownOpen
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none",
                 )}
               >
-                <span>{item.name}</span>
-              </Link>
-            ))}
+                {sellersItems.map((item, index) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      "block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100 last:border-b-0",
+                      index === 0 && "rounded-t-lg bg-gradient-to-r from-blue-50/30 to-transparent font-semibold"
+                    )}
+                  >
+                    <span className="block">{item.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* 5. Local Resources Dropdown */}
+            <div
+              className="relative group"
+              onMouseEnter={() => setLocalResourcesDropdownOpen(true)}
+              onMouseLeave={() => setLocalResourcesDropdownOpen(false)}
+            >
+              <div className="flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 cursor-default whitespace-nowrap relative">
+                <span className="relative z-10">Local Resources</span>
+                <ChevronDown className={cn(
+                  "w-3.5 h-3.5 opacity-70 transition-transform duration-300",
+                  localResourcesDropdownOpen && "rotate-180"
+                )} />
+              </div>
+
+              <div
+                className={cn(
+                  "absolute top-full left-0 w-72 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
+                  localResourcesDropdownOpen
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none",
+                )}
+              >
+                {localResourcesItems.map((item, index) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      "block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100 last:border-b-0",
+                      index === 0 && "rounded-t-lg bg-gradient-to-r from-blue-50/30 to-transparent font-semibold"
+                    )}
+                  >
+                    <span className="block">{item.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* 6. About Dropdown */}
+            <div
+              className="relative group"
+              onMouseEnter={() => setAboutDropdownOpen(true)}
+              onMouseLeave={() => setAboutDropdownOpen(false)}
+            >
+              <div className="flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 cursor-default whitespace-nowrap relative">
+                <span className="relative z-10">About</span>
+                <ChevronDown className={cn(
+                  "w-3.5 h-3.5 opacity-70 transition-transform duration-300",
+                  aboutDropdownOpen && "rotate-180"
+                )} />
+              </div>
+
+              <div
+                className={cn(
+                  "absolute top-full left-0 w-60 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
+                  aboutDropdownOpen
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none",
+                )}
+              >
+                {aboutItems.map((item, index) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      "block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100 last:border-b-0",
+                      index === 0 && "rounded-t-lg"
+                    )}
+                  >
+                    <span className="block">{item.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* 7. Contact */}
+            <Link
+              href="/contact"
+              className={cn(
+                "group flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 whitespace-nowrap relative",
+                pathname === "/contact" && "text-[#21266c] border-[#3b82f6]",
+              )}
+            >
+              <span className="relative z-10">Contact</span>
+            </Link>
           </nav>
 
-          {/* Authentication Section - Right Side */}
-          <div className="hidden xl:flex items-center space-x-3">
+          {/* Authentication Section - Right Column */}
+          <div className="hidden xl:flex items-center justify-end space-x-3">
             {session ? (
               <>
                 {/* Profile Icon with Dropdown */}
@@ -273,7 +373,7 @@ export default function Header() {
               >
                 <Link
                   href="/profile"
-                  className="flex items-center justify-center w-8 h-8 xl:w-9 xl:h-9 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-white font-semibold text-sm hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-[#21266c] to-[#3b82f6] text-white font-bold text-sm hover:from-[#3b82f6] hover:to-[#21266c] transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105"
                   onClick={() => setProfileDropdownOpen(false)}
                 >
                   {session.user?.name?.[0]?.toUpperCase() ||
@@ -284,30 +384,30 @@ export default function Header() {
                 {/* Profile Dropdown Menu */}
                 <div
                   className={cn(
-                    "absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 shadow-xl overflow-hidden transition-all duration-200 z-50 rounded-lg",
+                    "absolute top-full right-0 mt-1 w-52 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
                     profileDropdownOpen
                       ? "opacity-100 visible translate-y-0"
-                      : "opacity-0 invisible -translate-y-2",
+                      : "opacity-0 invisible -translate-y-2 pointer-events-none",
                   )}
                 >
                   <Link
                     href="/dashboard"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100"
+                    className="block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100"
                     onClick={() => setProfileDropdownOpen(false)}
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <Home className="w-4 h-4" />
-                      <span className="font-medium">Dashboard</span>
+                      <span>Dashboard</span>
                     </div>
                   </Link>
                   <Link
                     href="/profile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100"
+                    className="block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100"
                     onClick={() => setProfileDropdownOpen(false)}
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <User className="w-4 h-4" />
-                      <span className="font-medium">Profile</span>
+                      <span>Profile</span>
                     </div>
                   </Link>
                   <button
@@ -316,11 +416,11 @@ export default function Header() {
                       setProfileDropdownOpen(false);
                       signOut({ callbackUrl: "/" });
                     }}
-                    className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    className="w-full text-left px-5 py-3.5 text-sm font-medium text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-transparent transition-all duration-200"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <LogOut className="w-4 h-4" />
-                      <span className="font-medium">Sign Out</span>
+                      <span>Sign Out</span>
                     </div>
                   </button>
                 </div>
@@ -330,197 +430,297 @@ export default function Header() {
                 <Link
                   href="/settings"
                   className={cn(
-                    "flex items-center justify-center w-8 h-8 xl:w-9 xl:h-9 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-200",
-                    pathname === "/settings" && "text-gray-900 bg-gray-100",
+                    "flex items-center justify-center w-10 h-10 rounded-full text-gray-600 hover:text-[#21266c] hover:bg-gray-100 transition-all duration-300 hover:scale-105",
+                    pathname === "/settings" && "text-[#21266c] bg-gray-100",
                   )}
                 >
-                  <Settings className="w-4 h-4 xl:w-5 xl:h-5" />
+                  <Settings className="w-5 h-5" />
                 </Link>
               </>
             ) : (
               <Link
                 href="/login"
-                className="group flex items-center gap-1.5 text-xs xl:text-sm font-medium text-gray-600 hover:text-gray-900 tracking-wide uppercase transition-all duration-200 pb-1 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap"
+                className="group flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 whitespace-nowrap"
               >
-                <User className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
+                <User className="w-4 h-4" />
                 Sign In
               </Link>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="xl:hidden text-gray-700 p-2 hover:bg-gray-100 rounded transition-colors ml-auto"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
+          {/* Mobile Menu Button - Only visible on mobile */}
+          <div className="xl:hidden flex items-center justify-end col-span-2">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-700 p-2.5 hover:bg-gray-100 rounded-lg transition-all duration-300 hover:scale-105"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="xl:hidden mt-4 space-y-1 border-t border-gray-200 pt-4 pb-4 bg-white">
-            {/* 1. Home Navigation */}
-            {homeNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
-                  pathname === item.href && "text-blue-600 bg-blue-50",
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <item.icon className="w-4 h-4" />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            ))}
+          <div className="xl:hidden mt-4 space-y-2 border-t border-gray-200 pt-5 pb-5 bg-white">
+            {/* 1. Home */}
+            <Link
+              href="/"
+              className={cn(
+                "flex items-center gap-3 px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 min-h-[44px]",
+                pathname === "/" && "text-[#21266c] bg-gradient-to-r from-blue-50 to-transparent font-semibold",
+              )}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <Home className="w-5 h-5" />
+              <span className="font-medium">Home</span>
+            </Link>
 
-            {/* 2. Our Listings Navigation */}
-            {ourListingsNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
-                  pathname === item.href && "text-blue-600 bg-blue-50",
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
+            {/* 2. Properties Section */}
+            <div>
+              <button
+                onClick={() => setMobilePropertiesOpen(!mobilePropertiesOpen)}
+                className="flex items-center justify-between w-full px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent transition-all duration-200 min-h-[44px]"
               >
-                <item.icon className="w-4 h-4" />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            ))}
-
-            {/* 3. Company Section Header */}
-            <div className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 cursor-default">
-              <BookOpen className="w-4 h-4" />
-              <span className="font-medium">Company</span>
+                <div className="flex items-center gap-3">
+                  <FolderOpen className="w-5 h-5" />
+                  <span className="font-semibold">Properties</span>
+                </div>
+                <ChevronDown
+                  className={cn(
+                    "w-5 h-5 transition-transform duration-300",
+                    mobilePropertiesOpen && "rotate-180",
+                  )}
+                />
+              </button>
+              {mobilePropertiesOpen && (
+                <div className="mt-2 space-y-1 ml-3 pl-5 border-l-2 border-blue-200">
+                  {propertiesItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 text-sm min-h-[44px]"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span className="font-medium">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Company Subitems */}
-            {companyItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 px-8 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors text-sm"
-                onClick={() => setIsMobileMenuOpen(false)}
+            {/* 3. For Buyers Section */}
+            <div>
+              <button
+                onClick={() => setMobileBuyersOpen(!mobileBuyersOpen)}
+                className="flex items-center justify-between w-full px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent transition-all duration-200 min-h-[44px]"
               >
-                <item.icon className="w-3 h-3" />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            ))}
+                <div className="flex items-center gap-3">
+                  <BookOpen className="w-5 h-5" />
+                  <span className="font-semibold">For Buyers</span>
+                </div>
+                <ChevronDown
+                  className={cn(
+                    "w-5 h-5 transition-transform duration-300",
+                    mobileBuyersOpen && "rotate-180",
+                  )}
+                />
+              </button>
+              {mobileBuyersOpen && (
+                <div className="mt-2 space-y-1 ml-3 pl-5 border-l-2 border-blue-200">
+                  {buyersItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 text-sm min-h-[44px]"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span className="font-medium">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            {/* 4. Analyze Navigation */}
-            {analyzeNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
-                  pathname === item.href && "text-blue-600 bg-blue-50",
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
+            {/* 4. For Sellers Section */}
+            <div>
+              <button
+                onClick={() => setMobileSellersOpen(!mobileSellersOpen)}
+                className="flex items-center justify-between w-full px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent transition-all duration-200 min-h-[44px]"
               >
-                <item.icon className="w-4 h-4" />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            ))}
+                <div className="flex items-center gap-3">
+                  <PlusCircle className="w-5 h-5" />
+                  <span className="font-semibold">For Sellers</span>
+                </div>
+                <ChevronDown
+                  className={cn(
+                    "w-5 h-5 transition-transform duration-300",
+                    mobileSellersOpen && "rotate-180",
+                  )}
+                />
+              </button>
+              {mobileSellersOpen && (
+                <div className="mt-2 space-y-1 ml-3 pl-5 border-l-2 border-blue-200">
+                  {sellersItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 text-sm min-h-[44px]"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span className="font-medium">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            {/* 5. Sell Property Navigation */}
-            {sellPropertyNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
-                  pathname === item.href && "text-blue-600 bg-blue-50",
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
+            {/* 5. Local Resources Section */}
+            <div>
+              <button
+                onClick={() => setMobileLocalResourcesOpen(!mobileLocalResourcesOpen)}
+                className="flex items-center justify-between w-full px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent transition-all duration-200 min-h-[44px]"
               >
-                <item.icon className="w-4 h-4" />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            ))}
+                <div className="flex items-center gap-3">
+                  <Home className="w-5 h-5" />
+                  <span className="font-semibold">Local Resources</span>
+                </div>
+                <ChevronDown
+                  className={cn(
+                    "w-5 h-5 transition-transform duration-300",
+                    mobileLocalResourcesOpen && "rotate-180",
+                  )}
+                />
+              </button>
+              {mobileLocalResourcesOpen && (
+                <div className="mt-2 space-y-1 ml-3 pl-5 border-l-2 border-blue-200">
+                  {localResourcesItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 text-sm min-h-[44px]"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span className="font-medium">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            {/* 6. Home Financing Navigation */}
-            {homeFinancingNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
-                  pathname === item.href && "text-blue-600 bg-blue-50",
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
+            {/* 6. About Section */}
+            <div>
+              <button
+                onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
+                className="flex items-center justify-between w-full px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent transition-all duration-200 min-h-[44px]"
               >
-                <item.icon className="w-4 h-4" />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            ))}
+                <div className="flex items-center gap-3">
+                  <BookOpen className="w-5 h-5" />
+                  <span className="font-semibold">About</span>
+                </div>
+                <ChevronDown
+                  className={cn(
+                    "w-5 h-5 transition-transform duration-300",
+                    mobileAboutOpen && "rotate-180",
+                  )}
+                />
+              </button>
+              {mobileAboutOpen && (
+                <div className="mt-2 space-y-1 ml-3 pl-5 border-l-2 border-blue-200">
+                  {aboutItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 text-sm min-h-[44px]"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span className="font-medium">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            {/* 7. Other Navigation (if any items exist) */}
-            {otherNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
-                  pathname === item.href && "text-blue-600 bg-blue-50",
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <item.icon className="w-4 h-4" />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            ))}
+            {/* 7. Contact */}
+            <Link
+              href="/contact"
+              className={cn(
+                "flex items-center gap-3 px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 min-h-[44px]",
+                pathname === "/contact" && "text-[#21266c] bg-gradient-to-r from-blue-50 to-transparent font-semibold",
+              )}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <PlusCircle className="w-5 h-5" />
+              <span className="font-medium">Contact</span>
+            </Link>
+
+            {/* Divider for auth section */}
+            <div className="my-3 border-t border-gray-200"></div>
+
             {session ? (
               <>
                 <Link
-                  href="/settings"
+                  href="/dashboard"
                   className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors",
-                    pathname === "/settings" && "text-blue-600 bg-blue-50",
+                    "flex items-center gap-3 px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 min-h-[44px]",
+                    pathname === "/dashboard" && "text-[#21266c] bg-gradient-to-r from-blue-50 to-transparent font-semibold",
                   )}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <Settings className="w-4 h-4" />
-                  <span className="font-medium">Settings</span>
+                  <Home className="w-5 h-5" />
+                  <span className="font-medium">Dashboard</span>
                 </Link>
                 <Link
                   href="/profile"
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                  className={cn(
+                    "flex items-center gap-3 px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 min-h-[44px]",
+                    pathname === "/profile" && "text-[#21266c] bg-gradient-to-r from-blue-50 to-transparent font-semibold",
+                  )}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <User className="w-4 h-4" />
+                  <User className="w-5 h-5" />
                   <span className="font-medium">Profile</span>
+                </Link>
+                <Link
+                  href="/settings"
+                  className={cn(
+                    "flex items-center gap-3 px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 min-h-[44px]",
+                    pathname === "/settings" && "text-[#21266c] bg-gradient-to-r from-blue-50 to-transparent font-semibold",
+                  )}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Settings className="w-5 h-5" />
+                  <span className="font-medium">Settings</span>
                 </Link>
                 <button
                   onClick={() => {
                     signOut({ callbackUrl: "/" });
                     setIsMobileMenuOpen(false);
                   }}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 w-full text-left transition-colors"
+                  className="flex items-center gap-3 px-5 py-4 rounded-lg text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-transparent w-full text-left transition-all duration-200 min-h-[44px]"
                 >
-                  <LogOut className="w-4 h-4" />
-                  <span className="font-medium">Sign Out</span>
+                  <LogOut className="w-5 h-5" />
+                  <span className="font-semibold">Sign Out</span>
                 </button>
               </>
             ) : (
-              <div className="px-4 pt-2">
+              <div className="px-2 pt-2">
                 <Link
                   href="/login"
-                  className="block w-full px-4 py-3 bg-blue-600 text-white text-center font-medium rounded hover:bg-blue-700 transition-colors"
+                  className="flex items-center justify-center gap-2 w-full px-5 py-4 bg-gradient-to-r from-[#21266c] to-[#3b82f6] text-white text-center font-semibold rounded-lg hover:from-[#3b82f6] hover:to-[#21266c] transition-all duration-300 shadow-md hover:shadow-lg min-h-[44px]"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Sign In
+                  <User className="w-5 h-5" />
+                  <span>Sign In</span>
                 </Link>
               </div>
             )}
