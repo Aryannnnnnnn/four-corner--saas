@@ -100,7 +100,7 @@ export default function HomeFinancingHero() {
           >
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80"
+                src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1762206396/Gemini_Generated_Image_g8u6n8g8u6n8g8u6_1_sy7ujy.png"
                 alt="Home Financing"
                 className="w-full h-full object-cover"
                 style={{ aspectRatio: "4/3" }}

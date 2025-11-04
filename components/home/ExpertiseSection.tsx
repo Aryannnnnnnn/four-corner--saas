@@ -55,7 +55,7 @@ const ExpertiseSection: React.FC = () => {
               transition={{ delay: 0.2 }}
             >
               <img
-                src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1760173041/todd-kent-178j8tJrNlc-unsplash_txkfnv.jpg"
+                src="https://res.cloudinary.com/dklhvv6mc/image/upload/v1762206590/a0de8491_hmef3l.avif"
                 alt="Vermont Real Estate"
                 className="w-full h-[500px] lg:h-[600px] object-cover"
               />
