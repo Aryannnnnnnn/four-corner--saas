@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { DollarSign, TrendingDown, Calculator, Home, FileText, CheckCircle, AlertCircle, MinusCircle, X, ChevronDown, ChevronUp, Calendar, ArrowLeft } from "lucide-react";
+import React from "react";
+import { DollarSign, TrendingDown, Calculator, Home, FileText, CheckCircle, AlertCircle, MinusCircle, X, Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MortgageCalculator from "@/components/calculators/MortgageCalculator";
 
 export default function SellerClosingCostsPage() {
-  const [expandedScenario, setExpandedScenario] = useState<number | null>(null);
 
   const costBreakdownItems = [
     {
