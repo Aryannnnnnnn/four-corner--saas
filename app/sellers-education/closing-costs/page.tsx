@@ -1,42 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { DollarSign, TrendingDown, Calculator, Home, FileText, CheckCircle, AlertCircle, MinusCircle, X, ChevronDown, ChevronUp } from "lucide-react";
+import { DollarSign, TrendingDown, Calculator, Home, FileText, CheckCircle, AlertCircle, MinusCircle, X, ChevronDown, ChevronUp, Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import MortgageCalculator from "@/components/calculators/MortgageCalculator";
 
 export default function SellerClosingCostsPage() {
-  const [salePrice, setSalePrice] = useState<string>("400000");
-  const [commissionRate, setCommissionRate] = useState<string>("6");
-  const [attorneyFee, setAttorneyFee] = useState<string>("1200");
-  const [mortgagePayoff, setMortgagePayoff] = useState<string>("300000");
-  const [propertyTaxes, setPropertyTaxes] = useState<string>("800");
-  const [otherCosts, setOtherCosts] = useState<string>("0");
   const [expandedScenario, setExpandedScenario] = useState<number | null>(null);
-
-  const calculateNetProceeds = () => {
-    const price = parseFloat(salePrice) || 0;
-    const commission = (price * (parseFloat(commissionRate) || 0)) / 100;
-    const attorney = parseFloat(attorneyFee) || 0;
-    const mortgage = parseFloat(mortgagePayoff) || 0;
-    const taxes = parseFloat(propertyTaxes) || 0;
-    const other = parseFloat(otherCosts) || 0;
-    const recording = 50;
-
-    const totalCosts = commission + attorney + taxes + other + recording;
-    const netProceeds = price - totalCosts - mortgage;
-    const costPercentage = (totalCosts / price) * 100;
-
-    return {
-      commission,
-      attorney,
-      recording,
-      totalCosts,
-      netProceeds,
-      costPercentage,
-    };
-  };
-
-  const results = calculateNetProceeds();
 
   const costBreakdownItems = [
     {
@@ -252,83 +224,105 @@ export default function SellerClosingCostsPage() {
     {
       phase: "Before Listing",
       items: ["Photography ($150-$400)", "Staging (optional, $500-$2,000)"],
-      icon: <Home className="w-5 h-5 text-blue-600" />,
+      icon: <Home className="w-5 h-5 text-white" />,
     },
     {
       phase: "During Sale",
       items: ["Maintain utilities", "Keep homeowner's insurance active", "Continue mortgage payments"],
-      icon: <Calendar className="w-5 h-5 text-purple-600" />,
+      icon: <Calendar className="w-5 h-5 text-white" />,
     },
     {
       phase: "At Closing",
       items: ["All closing costs deducted from sale proceeds", "Mortgage payoff processed", "Net proceeds calculated"],
-      icon: <DollarSign className="w-5 h-5 text-green-600" />,
+      icon: <DollarSign className="w-5 h-5 text-white" />,
     },
     {
       phase: "After Closing",
       items: ["None (if all paid at closing)", "Receive net proceeds via wire transfer within 24 hours"],
-      icon: <CheckCircle className="w-5 h-5 text-green-600" />,
+      icon: <CheckCircle className="w-5 h-5 text-white" />,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-[#21266c] to-[#3b82f6] text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="font-coconat text-4xl md:text-6xl font-bold mb-6">
-              Understanding Seller Closing Costs in Vermont
-            </h1>
-            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
-              What you'll actually net from your home sale
-            </p>
+    <>
+      <Header />
+      <div className="min-h-screen bg-white">
+        {/* Hero Section */}
+        <section className="relative bg-gradient-to-br from-[#21266c] to-[#3b82f6] pt-32 pb-16 sm:pt-40 sm:pb-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Back Button */}
+            <Link href="/sellers-education" className="inline-flex items-center gap-2 text-white hover:text-blue-100 transition-colors mb-8">
+              <ArrowLeft className="w-5 h-5" />
+              <span className="font-medium">Back to Seller Resources</span>
+            </Link>
+
+            {/* Page Header */}
+            <div className="text-white">
+              <div className="inline-block mb-4">
+                <div className="w-12 h-1 bg-white mb-4"></div>
+                <span className="text-sm font-semibold uppercase tracking-[0.2em]">
+                  Seller's Guide
+                </span>
+              </div>
+
+              <h1
+                className="mt-6 text-white text-4xl sm:text-5xl lg:text-6xl leading-[1.1] tracking-tight mb-6"
+                style={{ fontFamily: "Coconat" }}
+              >
+                Understanding Seller Closing Costs in Vermont
+              </h1>
+
+              <p className="text-lg sm:text-xl text-blue-100 max-w-3xl leading-relaxed">
+                A comprehensive breakdown of what you'll pay when selling your home in Vermont. Seller costs typically range from 6-10% of your sale price, with real estate commission being the largest expense.
+              </p>
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
 
       {/* Overview Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-12">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <DollarSign className="w-8 h-8 text-blue-600" />
-            </div>
-            <div>
-              <h2 className="font-coconat text-3xl font-bold text-gray-900 mb-4">
-                Overview: What Are Seller Closing Costs?
-              </h2>
-              <p className="text-lg text-gray-700 mb-4">
+      <section className="py-16 sm:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#21266c] mb-6" style={{ fontFamily: "Coconat" }}>
+              What Are Seller Closing Costs?
+            </h2>
+            <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
+              <p>
                 Seller closing costs are the expenses you pay when transferring ownership of your property to the buyer. Understanding these costs is crucial for calculating your actual net proceeds from the sale.
+              </p>
+              <p>
+                In Vermont, sellers should budget <span className="font-semibold text-[#21266c]">6-10% of the sale price</span> for closing costs and commissions. On a $400,000 home, this means $24,000-$40,000 in total costs.
               </p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mt-8">
-            <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-              <h3 className="font-semibold text-blue-900 mb-2">Typical Range</h3>
-              <p className="text-3xl font-bold text-blue-600">6-10%</p>
+            <div className="bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
+              <h3 className="font-semibold text-[#21266c] mb-2">Typical Range</h3>
+              <p className="text-3xl font-bold text-[#3b82f6]">6-10%</p>
               <p className="text-sm text-gray-600 mt-2">of sale price</p>
             </div>
-            <div className="bg-red-50 p-6 rounded-lg border border-red-200">
+            <div className="bg-red-50 p-6 rounded-lg border-2 border-red-200">
               <h3 className="font-semibold text-red-900 mb-2">Largest Cost</h3>
               <p className="text-3xl font-bold text-red-600">Commission</p>
               <p className="text-sm text-gray-600 mt-2">Usually 5-6% of sale price</p>
             </div>
-            <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
+            <div className="bg-purple-50 p-6 rounded-lg border-2 border-purple-200">
               <h3 className="font-semibold text-purple-900 mb-2">Important Note</h3>
               <p className="text-lg font-bold text-purple-600">Payoff Amounts</p>
               <p className="text-sm text-gray-600 mt-2">May exceed closing costs</p>
             </div>
           </div>
         </div>
+      </section>
 
         {/* Detailed Cost Breakdown */}
-        <div className="mb-16">
-          <h2 className="font-coconat text-4xl font-bold text-gray-900 mb-8 text-center">
-            Detailed Cost Breakdown
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
+        <section className="py-16 sm:py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#21266c] mb-12 text-center" style={{ fontFamily: "Coconat" }}>
+              Detailed Cost Breakdown
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
             {costBreakdownItems.map((item, index) => (
               <div
                 key={index}
@@ -360,9 +354,12 @@ export default function SellerClosingCostsPage() {
             ))}
           </div>
         </div>
+      </section>
 
         {/* Other Potential Costs */}
-        <div className="bg-amber-50 rounded-2xl shadow-lg p-8 md:p-12 mb-16 border border-amber-200">
+        <section className="py-16 sm:py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-amber-50 rounded-2xl shadow-lg p-8 md:p-12 border-2 border-amber-200">
           <div className="flex items-start gap-4 mb-6">
             <div className="bg-amber-100 p-3 rounded-lg">
               <AlertCircle className="w-8 h-8 text-amber-600" />
@@ -382,82 +379,75 @@ export default function SellerClosingCostsPage() {
             </div>
           </div>
         </div>
+          </div>
+        </section>
 
         {/* Example Scenarios */}
-        <div className="mb-16">
-          <h2 className="font-coconat text-4xl font-bold text-gray-900 mb-8 text-center">
-            Example Calculations
-          </h2>
+        <section className="py-16 sm:py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#21266c] mb-8 text-center" style={{ fontFamily: "Coconat" }}>
+              Example Calculations
+            </h2>
           <p className="text-center text-gray-600 mb-8 text-lg">
-            Click each scenario to see the detailed breakdown
+            Real-world examples of seller closing costs in Vermont
           </p>
           <div className="grid md:grid-cols-3 gap-6">
-            {scenarios.map((scenario, index) => (
+            {scenarios.map((scenario, idx) => (
               <div
-                key={index}
-                className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-shadow"
+                key={`scenario-${idx}`}
+                className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden"
               >
-                <div
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 cursor-pointer"
-                  onClick={() => setExpandedScenario(expandedScenario === index ? null : index)}
-                >
+                <div className="bg-gradient-to-r from-[#21266c] to-[#3b82f6] text-white p-6">
                   <h3 className="font-coconat text-xl font-bold mb-2">{scenario.title}</h3>
                   <p className="text-3xl font-bold">
                     ${scenario.salePrice.toLocaleString()}
                   </p>
-                  <div className="flex items-center justify-between mt-4">
-                    <span className="text-sm">Click for details</span>
-                    {expandedScenario === index ? (
-                      <ChevronUp className="w-5 h-5" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5" />
-                    )}
-                  </div>
                 </div>
 
-                {expandedScenario === index && (
-                  <div className="p-6">
-                    <div className="space-y-3 mb-4">
-                      {scenario.breakdown.map((item, idx) => (
-                        <div key={idx} className="flex justify-between items-center">
-                          <span className="text-gray-700">{item.label}:</span>
-                          <span className="font-semibold text-gray-900">
-                            ${item.amount.toLocaleString()}
-                          </span>
-                        </div>
-                      ))}
+                <div className="p-6">
+                  <div className="space-y-3 mb-4">
+                    {scenario.breakdown.map((item, itemIdx) => (
+                      <div key={itemIdx} className="flex justify-between items-center">
+                        <span className="text-gray-700">{item.label}:</span>
+                        <span className="font-semibold text-gray-900">
+                          ${item.amount.toLocaleString()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="border-t-2 border-gray-200 pt-4 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-gray-900">Total Costs:</span>
+                      <span className="font-bold text-red-600">
+                        ${scenario.totalCosts.toLocaleString()} ({scenario.costPercentage}%)
+                      </span>
                     </div>
-                    <div className="border-t-2 border-gray-200 pt-4 space-y-3">
+                    {scenario.mortgagePayoff > 0 && (
                       <div className="flex justify-between items-center">
-                        <span className="font-bold text-gray-900">Total Costs:</span>
-                        <span className="font-bold text-red-600">
-                          ${scenario.totalCosts.toLocaleString()} ({scenario.costPercentage}%)
+                        <span className="text-gray-700">Mortgage Payoff:</span>
+                        <span className="font-semibold text-gray-900">
+                          ${scenario.mortgagePayoff.toLocaleString()}
                         </span>
                       </div>
-                      {scenario.mortgagePayoff > 0 && (
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-700">Mortgage Payoff:</span>
-                          <span className="font-semibold text-gray-900">
-                            ${scenario.mortgagePayoff.toLocaleString()}
-                          </span>
-                        </div>
-                      )}
-                      <div className="flex justify-between items-center bg-green-50 p-3 rounded-lg border border-green-200">
-                        <span className="font-bold text-green-900">Net Proceeds:</span>
-                        <span className="font-bold text-green-600 text-xl">
-                          ${scenario.netProceeds.toLocaleString()}
-                        </span>
-                      </div>
+                    )}
+                    <div className="flex justify-between items-center bg-green-50 p-3 rounded-lg border border-green-200">
+                      <span className="font-bold text-green-900">Net Proceeds:</span>
+                      <span className="font-bold text-green-600 text-xl">
+                        ${scenario.netProceeds.toLocaleString()}
+                      </span>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
-        </div>
+          </div>
+        </section>
 
-        {/* Net Proceeds Calculator */}
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl shadow-2xl p-8 md:p-12 mb-16 border-2 border-blue-200">
+        {/* Calculator Section */}
+        <section className="py-16 sm:py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl shadow-2xl p-8 md:p-12 border-2 border-blue-200">
           <div className="flex items-center gap-4 mb-8">
             <div className="bg-blue-600 p-4 rounded-xl">
               <Calculator className="w-10 h-10 text-white" />
@@ -467,147 +457,13 @@ export default function SellerClosingCostsPage() {
                 Calculate Your Net Proceeds
               </h2>
               <p className="text-gray-600 mt-1">
-                Enter your information to estimate what you'll receive at closing
+                Use this calculator to estimate your costs and net proceeds from your home sale
               </p>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Sale Price ($)
-              </label>
-              <input
-                type="number"
-                value={salePrice}
-                onChange={(e) => setSalePrice(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="400000"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Commission Rate (%)
-              </label>
-              <input
-                type="number"
-                value={commissionRate}
-                onChange={(e) => setCommissionRate(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="6"
-                step="0.1"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Attorney Fee ($)
-              </label>
-              <input
-                type="number"
-                value={attorneyFee}
-                onChange={(e) => setAttorneyFee(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="1200"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Mortgage Payoff ($)
-              </label>
-              <input
-                type="number"
-                value={mortgagePayoff}
-                onChange={(e) => setMortgagePayoff(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="300000"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Prorated Property Taxes ($)
-              </label>
-              <input
-                type="number"
-                value={propertyTaxes}
-                onChange={(e) => setPropertyTaxes(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="800"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Other Costs ($)
-              </label>
-              <input
-                type="number"
-                value={otherCosts}
-                onChange={(e) => setOtherCosts(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="0"
-              />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-200">
-            <h3 className="font-coconat text-xl font-bold text-gray-900 mb-4">
-              Calculation Breakdown
-            </h3>
-            <div className="space-y-3 mb-4">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-700">Sale Price:</span>
-                <span className="font-semibold text-gray-900">
-                  ${(parseFloat(salePrice) || 0).toLocaleString()}
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-red-600">
-                <span>- Commission ({commissionRate}%):</span>
-                <span className="font-semibold">
-                  ${results.commission.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-red-600">
-                <span>- Attorney Fee:</span>
-                <span className="font-semibold">
-                  ${results.attorney.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-red-600">
-                <span>- Recording Fees:</span>
-                <span className="font-semibold">$50</span>
-              </div>
-              <div className="flex justify-between items-center text-red-600">
-                <span>- Prorated Taxes:</span>
-                <span className="font-semibold">
-                  ${(parseFloat(propertyTaxes) || 0).toLocaleString()}
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-red-600">
-                <span>- Other Costs:</span>
-                <span className="font-semibold">
-                  ${(parseFloat(otherCosts) || 0).toLocaleString()}
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-purple-600 pt-2 border-t border-gray-300">
-                <span className="font-semibold">Total Closing Costs ({results.costPercentage.toFixed(1)}%):</span>
-                <span className="font-bold">
-                  ${results.totalCosts.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-red-600">
-                <span>- Mortgage Payoff:</span>
-                <span className="font-semibold">
-                  ${(parseFloat(mortgagePayoff) || 0).toLocaleString()}
-                </span>
-              </div>
-            </div>
-            <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6 rounded-lg mt-6">
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-bold">Your Net Proceeds:</span>
-                <span className="text-4xl font-bold">
-                  ${results.netProceeds.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                </span>
-              </div>
-            </div>
+          <div className="bg-white rounded-xl p-6 shadow-lg">
+            <MortgageCalculator />
           </div>
 
           <div className="mt-6 bg-blue-50 p-6 rounded-lg border border-blue-200">
@@ -626,12 +482,15 @@ export default function SellerClosingCostsPage() {
             </div>
           </div>
         </div>
+          </div>
+        </section>
 
         {/* Ways to Reduce Costs */}
-        <div className="mb-16">
-          <h2 className="font-coconat text-4xl font-bold text-gray-900 mb-8 text-center">
-            Ways to Reduce Your Closing Costs
-          </h2>
+        <section className="py-16 sm:py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#21266c] mb-12 text-center" style={{ fontFamily: "Coconat" }}>
+              Ways to Reduce Your Closing Costs
+            </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {waysToReduce.map((item, index) => (
               <div
@@ -648,10 +507,13 @@ export default function SellerClosingCostsPage() {
               </div>
             ))}
           </div>
-        </div>
+          </div>
+        </section>
 
         {/* Vermont-Specific Considerations */}
-        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl shadow-lg p-8 md:p-12 mb-16 border-2 border-green-300">
+        <section className="py-16 sm:py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl shadow-lg p-8 md:p-12 border-2 border-green-300">
           <div className="flex items-center gap-4 mb-8">
             <div className="bg-green-600 p-4 rounded-xl">
               <Home className="w-10 h-10 text-white" />
@@ -683,9 +545,13 @@ export default function SellerClosingCostsPage() {
             ))}
           </div>
         </div>
+          </div>
+        </section>
 
         {/* What Sellers DON'T Pay */}
-        <div className="bg-gradient-to-br from-gray-50 to-slate-100 rounded-2xl shadow-lg p-8 md:p-12 mb-16 border-2 border-gray-300">
+        <section className="py-16 sm:py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-gradient-to-br from-gray-50 to-slate-100 rounded-2xl shadow-lg p-8 md:p-12 border-2 border-gray-300">
           <div className="flex items-center gap-4 mb-8">
             <div className="bg-gray-700 p-4 rounded-xl">
               <MinusCircle className="w-10 h-10 text-white" />
@@ -714,12 +580,15 @@ export default function SellerClosingCostsPage() {
             ))}
           </div>
         </div>
+          </div>
+        </section>
 
         {/* Timeline of Payments */}
-        <div className="mb-16">
-          <h2 className="font-coconat text-4xl font-bold text-gray-900 mb-8 text-center">
-            Timeline of Payments
-          </h2>
+        <section className="py-16 sm:py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#21266c] mb-12 text-center" style={{ fontFamily: "Coconat" }}>
+              Timeline of Payments
+            </h2>
           <div className="grid md:grid-cols-4 gap-6">
             {timeline.map((phase, index) => (
               <div
@@ -727,7 +596,7 @@ export default function SellerClosingCostsPage() {
                 className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 relative"
               >
                 <div className="flex justify-center mb-4">
-                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-full">
+                  <div className="bg-gradient-to-r from-[#21266c] to-[#3b82f6] p-4 rounded-full">
                     {phase.icon}
                   </div>
                 </div>
@@ -750,10 +619,13 @@ export default function SellerClosingCostsPage() {
               </div>
             ))}
           </div>
-        </div>
+          </div>
+        </section>
 
         {/* Closing Day Section */}
-        <div className="bg-gradient-to-r from-[#21266c] to-[#3b82f6] text-white rounded-2xl shadow-2xl p-8 md:p-12 mb-16">
+        <section className="py-16 sm:py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-gradient-to-r from-[#21266c] to-[#3b82f6] text-white rounded-2xl shadow-2xl p-8 md:p-12">
           <div className="flex items-center gap-4 mb-8">
             <div className="bg-white/20 p-4 rounded-xl">
               <FileText className="w-10 h-10 text-white" />
@@ -828,9 +700,13 @@ export default function SellerClosingCostsPage() {
             </div>
           </div>
         </div>
+          </div>
+        </section>
 
         {/* CTA Section */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 text-center">
+        <section className="py-16 sm:py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 text-center border-2 border-gray-200">
           <h2 className="font-coconat text-3xl font-bold text-gray-900 mb-4">
             Ready to Sell Your Vermont Home?
           </h2>
@@ -854,27 +730,10 @@ export default function SellerClosingCostsPage() {
             </Link>
           </div>
         </div>
+          </div>
+        </section>
       </div>
-    </div>
-  );
-}
-
-// Calendar icon component (since it's not in lucide-react by default in this context)
-function Calendar({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-      />
-    </svg>
+      <Footer />
+    </>
   );
 }
