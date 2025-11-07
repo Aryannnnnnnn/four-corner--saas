@@ -59,7 +59,6 @@ export default function Header() {
     { name: "Closing Costs Explained", href: "/buyers-education/closing-costs", icon: DollarSign },
     { name: "Final Walkthrough", href: "/buyers-education/final-walkthrough", icon: FolderOpen },
     { name: "Closing Process", href: "/buyers-education/closing-process", icon: FolderOpen },
-    { name: "Calculators", href: "/calculators", icon: DollarSign },
   ];
 
   const sellersItems = [
@@ -157,6 +156,57 @@ export default function Header() {
               <span className={cn(
                 "absolute bottom-0 left-0 right-0 h-0.5 bg-[#3b82f6] transition-all duration-300",
                 pathname === "/" ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+              )}></span>
+            </Link>
+
+                        {/* 6. About Dropdown */}
+            <div
+              className="relative group"
+              onMouseEnter={() => setAboutDropdownOpen(true)}
+              onMouseLeave={() => setAboutDropdownOpen(false)}
+            >
+              <div className="flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 cursor-default whitespace-nowrap relative">
+                <span className="relative z-10">About</span>
+                <ChevronDown className={cn(
+                  "w-3.5 h-3.5 opacity-70 transition-transform duration-300",
+                  aboutDropdownOpen && "rotate-180"
+                )} />
+              </div>
+
+              <div
+                className={cn(
+                  "absolute top-full left-0 w-60 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
+                  aboutDropdownOpen
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none",
+                )}
+              >
+                {aboutItems.map((item, index) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      "block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100 last:border-b-0",
+                      index === 0 && "rounded-t-lg"
+                    )}
+                  >
+                    <span className="block">{item.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <Link
+              href="/calculators"
+              className={cn(
+                "group flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 whitespace-nowrap relative",
+                pathname === "/calculators" && "text-[#21266c]",
+              )}
+            >
+              <span className="relative z-10">Calculators</span>
+              <span className={cn(
+                "absolute bottom-0 left-0 right-0 h-0.5 bg-[#3b82f6] transition-all duration-300",
+                pathname === "/calculators" ? "opacity-100" : "opacity-0 group-hover:opacity-100"
               )}></span>
             </Link>
 
@@ -312,43 +362,6 @@ export default function Header() {
               </div>
             </div>
 
-            {/* 6. About Dropdown */}
-            <div
-              className="relative group"
-              onMouseEnter={() => setAboutDropdownOpen(true)}
-              onMouseLeave={() => setAboutDropdownOpen(false)}
-            >
-              <div className="flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 cursor-default whitespace-nowrap relative">
-                <span className="relative z-10">About</span>
-                <ChevronDown className={cn(
-                  "w-3.5 h-3.5 opacity-70 transition-transform duration-300",
-                  aboutDropdownOpen && "rotate-180"
-                )} />
-              </div>
-
-              <div
-                className={cn(
-                  "absolute top-full left-0 w-60 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
-                  aboutDropdownOpen
-                    ? "opacity-100 visible translate-y-0"
-                    : "opacity-0 invisible -translate-y-2 pointer-events-none",
-                )}
-              >
-                {aboutItems.map((item, index) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={cn(
-                      "block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100 last:border-b-0",
-                      index === 0 && "rounded-t-lg"
-                    )}
-                  >
-                    <span className="block">{item.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
             {/* 7. Contact */}
             <Link
               href="/contact"
@@ -466,7 +479,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="xl:hidden mt-4 space-y-2 border-t border-gray-200 pt-5 pb-5 bg-white">
+          <div className="xl:hidden mt-4 space-y-2 border-t border-gray-200 pt-5 pb-5 bg-white max-h-[calc(100vh-80px)] overflow-y-auto">
             {/* 1. Home */}
             <Link
               href="/"
@@ -479,6 +492,55 @@ export default function Header() {
               <Home className="w-5 h-5" />
               <span className="font-medium">Home</span>
             </Link>
+
+                        {/* 6. About Section */}
+            <div>
+              <button
+                onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
+                className="flex items-center justify-between w-full px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent transition-all duration-200 min-h-[44px]"
+              >
+                <div className="flex items-center gap-3">
+                  <BookOpen className="w-5 h-5" />
+                  <span className="font-semibold">About</span>
+                </div>
+                <ChevronDown
+                  className={cn(
+                    "w-5 h-5 transition-transform duration-300",
+                    mobileAboutOpen && "rotate-180",
+                  )}
+                />
+              </button>
+              {mobileAboutOpen && (
+                <div className="mt-2 space-y-1 ml-3 pl-5 border-l-2 border-blue-200">
+                  {aboutItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 text-sm min-h-[44px]"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span className="font-medium">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 2. Calculators */}
+            <Link
+              href="/calculators"
+              className={cn(
+                "flex items-center gap-3 px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 min-h-[44px]",
+                pathname === "/" && "text-[#21266c] bg-gradient-to-r from-blue-50 to-transparent font-semibold",
+              )}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <Home className="w-5 h-5" />
+              <span className="font-medium">Calculators</span>
+            </Link>
+
+
 
             {/* 2. Properties Section */}
             <div>
@@ -602,40 +664,6 @@ export default function Header() {
               {mobileLocalResourcesOpen && (
                 <div className="mt-2 space-y-1 ml-3 pl-5 border-l-2 border-blue-200">
                   {localResourcesItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 text-sm min-h-[44px]"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <item.icon className="w-4 h-4" />
-                      <span className="font-medium">{item.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 6. About Section */}
-            <div>
-              <button
-                onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
-                className="flex items-center justify-between w-full px-5 py-4 rounded-lg text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent transition-all duration-200 min-h-[44px]"
-              >
-                <div className="flex items-center gap-3">
-                  <BookOpen className="w-5 h-5" />
-                  <span className="font-semibold">About</span>
-                </div>
-                <ChevronDown
-                  className={cn(
-                    "w-5 h-5 transition-transform duration-300",
-                    mobileAboutOpen && "rotate-180",
-                  )}
-                />
-              </button>
-              {mobileAboutOpen && (
-                <div className="mt-2 space-y-1 ml-3 pl-5 border-l-2 border-blue-200">
-                  {aboutItems.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}

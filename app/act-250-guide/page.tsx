@@ -938,7 +938,7 @@ export default function Act250GuidePage() {
 
               <div className="mt-8 bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-lg">
                 <p className="text-gray-800">
-                  <strong>Caution:</strong> Exemptions can be nuanced and fact-specific. Even if you believe your project is exempt, it's wise to confirm this with a jurisdictional inquiry or consultation with a land use attorney to avoid costly mistakes.
+                  <strong>Note:</strong> There are specific rules, exemptions, and definitions for counting land area and units, so it's always best to consult the Act 250 district coordinator for a formal determination.
                 </p>
               </div>
             </div>
