@@ -129,6 +129,7 @@ const FAQSection: React.FC = () => {
               <button
                 className="group bg-[#21266c] border-2 border-[#21266c] rounded-full px-4 py-1 flex items-center gap-3 transition-all duration-300 ease-out"
                 style={{ fontFamily: "Coconat" }}
+                onClick={() => window.location.href = "/contact"}
               >
                 {/* Button Content */}
                 <span className="py-2 text-white font-medium text-lg">

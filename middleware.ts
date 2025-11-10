@@ -21,6 +21,12 @@ export default auth((req) => {
     "/analyze",
     "/search",
     "/financing",
+    "/buyers-education",
+    "/sellers-education",
+    "/calculators",
+    "/contract-glossary",
+    "/act-250-guide",
+    "/local-resources",
   ];
 
   // Check if current path is a public route

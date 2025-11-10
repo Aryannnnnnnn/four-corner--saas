@@ -64,8 +64,8 @@ export default function SuccessStoriesPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 mt-20">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 mt-16">
+        <div className="max-w-7xl mx-auto mb-16">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900">

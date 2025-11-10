@@ -123,7 +123,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-[90vw] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className=" px-4 sm:px-6 lg:px-8">
         {/* Three-column grid layout for proper centering */}
         <div className="grid grid-cols-3 items-center h-16">
           {/* Logo - Left Column */}
@@ -210,7 +210,7 @@ export default function Header() {
               )}></span>
             </Link>
 
-            {/* 2. Properties Dropdown */}
+            {/* 2. Properties & Local Resources Combined Dropdown */}
             <div
               className="relative group"
               onMouseEnter={() => setPropertiesDropdownOpen(true)}
@@ -230,24 +230,48 @@ export default function Header() {
 
               <div
                 className={cn(
-                  "absolute top-full left-0 w-60 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
+                  "absolute top-full left-0 w-[600px] bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
                   propertiesDropdownOpen
                     ? "opacity-100 visible translate-y-0"
                     : "opacity-0 invisible -translate-y-2 pointer-events-none",
                 )}
               >
-                {propertiesItems.map((item, index) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={cn(
-                      "block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100 last:border-b-0",
-                      index === 0 && "rounded-t-lg"
-                    )}
-                  >
-                    <span className="block">{item.name}</span>
-                  </Link>
-                ))}
+                <div className="flex">
+                  {/* Left Side - Properties */}
+                  <div className="flex-1 p-2">
+                    <div className="px-3 py-2 mb-1">
+                      <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Properties</h3>
+                    </div>
+                    {propertiesItems.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 rounded-md"
+                      >
+                        <span className="block">{item.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* Center Divider */}
+                  <div className="w-px bg-gray-200"></div>
+
+                  {/* Right Side - Local Resources */}
+                  <div className="flex-1 p-2">
+                    <div className="px-3 py-2 mb-1">
+                      <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Local Resources</h3>
+                    </div>
+                    {localResourcesItems.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 rounded-md"
+                      >
+                        <span className="block">{item.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -325,44 +349,7 @@ export default function Header() {
               </div>
             </div>
 
-            {/* 5. Local Resources Dropdown */}
-            <div
-              className="relative group"
-              onMouseEnter={() => setLocalResourcesDropdownOpen(true)}
-              onMouseLeave={() => setLocalResourcesDropdownOpen(false)}
-            >
-              <div className="flex items-center justify-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-[#21266c] tracking-wide uppercase transition-all duration-300 cursor-default whitespace-nowrap relative">
-                <span className="relative z-10">Local Resources</span>
-                <ChevronDown className={cn(
-                  "w-3.5 h-3.5 opacity-70 transition-transform duration-300",
-                  localResourcesDropdownOpen && "rotate-180"
-                )} />
-              </div>
-
-              <div
-                className={cn(
-                  "absolute top-full left-0 w-72 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 z-50",
-                  localResourcesDropdownOpen
-                    ? "opacity-100 visible translate-y-0"
-                    : "opacity-0 invisible -translate-y-2 pointer-events-none",
-                )}
-              >
-                {localResourcesItems.map((item, index) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={cn(
-                      "block px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent hover:text-[#21266c] transition-all duration-200 border-b border-gray-100 last:border-b-0",
-                      index === 0 && "rounded-t-lg bg-gradient-to-r from-blue-50/30 to-transparent font-semibold"
-                    )}
-                  >
-                    <span className="block">{item.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* 7. Contact */}
+            {/* 5. Contact */}
             <Link
               href="/contact"
               className={cn(

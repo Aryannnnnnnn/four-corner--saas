@@ -302,10 +302,16 @@ const Footer: React.FC = () => {
                   Properties
                 </Link>
                 <Link
-                  href="/contact"
+                  href="/home-financing"
                   className="block text-gray-700 text-sm hover:text-[#21266c] transition-colors duration-300"
                 >
-                  Contact
+                  Home Financing
+                </Link>
+                <Link
+                  href="/financing"
+                  className="block text-gray-700 text-sm hover:text-[#21266c] transition-colors duration-300"
+                >
+                  Financing
                 </Link>
                 <Link
                   href="/success-stories"
@@ -324,6 +330,12 @@ const Footer: React.FC = () => {
                   className="block text-gray-700 text-sm hover:text-[#21266c] transition-colors duration-300"
                 >
                   Analyze Property
+                </Link>
+                <Link
+                  href="/contact"
+                  className="block text-gray-700 text-sm hover:text-[#21266c] transition-colors duration-300"
+                >
+                  Contact
                 </Link>
               </nav>
             </div>
