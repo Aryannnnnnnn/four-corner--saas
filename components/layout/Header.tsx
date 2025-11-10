@@ -29,7 +29,6 @@ export default function Header() {
   const [propertiesDropdownOpen, setPropertiesDropdownOpen] = useState(false);
   const [buyersDropdownOpen, setBuyersDropdownOpen] = useState(false);
   const [sellersDropdownOpen, setSellersDropdownOpen] = useState(false);
-  const [localResourcesDropdownOpen, setLocalResourcesDropdownOpen] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
@@ -102,7 +101,6 @@ export default function Header() {
       setPropertiesDropdownOpen(false);
       setBuyersDropdownOpen(false);
       setSellersDropdownOpen(false);
-      setLocalResourcesDropdownOpen(false);
       setAboutDropdownOpen(false);
       setProfileDropdownOpen(false);
     };
@@ -116,7 +114,6 @@ export default function Header() {
     setPropertiesDropdownOpen(false);
     setBuyersDropdownOpen(false);
     setSellersDropdownOpen(false);
-    setLocalResourcesDropdownOpen(false);
     setAboutDropdownOpen(false);
     setProfileDropdownOpen(false);
   }, [pathname]);
